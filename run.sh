@@ -1,0 +1,1 @@
+java -jar target/georgeLibrary-1.0-SNAPSHOT.jar
