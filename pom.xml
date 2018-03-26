@@ -30,7 +30,7 @@
     <outputDirectory>${project.build.directory}</outputDirectory>
     <resources>
       <resource>
-      <directory>${project.basedir}</directory>
+      <directory>src/main/resources</directory>
       <includes>
       <include>library.db</include>
       </includes>
