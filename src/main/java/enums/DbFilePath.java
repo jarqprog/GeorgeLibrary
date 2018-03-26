@@ -3,7 +3,7 @@ package enums;
 public enum DbFilePath {
 
     DB_SETUP_SCRIPT("src/main/resources/setup_script.sql"),
-    SQLITE_DATABASE("src/main/resources/dbStruct.db");
+    SQLITE_DATABASE("src/main/resources/library.db");
 
     private String filePath;
 
