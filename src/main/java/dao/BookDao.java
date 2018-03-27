@@ -2,11 +2,12 @@ package dao;
 
 import managers.databaseManagers.JDBCProcessManager;
 import models.Book;
+import models.FakeBook;
 
 import java.sql.Connection;
 import java.util.List;
 
-public class BookDao implements GetableDao<Book>{
+public class BookDao implements GetableDao<FakeBook>{
 
     private Connection connection;
     private JDBCProcessManager processManager;
@@ -18,12 +19,12 @@ public class BookDao implements GetableDao<Book>{
 
 
     @Override
-    public Book getModelById(int id) {
-        return new Book("Ania z Zielonego Wzgorza");
+    public FakeBook getModelById(int id) {
+        return new FakeBook("Ania z Zielonego Wzgorza");
     }
 
     @Override
-    public List<Book> getAllModels() {
+    public List<FakeBook> getAllModels() {
         return null;
     }
 }

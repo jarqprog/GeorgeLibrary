@@ -28,7 +28,7 @@ public class SQLManager implements DatabaseManager {
     @Override
     public Connection getConnection() {
         try {
-            if(connection == null) {
+            if( isConnectionValid(connection) ) {
                 connection = DriverManager.getConnection(url);
             }
         } catch (SQLException e) {
@@ -42,7 +42,7 @@ public class SQLManager implements DatabaseManager {
     @Override
     public void closeConnection() {
         try {
-            if(connection != null && !connection.isClosed()) {
+            if( isConnectionValid(connection) ) {
                 connection.close();
             }
         } catch (SQLException e) {
