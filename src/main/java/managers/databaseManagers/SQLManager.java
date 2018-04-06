@@ -9,20 +9,14 @@ public class SQLManager implements DatabaseManager {
     private Connection connection;
     private String url;
 
-    public static DatabaseManager getSQLiteManager(DatabaseConfig dbConfig) {
+    public static DatabaseManager getSQLiteManager(DatabaseConfig dbConfig) throws ClassNotFoundException {
         return new SQLManager(dbConfig);
     }
 
-    private SQLManager(DatabaseConfig dbConfig) {
+    private SQLManager(DatabaseConfig dbConfig) throws ClassNotFoundException {
         String driver = dbConfig.getDRIVER();
         this.url = dbConfig.getURL();
-        try {
-            Class.forName(driver);
-        } catch (ClassNotFoundException e) {
-            System.out.println("Problem with jdbc driver!");
-            e.printStackTrace();
-            System.exit(1);
-        }
+        Class.forName(driver);
     }
 
     @Override

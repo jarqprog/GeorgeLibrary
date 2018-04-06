@@ -4,53 +4,45 @@ import enums.DbFilePath;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class SqliteDbSetter implements DatabaseSetter {
+public class SQLiteDbCreator implements DatabaseCreator {
 
-    private DatabaseManager databaseManager;
-    private DbFilePath dbFilePath;
-    private DbFilePath dbSetupScript;
+    private DatabaseConfig databaseConfig;
+    private String setupScript;
 
-    public static DatabaseSetter getInstance(DatabaseManager databaseManager, DbFilePath dbFilePath,
-                                             DbFilePath dbSetupScript) {
-        return new SqliteDbSetter(databaseManager, dbFilePath, dbSetupScript);
+    public static DatabaseCreator getInstance(DatabaseConfig databaseConfig, DbFilePath setupScript) {
+        return new SQLiteDbCreator(databaseConfig, setupScript);
     }
 
-    private SqliteDbSetter(DatabaseManager databaseManager, DbFilePath dbFilePath, DbFilePath dbSetupScript) {
-        this.databaseManager = databaseManager;
-        this.dbFilePath = dbFilePath;
-        this.dbSetupScript = dbSetupScript;
+    private SQLiteDbCreator(DatabaseConfig databaseConfig, DbFilePath setupScript) {
+        this.databaseConfig = databaseConfig;
+        this.setupScript = setupScript.getPath();
     }
 
-    @Override
-    public void prepareDatabase() throws IOException {
-        if(! checkIfDatabaseExists()){
-            File f = new File(dbFilePath.getPath());
-            f.createNewFile();
-            updateDatabaseWithSqlFile();
-        }
+    public DatabaseManager createDatabase() throws IOException, ClassNotFoundException {
+        DatabaseManager manager = createManager();
+        updateDatabaseWithSqlFile(manager);
+        return manager;
     }
 
 
-    private Boolean checkIfDatabaseExists(){
-        return new File(dbFilePath.getPath()).exists();
+
+    private DatabaseManager createManager() throws IOException, ClassNotFoundException {
+        File f = new File(databaseConfig.getFILEPATH());
+        f.createNewFile();  // just to create new file for database
+        return SQLManager.getSQLiteManager(databaseConfig);
     }
 
-    private void clearFile() throws FileNotFoundException {
-        new FileOutputStream(dbFilePath.getPath());
-    }
-
-    private void updateDatabaseWithSqlFile() throws FileNotFoundException {
+    private void updateDatabaseWithSqlFile(DatabaseManager databaseManager) throws FileNotFoundException {
         Connection connection = databaseManager.getConnection();
         String delimiter = ";";
         Scanner scanner;
-        File sqlFile = new File(dbSetupScript.getPath());
+        File sqlFile = new File(setupScript);
         scanner = new Scanner(sqlFile).useDelimiter(delimiter);
         try (Statement currentStatement = connection.createStatement()) {
             connection.setAutoCommit(false);

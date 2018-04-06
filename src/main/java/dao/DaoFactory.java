@@ -35,9 +35,6 @@ public class DaoFactory {
             case ("BookDao"):
                 dao = new BookDao(connection, processManager);
                 break;
-//            case ("TrainerDAO"):
-//                dao = new TrainerDAO(connection);
-//                break;
         }
         return daoType.cast(dao);
     }
