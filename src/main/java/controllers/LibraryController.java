@@ -1,6 +1,5 @@
 package controllers;
 
-import dao.GetableDao;
 import factory.IDaoFactory;
 import factory.IModelFactoryManufacture;
 import models.book.Book;
@@ -41,5 +40,12 @@ public class LibraryController implements ILibraryController {
     public void runMenu() {
         view.displayMessage("Hello!");  // tmp
         List<Book> books = daoFactory.getDAO(BookDao.class).getAllModels();
+
+        library.setBooks(books);
+        showBooks(library.getBooks());
+    }
+
+    private void showBooks(List<Book> books) {
+        books.forEach(b -> view.displayMessage(b.toString()));
     }
 }

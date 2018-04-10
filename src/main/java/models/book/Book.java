@@ -4,9 +4,9 @@ import models.worker.Author;
 import models.Model;
 import models.worker.Publisher;
 
-public abstract class Book implements Model, IBook {
+public abstract class Book implements Model {
 
-    private long isbn;
+    private String isbn;
     private Author author;
     private String title;
     private Publisher publisher;
@@ -14,7 +14,7 @@ public abstract class Book implements Model, IBook {
     private float price;
 
 
-    Book(long isbn, Author author, String title, Publisher publisher,
+    Book(String isbn, Author author, String title, Publisher publisher,
                 int publicationYear, float price) {
         this.isbn = isbn;
         this.author = author;

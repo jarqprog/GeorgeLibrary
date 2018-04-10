@@ -4,6 +4,9 @@ import dao.GetableDao;
 import managers.databaseManagers.JDBCProcessManager;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+
+import java.util.Collections;
 import java.util.List;
 
 public class BookDao implements GetableDao<Book> {
@@ -19,12 +22,14 @@ public class BookDao implements GetableDao<Book> {
     @Override
     public Book getModelById(int id) {
         return new FakeBook(
-                123L, null, "zielone wzgorze",
+                "12321421", null, "zielone wzgorze",
                 null, 1997, 10);
     }
 
     @Override
     public List<Book> getAllModels() {
-        return null;
+        return new ArrayList<>(Collections.singletonList(new FakeBook(
+                123L, null, "zielone wzgorze",
+                null, 1997, 10)));
     }
 }

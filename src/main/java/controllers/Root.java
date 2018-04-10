@@ -3,14 +3,11 @@ package controllers;
 import factory.ModelFactoryManufacture;
 import factory.IDaoFactory;
 import factory.IModelFactoryManufacture;
-import models.book.BookDao;
 import dao.DaoFactory;
-import dao.GetableDao;
 import enums.DbDriver;
 import enums.DbFilePath;
 import enums.DbUrl;
 import managers.databaseManagers.*;
-import models.book.FakeBook;
 import models.library.ILibrary;
 import models.library.LibraryFactory;
 import views.ILibraryView;
@@ -22,13 +19,11 @@ import java.io.IOException;
 public class Root {
 
     private RootView view;
-    private DatabaseManager dbManager;
-    private IDaoFactory daoFactory;
+    private ILibraryController libraryController;
 
     private Root() {
         view = new RootView();
-        dbManager = createDatabaseManager();
-        daoFactory = DaoFactory.getInstance(dbManager, SQLProcessManager.getInstance());
+        libraryController = createLibraryController();
     }
 
     public static Root getInstance() {
@@ -36,15 +31,19 @@ public class Root {
     }
 
     public void runApp() {
+        libraryController.runMenu();
+    }
 
-        GetableDao<FakeBook> bookDao = daoFactory.getDAO(BookDao.class);
-        FakeBook myBook = bookDao.getModelById(1);
-        view.displayMessage(myBook.toString());
+    private ILibraryController createLibraryController() {
+        ILibraryView view = new LibraryView();
+        IModelFactoryManufacture modelFactoryManufacture = new ModelFactoryManufacture();
 
+        ILibrary library = modelFactoryManufacture.create(LibraryFactory.class).build();
+        DatabaseManager databaseManager = createDatabaseManager();
+        JDBCProcessManager processManager = SQLProcessManager.getInstance();
+        IDaoFactory daoFactory = DaoFactory.getInstance(databaseManager, processManager);
 
-        initializeController();
-        dbManager.closeConnection();
-        view.displayMessage("Database connection closed, bye!");
+        return LibraryController.getInstance(view, library, daoFactory, modelFactoryManufacture);
     }
 
     private DatabaseManager createDatabaseManager() {
@@ -90,15 +89,5 @@ public class Root {
             System.exit(0);
             return null;
         }
-    }
-
-    private void initializeController() {
-
-        IModelFactoryManufacture modelFactory = new ModelFactoryManufacture();
-        ILibrary library = modelFactory.create(LibraryFactory.class).build();
-        ILibraryView view = new LibraryView();
-        ILibraryController controller = LibraryController
-                .getInstance(view, library, daoFactory, modelFactory);
-
     }
 }

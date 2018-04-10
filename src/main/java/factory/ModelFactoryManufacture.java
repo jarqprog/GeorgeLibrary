@@ -1,6 +1,7 @@
 package factory;
 
 import models.book.BookFactory;
+import models.library.LibraryFactory;
 import models.worker.AuthorFactory;
 
 public class ModelFactoryManufacture implements IModelFactoryManufacture {
@@ -17,6 +18,9 @@ public class ModelFactoryManufacture implements IModelFactoryManufacture {
                 break;
             case("AuthorFactory"):
                 factory = new AuthorFactory();
+                break;
+            case("LibraryFactory"):
+                factory = new LibraryFactory();
                 break;
         }
         return type.cast(factory);
