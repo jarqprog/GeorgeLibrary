@@ -1,18 +1,20 @@
 package dao;
 
+import factory.IDaoFactory;
 import managers.databaseManagers.DatabaseManager;
 import managers.databaseManagers.JDBCProcessManager;
 import models.Model;
+import models.book.BookDao;
 
 import java.sql.Connection;
 
-public class DaoFactory {
+public class DaoFactory implements IDaoFactory {
 
     private DatabaseManager dbManager;
     private JDBCProcessManager processManager;
     private Connection connection;
 
-    public static DaoFactory getInstance(DatabaseManager dbManager, JDBCProcessManager processManager) {
+    public static IDaoFactory getInstance(DatabaseManager dbManager, JDBCProcessManager processManager) {
         return new DaoFactory(dbManager, processManager);
     }
 

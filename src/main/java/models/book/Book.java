@@ -1,6 +1,10 @@
-package models;
+package models.book;
 
-public abstract class Book implements Model {
+import models.worker.Author;
+import models.Model;
+import models.worker.Publisher;
+
+public abstract class Book implements Model, IBook {
 
     private long isbn;
     private Author author;
@@ -10,7 +14,7 @@ public abstract class Book implements Model {
     private float price;
 
 
-    public Book(long isbn, Author author, String title, Publisher publisher,
+    Book(long isbn, Author author, String title, Publisher publisher,
                 int publicationYear, float price) {
         this.isbn = isbn;
         this.author = author;
@@ -18,30 +22,6 @@ public abstract class Book implements Model {
         this.publisher = publisher;
         this.publicationYear = publicationYear;
         this.price = price;
-    }
-
-    public long getIsbn() {
-        return isbn;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Publisher getPublisher() {
-        return publisher;
-    }
-
-    public int getPublicationYear() {
-        return publicationYear;
-    }
-
-    public float getPrice() {
-        return price;
     }
 
     @Override

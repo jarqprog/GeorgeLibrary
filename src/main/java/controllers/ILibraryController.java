@@ -1,6 +1,6 @@
 package controllers;
 
-public interface IMainController {
+public interface ILibraryController {
 
     void runMenu();
 

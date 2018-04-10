@@ -1,13 +1,20 @@
 package controllers;
 
-import dao.BookDao;
+import factory.ModelFactoryManufacture;
+import factory.IDaoFactory;
+import factory.IModelFactoryManufacture;
+import models.book.BookDao;
 import dao.DaoFactory;
 import dao.GetableDao;
 import enums.DbDriver;
 import enums.DbFilePath;
 import enums.DbUrl;
 import managers.databaseManagers.*;
-import models.FakeBook;
+import models.book.FakeBook;
+import models.library.ILibrary;
+import models.library.LibraryFactory;
+import views.ILibraryView;
+import views.LibraryView;
 import views.RootView;
 
 import java.io.IOException;
@@ -16,7 +23,7 @@ public class Root {
 
     private RootView view;
     private DatabaseManager dbManager;
-    private DaoFactory daoFactory;
+    private IDaoFactory daoFactory;
 
     private Root() {
         view = new RootView();
@@ -46,36 +53,52 @@ public class Root {
         final DbUrl url = DbUrl.SQLITE;
         final DbDriver driver = DbDriver.SQLITE;
         final DbFilePath dbFilePath = DbFilePath.SQLITE_DATABASE;
+
         DatabaseConfig dbConfig = SQLConfig.createSQLiteConfiguration(url, driver, dbFilePath);
+
         try {
             manager = SQLManager.getSQLiteManager(dbConfig);
+
         } catch(ClassNotFoundException notUsed) {
+
             String userChoice = view
                     .getUserInput("Database problem occurred, create new database? (type 'y' to approve) ")
                     .toLowerCase();
+
             if(userChoice.equals("y")) {
-                try {
-                    final DbFilePath dbSetupScript = DbFilePath.DB_SETUP_SCRIPT;
-                    DatabaseCreator databaseCreator = SQLiteDbCreator
-                            .getInstance(dbConfig, dbSetupScript);
-                    manager = databaseCreator.createDatabase();
-                } catch (IOException | ClassNotFoundException e) {
-                    view.displayMessage("Can't create database, please contact with help desk.");
-                    System.exit(0);
-                }
+                manager = createDatabaseManagerForRecoveredDatabase(dbConfig);
             }
+
             view.displayMessage("Can't run application without database - closing the program..");
             System.exit(0);
         }
         return manager;
     }
 
+    private DatabaseManager createDatabaseManagerForRecoveredDatabase(DatabaseConfig dbConfig) {
+        // recover database using sql script file
+        try {
+            final DbFilePath dbSetupSQLScript = DbFilePath.DB_SETUP_SCRIPT;
+
+            DatabaseCreator databaseCreator = SQLiteDbCreator
+                    .getInstance(dbConfig, dbSetupSQLScript );
+
+            return databaseCreator.createDatabase();
+
+        } catch (IOException | ClassNotFoundException notUsed) {
+            view.displayMessage("Can't create database, please contact with help desk.");
+            System.exit(0);
+            return null;
+        }
+    }
+
     private void initializeController() {
 
-//        IMainController mainController = MainController.getInstance(new MainView(),
-//                DaoFactory.getDAO(TrainerDAO.class),
-//                DaoFactory.getDAO(PokemonDAO.class),
-//                new PokemonAreaCalc());
-//        mainController.executeProgram();
+        IModelFactoryManufacture modelFactory = new ModelFactoryManufacture();
+        ILibrary library = modelFactory.create(LibraryFactory.class).build();
+        ILibraryView view = new LibraryView();
+        ILibraryController controller = LibraryController
+                .getInstance(view, library, daoFactory, modelFactory);
+
     }
 }
