@@ -4,23 +4,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLManager implements DatabaseManager {
+public class SQLiteManager implements DatabaseManager {
 
     private String url;
     private Connection connection;
 
     public static DatabaseManager getSQLiteManager(DatabaseConfig dbConfig) {
-        return new SQLManager(dbConfig);
+        return new SQLiteManager(dbConfig);
     }
 
-    private SQLManager(DatabaseConfig dbConfig) {
+    private SQLiteManager(DatabaseConfig dbConfig) {
         this.url = dbConfig.getUrl();
     }
 
     @Override
     public Connection getConnection() {
         try {
-            if( isConnectionValid(connection) ) {
+            if(! isConnectionValid(connection) ) {
                 connection = DriverManager.getConnection(url);
             }
         } catch (SQLException e) {

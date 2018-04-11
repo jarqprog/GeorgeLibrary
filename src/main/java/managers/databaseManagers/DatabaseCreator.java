@@ -1,8 +1,8 @@
 package managers.databaseManagers;
 
-import java.io.IOException;
+import exceptions.DatabaseCreationFailure;
 
 public interface DatabaseCreator {
 
-    DatabaseManager createDatabase() throws IOException, ClassNotFoundException;
+    void createDatabase() throws DatabaseCreationFailure;
 }

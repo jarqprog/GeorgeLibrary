@@ -2,26 +2,23 @@ package managers.databaseManagers;
 
 import enums.DbDriver;
 import enums.DbFilePath;
-import enums.DbName;
 import enums.DbUrl;
 
-public class SQLConfig implements DatabaseConfig {
+public class SQLiteConfig implements DatabaseConfig {
 
     private final String DRIVER;
     private final String URL;
     private final String FILEPATH;
-    private final String DB_NAME;
 
     // get configuration object via static method - different for varied database engines
-    public static SQLConfig createSQLiteConfiguration(DbUrl URL, DbDriver DRIVER, DbFilePath FILEPATH, DbName DB_NAME) {
-        return new SQLConfig(URL, DRIVER, FILEPATH, DB_NAME);
+    public static SQLiteConfig createSQLiteConfiguration(DbUrl URL, DbDriver DRIVER, DbFilePath FILEPATH) {
+        return new SQLiteConfig(URL, DRIVER, FILEPATH);
     }
 
-    private SQLConfig(DbUrl URL, DbDriver DRIVER, DbFilePath FILEPATH, DbName DB_NAME) {
+    private SQLiteConfig(DbUrl URL, DbDriver DRIVER, DbFilePath FILEPATH) {
         this.URL = URL.getUrl();
         this.DRIVER = DRIVER.getDriver();
         this.FILEPATH = FILEPATH.getPath();
-        this.DB_NAME = DB_NAME.getName();
     }
 
     public String getUrl() {
@@ -34,9 +31,5 @@ public class SQLConfig implements DatabaseConfig {
 
     public String getFilepath() {
         return FILEPATH;
-    }
-
-    public String getDbName() {
-        return DB_NAME;
     }
 }
