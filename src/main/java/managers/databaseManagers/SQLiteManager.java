@@ -6,17 +6,15 @@ import java.sql.SQLException;
 
 public class SQLManager implements DatabaseManager {
 
-    private Connection connection;
     private String url;
+    private Connection connection;
 
-    public static DatabaseManager getSQLiteManager(DatabaseConfig dbConfig) throws ClassNotFoundException {
+    public static DatabaseManager getSQLiteManager(DatabaseConfig dbConfig) {
         return new SQLManager(dbConfig);
     }
 
-    private SQLManager(DatabaseConfig dbConfig) throws ClassNotFoundException {
-        String driver = dbConfig.getDRIVER();
-        this.url = dbConfig.getURL();
-        Class.forName(driver);
+    private SQLManager(DatabaseConfig dbConfig) {
+        this.url = dbConfig.getUrl();
     }
 
     @Override

@@ -4,7 +4,7 @@ import models.worker.Author;
 import models.worker.Publisher;
 
 public class PaperBook extends Book {
-    PaperBook(long isbn, Author author, String title, Publisher publisher,
+    PaperBook(String isbn, Author author, String title, Publisher publisher,
               int publicationYear, float price) {
 
         super(isbn, author, title, publisher, publicationYear, price);

@@ -1,15 +1,18 @@
 package models.book;
 
-import dao.GetableDao;
+import dao.IDao;
 import managers.databaseManagers.JDBCProcessManager;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import java.util.Collections;
 import java.util.List;
 
-public class BookDao implements GetableDao<Book> {
+public class BookDao implements IDao<Book> {
 
     private Connection connection;
     private JDBCProcessManager processManager;
@@ -28,8 +31,20 @@ public class BookDao implements GetableDao<Book> {
 
     @Override
     public List<Book> getAllModels() {
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("Select * from Books;");
+            while (rs.next()) {
+                System.out.println(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
         return new ArrayList<>(Collections.singletonList(new FakeBook(
-                123L, null, "zielone wzgorze",
+                "12321421", null, "zielone wzgorze",
                 null, 1997, 10)));
     }
 }

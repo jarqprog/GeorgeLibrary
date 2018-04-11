@@ -24,15 +24,14 @@ public class SQLiteDbCreator implements DatabaseCreator {
         this.setupScript = setupScript.getPath();
     }
 
-    public DatabaseManager createDatabase() throws IOException, ClassNotFoundException {
+    public DatabaseManager createDatabase() throws IOException, ClassNotFoundException, SQLException {
         DatabaseManager manager = createManager();
         updateDatabaseWithSqlFile(manager);
         return manager;
     }
 
 
-
-    private DatabaseManager createManager() throws IOException, ClassNotFoundException {
+    private DatabaseManager createManager() throws IOException, ClassNotFoundException, SQLException {
         File f = new File(databaseConfig.getFILEPATH());
         f.createNewFile();  // just to create new file for database
         return SQLManager.getSQLiteManager(databaseConfig);
@@ -40,6 +39,12 @@ public class SQLiteDbCreator implements DatabaseCreator {
 
     private void updateDatabaseWithSqlFile(DatabaseManager databaseManager) throws FileNotFoundException {
         Connection connection = databaseManager.getConnection();
+        try {
+            boolean isValid = (! connection.isClosed() && ! (connection == null));
+            System.out.println(String.valueOf(isValid));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         String delimiter = ";";
         Scanner scanner;
         File sqlFile = new File(setupScript);
