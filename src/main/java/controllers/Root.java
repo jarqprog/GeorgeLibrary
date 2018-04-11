@@ -1,5 +1,7 @@
 package controllers;
 
+import enums.DbTables;
+import exceptions.DatabaseCreationFailure;
 import factory.ModelFactoryManufacture;
 import factory.IDaoFactory;
 import factory.IModelFactoryManufacture;
@@ -8,21 +10,28 @@ import enums.DbDriver;
 import enums.DbFilePath;
 import enums.DbUrl;
 import managers.databaseManagers.*;
-import models.library.ILibrary;
-import models.library.LibraryFactory;
 import views.ILibraryView;
 import views.LibraryView;
 import views.RootView;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Root {
 
+    private final DatabaseConfig databaseConfig;
     private RootView view;
     private ILibraryController libraryController;
+    private DatabaseManager databaseManager;
 
     private Root() {
         view = new RootView();
+        databaseConfig = SQLiteConfig.createSQLiteConfiguration(
+                            DbUrl.SQLITE,
+                            DbDriver.SQLITE,
+                            DbFilePath.SQLITE_DATABASE);
+        databaseManager = createSQLiteManager();
         libraryController = createLibraryController();
     }
 
@@ -35,59 +44,51 @@ public class Root {
     }
 
     private ILibraryController createLibraryController() {
+
         ILibraryView view = new LibraryView();
         IModelFactoryManufacture modelFactoryManufacture = new ModelFactoryManufacture();
-
-        ILibrary library = modelFactoryManufacture.create(LibraryFactory.class).build();
-        DatabaseManager databaseManager = createDatabaseManager();
         JDBCProcessManager processManager = SQLProcessManager.getInstance();
         IDaoFactory daoFactory = DaoFactory.getInstance(databaseManager, processManager);
 
-        return LibraryController.getInstance(view, library, daoFactory, modelFactoryManufacture);
+        return LibraryController.getInstance(view, daoFactory, modelFactoryManufacture);
     }
 
-    private DatabaseManager createDatabaseManager() {
-        // enums to setup database
-        DatabaseManager manager = null;
-        final DbUrl url = DbUrl.SQLITE;
-        final DbDriver driver = DbDriver.SQLITE;
-        final DbFilePath dbFilePath = DbFilePath.SQLITE_DATABASE;
+    private DatabaseManager createSQLiteManager() {
 
-        DatabaseConfig dbConfig = SQLConfig.createSQLiteConfiguration(url, driver, dbFilePath);
-
-        try {
-            manager = SQLManager.getSQLiteManager(dbConfig);
-
-        } catch(ClassNotFoundException notUsed) {
-
-            String userChoice = view
-                    .getUserInput("Database problem occurred, create new database? (type 'y' to approve) ")
-                    .toLowerCase();
-
-            if(userChoice.equals("y")) {
-                manager = createDatabaseManagerForRecoveredDatabase(dbConfig);
+        if (! isDatabaseValid() ) {
+            try {
+                executeSQLiteCreationProcess();
+            } catch (DatabaseCreationFailure e) {
+                e.printStackTrace();
+                view.displayMessage(e.getMessage());
+                view.displayMessage("Can't run application without database - closing the program..");
+                System.exit(0);
             }
-
-            view.displayMessage("Can't run application without database - closing the program..");
-            System.exit(0);
         }
-        return manager;
+        return SQLiteManager.getSQLiteManager(databaseConfig);
     }
 
-    private DatabaseManager createDatabaseManagerForRecoveredDatabase(DatabaseConfig dbConfig) {
-        // recover database using sql script file
-        try {
-            final DbFilePath dbSetupSQLScript = DbFilePath.DB_SETUP_SCRIPT;
+    private boolean isDatabaseValid() {
 
-            DatabaseCreator databaseCreator = SQLiteDbCreator
-                    .getInstance(dbConfig, dbSetupSQLScript );
+        List<String> databaseTablesToCheck = Arrays
+                .stream(DbTables.values())
+                .map(DbTables::getTable)
+                .collect(Collectors.toList());
 
-            return databaseCreator.createDatabase();
+        DatabaseValidator database = SQLiteValidator.getInstance(databaseConfig, databaseTablesToCheck);
+        return database.isValid();
+    }
 
-        } catch (IOException | ClassNotFoundException notUsed) {
-            view.displayMessage("Can't create database, please contact with help desk.");
-            System.exit(0);
-            return null;
+    private void executeSQLiteCreationProcess() throws DatabaseCreationFailure {
+        String userChoice = view
+                .getUserInput("Database problem occurred, create new database? (type 'y' to approve) ")
+                .toLowerCase();
+
+        if (userChoice.equals("y") ) {
+            SQLiteCreator.getInstance(databaseConfig, DbFilePath.DB_SETUP_SCRIPT).createDatabase();
+            System.out.println("tworze baze danych");
+        } else {
+            throw new DatabaseCreationFailure();
         }
     }
 }

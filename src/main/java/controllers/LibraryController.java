@@ -5,6 +5,7 @@ import factory.IModelFactoryManufacture;
 import models.book.Book;
 import models.book.BookDao;
 import models.library.ILibrary;
+import models.library.LibraryFactory;
 import views.ILibraryView;
 
 import java.util.List;
@@ -18,22 +19,22 @@ public class LibraryController implements ILibraryController {
 
     public static ILibraryController getInstance(
             ILibraryView view,
-            ILibrary library,
             IDaoFactory daoFactory,
             IModelFactoryManufacture modelFactoryManufacture) {
 
-        return new LibraryController(view, library, daoFactory, modelFactoryManufacture);
+        return new LibraryController(view, daoFactory, modelFactoryManufacture);
     }
 
     private LibraryController(
-            ILibraryView view, ILibrary library,
+            ILibraryView view,
             IDaoFactory daoFactory,
             IModelFactoryManufacture modelFactoryManufacture) {
 
         this.view = view;
-        this.library = library;
+        this.library = modelFactoryManufacture.create(LibraryFactory.class).build();
         this.daoFactory = daoFactory;
         this.modelFactoryManufacture = modelFactoryManufacture;
+
     }
 
     @Override
