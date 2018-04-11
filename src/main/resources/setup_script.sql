@@ -1,4 +1,3 @@
-BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS `Books` (
 	`ISBN`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	`author`	INTEGER NOT NULL,
@@ -66,4 +65,3 @@ INSERT OR IGNORE INTO `Authors` (author_id,name,surname,birth_year,city,country)
 INSERT OR IGNORE INTO `Authors` (author_id,name,surname,birth_year,city,country) VALUES (6,'Atwood','Margaret',1939,'Ottawa','Canada');
 INSERT OR IGNORE INTO `Authors` (author_id,name,surname,birth_year,city,country) VALUES (7,'Lawson','Nigella',1960,'Wandsworth','UK');
 INSERT OR IGNORE INTO `Authors` (author_id,name,surname,birth_year,city,country) VALUES (8,'Mark','Twain',1835,'Florida','USA');
-COMMIT;
