@@ -1,9 +1,9 @@
 package factory;
 
-import dao.GetableDao;
+import dao.IDao;
 import models.Model;
 
 public interface IDaoFactory {
 
-    <M extends Model, T extends GetableDao<M>> T getDAO(Class<T> daoType);
+    <M extends Model, T extends IDao<M>> T getDAO(Class<T> daoType);
 }
