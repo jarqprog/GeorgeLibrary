@@ -24,14 +24,14 @@ public class DaoFactory implements IDaoFactory {
         connection = dbManager.getConnection();
     }
 
-    public <M extends Model, T extends GetableDao<M>> T getDAO(Class<T> daoType) {
+    public <M extends Model, T extends IDao<M>> T getDAO(Class<T> daoType) {
 
         if( ! dbManager.isConnectionValid(connection) ) {
             connection = dbManager.getConnection();
         }
 
         String daoName = daoType.getSimpleName();
-        GetableDao dao = null;
+        IDao dao = null;
 
         switch (daoName) {
             case ("BookDao"):
