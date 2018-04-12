@@ -23,28 +23,17 @@ public class BookDao implements IDao<Book> {
     }
 
     @Override
-    public Book getModelById(int id) {
+    public Book getModelById(String id) {
         return new FakeBook(
-                "12321421", null, "zielone wzgorze",
+                12321421, null, "zielone wzgorze",
                 null, 1997, 10);
     }
 
     @Override
     public List<Book> getAllModels() {
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("Select * from Books;");
-            while (rs.next()) {
-                System.out.println(rs.getString(1));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
+        
         return new ArrayList<>(Collections.singletonList(new FakeBook(
-                "12321421", null, "zielone wzgorze",
+                12321421, null, "zielone wzgorze",
                 null, 1997, 10)));
     }
 }
