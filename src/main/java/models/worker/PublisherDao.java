@@ -11,74 +11,69 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthorDao implements IDao <Author> {
+public class PublisherDao implements IDao<Publisher> {
 
     private Connection connection;
     private JDBCProcessManager processManager;
     private final String table;
 
-    public AuthorDao(Connection connection, JDBCProcessManager processManager) {
+    public PublisherDao(Connection connection, JDBCProcessManager processManager) {
         this.connection = connection;
         this.processManager = processManager;
-        this.table = DbTables.AUTHORS.getTable();
+        this.table = DbTables.PUBLISHERS.getTable();
     }
 
     @Override
-    public Author getModelById(String id) {
+    public Publisher getModelById(String id) {
 
-        final String query = String.format("SELECT * FROM %s WHERE author_id=?", table);
-        int authorId = Integer.parseInt(id);
+
+        final String query = String.format("SELECT * FROM %s WHERE publisher_id=?", table);
 
         try ( PreparedStatement preparedStatement = connection.prepareStatement(query) ) {
-            preparedStatement.setInt(1, authorId);
+            preparedStatement.setString(1, id);
             ResultSet rs = preparedStatement.executeQuery();
 
             String[] data = processManager.getObjectData(rs);
 
-            return extractAuthor(data);
+            return extractPublisher(data);
 
         } catch (SQLException | NumberFormatException e) {
             e.printStackTrace();
 
-            return new FakeAuthor();
+            return null;  // fake publisher?
         }
     }
 
     @Override
-    public List<Author> getAllModels() {
-        List<Author> authors = new ArrayList<>();
+    public List<Publisher> getAllModels() {
+        List<Publisher> publishers= new ArrayList<>();
         final String query = String.format("SELECT * FROM %s", table);
 
         try ( PreparedStatement preparedStatement = connection.prepareStatement(query) ) {
             ResultSet rs = preparedStatement.executeQuery();
             List<String[]> dataCollection = processManager.getObjectsDataCollection(rs);
             for(String[] data : dataCollection) {
-                authors.add(extractAuthor(data));
+                publishers.add(extractPublisher(data));
             }
 
         } catch (SQLException | NumberFormatException e) {
             e.printStackTrace();
         }
 
-        return authors;
+        return publishers;
     }
 
-    private Author extractAuthor(String[] data) throws NumberFormatException {
+    private Publisher extractPublisher(String[] data) throws NumberFormatException {
         final int idIndex = 0;
         final int nameIndex = 1;
-        final int surnameIndex = 2;
-        final int birthYearIndex = 3;
-        final int cityIndex = 4;
-        final int countryIndex = 5;
+        final int cityIndex = 2;
+        final int countryIndex = 3;
 
-        int id = Integer.parseInt(data[idIndex]);
+        String id = data[idIndex];
         String name = data[nameIndex];
-        String surname = data[surnameIndex];
-        int birthYear = Integer.parseInt(data[birthYearIndex]);
         String city = data[cityIndex];
         String country = data[countryIndex];
 
-        return new Author(id, name, surname, birthYear, city, country);
+        return new Publisher(id, name, city, country);
     }
-
 }

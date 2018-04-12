@@ -31,7 +31,7 @@ public class BookDao implements IDao<Book> {
 
     @Override
     public List<Book> getAllModels() {
-        
+
         return new ArrayList<>(Collections.singletonList(new FakeBook(
                 12321421, null, "zielone wzgorze",
                 null, 1997, 10)));
