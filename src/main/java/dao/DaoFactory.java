@@ -5,6 +5,7 @@ import managers.databaseManagers.DatabaseManager;
 import managers.databaseManagers.JDBCProcessManager;
 import models.Model;
 import models.book.BookDao;
+import models.worker.AuthorDao;
 
 import java.sql.Connection;
 
@@ -36,6 +37,9 @@ public class DaoFactory implements IDaoFactory {
         switch (daoName) {
             case ("BookDao"):
                 dao = new BookDao(connection, processManager);
+                break;
+            case ("AuthorDao"):
+                dao = new AuthorDao(connection, processManager);
                 break;
         }
         return daoType.cast(dao);
