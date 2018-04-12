@@ -12,4 +12,13 @@ public class Author extends Worker {
         this.surname = surname;
         this.birthYear = birthYear;
     }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "authorId=" + authorId +
+                ", surname='" + surname + '\'' +
+                ", birthYear=" + birthYear +
+                '}';
+    }
 }

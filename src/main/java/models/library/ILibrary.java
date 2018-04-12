@@ -8,4 +8,6 @@ public interface ILibrary {
 
     void setBooks(List<Book> books);
     List<Book> getBooks();
+    int getId();
+
 }

@@ -8,7 +8,7 @@ public class BookFactory implements IModelFactory, IBookFactory {
 
 
     @Override
-    public Book createEBook(String isbn, Author author, String title,
+    public Book createEBook(long isbn, Author author, String title,
                             Publisher publisher, int publicationYear,
                             float price) {
 
@@ -16,7 +16,7 @@ public class BookFactory implements IModelFactory, IBookFactory {
     }
 
     @Override
-    public Book createPaperBook(String isbn, Author author, String title,
+    public Book createPaperBook(long isbn, Author author, String title,
                                 Publisher publisher, int publicationYear,
                                 float price) {
 

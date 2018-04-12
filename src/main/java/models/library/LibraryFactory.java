@@ -4,8 +4,8 @@ import factory.IModelFactory;
 
 public class LibraryFactory implements IModelFactory {
 
-    public ILibrary build() {
-        return new Library();
+    public ILibrary build(int id) {
+        return new Library(id);
     }
 
 }
