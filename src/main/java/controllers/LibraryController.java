@@ -1,11 +1,15 @@
 package controllers;
 
+import dao.DaoFactory;
+import dao.IDao;
 import factory.IDaoFactory;
 import factory.IModelFactoryManufacture;
 import models.book.Book;
 import models.book.BookDao;
 import models.library.ILibrary;
 import models.library.LibraryFactory;
+import models.worker.Author;
+import models.worker.AuthorDao;
 import views.ILibraryView;
 
 import java.util.List;
@@ -31,7 +35,7 @@ public class LibraryController implements ILibraryController {
             IModelFactoryManufacture modelFactoryManufacture) {
 
         this.view = view;
-        this.library = modelFactoryManufacture.create(LibraryFactory.class).build();
+        this.library = modelFactoryManufacture.create(LibraryFactory.class).build(1);
         this.daoFactory = daoFactory;
         this.modelFactoryManufacture = modelFactoryManufacture;
 
@@ -44,9 +48,19 @@ public class LibraryController implements ILibraryController {
 
         library.setBooks(books);
         showBooks(library.getBooks());
+
+        IDao<Author> authorDao = daoFactory.getDAO(AuthorDao.class);
+        List<Author> authors = authorDao.getAllModels();
+        showAuthors(authors);
+
+        view.displayMessage(authorDao.getModelById("1").toString());
     }
 
     private void showBooks(List<Book> books) {
         books.forEach(b -> view.displayMessage(b.toString()));
+    }
+
+    private void showAuthors(List<Author> authors) {
+        authors.forEach(a -> view.displayMessage(a.toString()));
     }
 }
