@@ -1,6 +1,6 @@
 package controllers;
 
-import dao.ISqlDaoFactory;
+import dao.IDaoFactory;
 import factory.IModelFactoryManufacture;
 import models.repository.IRepository;
 import models.repository.RepositoryManufacture;
@@ -10,12 +10,12 @@ public class RepositoryController implements IRepositoryController {
 
     private IRepositoryView view;
     private IRepository library;
-    private ISqlDaoFactory daoFactory;
+    private IDaoFactory daoFactory;
     private IModelFactoryManufacture modelFactoryManufacture;
 
     public static IRepositoryController getInstance(
             IRepositoryView view,
-            ISqlDaoFactory daoFactory,
+            IDaoFactory daoFactory,
             IModelFactoryManufacture modelFactoryManufacture) {
 
         return new RepositoryController(view, daoFactory, modelFactoryManufacture);
@@ -23,7 +23,7 @@ public class RepositoryController implements IRepositoryController {
 
     private RepositoryController(
             IRepositoryView view,
-            ISqlDaoFactory daoFactory,
+            IDaoFactory daoFactory,
             IModelFactoryManufacture modelFactoryManufacture) {
 
         this.view = view;

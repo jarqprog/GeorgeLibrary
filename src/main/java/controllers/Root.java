@@ -1,10 +1,9 @@
 package controllers;
 
-import dao.ISqlDaoFactory;
+import dao.IDaoFactory;
 import enums.DbTables;
 import exceptions.DatabaseCreationFailure;
 import factory.ModelFactoryManufacture;
-import factory.IDaoFactory;
 import factory.IModelFactoryManufacture;
 import dao.SqlDaoFactory;
 import enums.DbDriver;
@@ -49,7 +48,7 @@ public class Root {
         IRepositoryView view = new RepositoryView();
         IModelFactoryManufacture modelFactoryManufacture = new ModelFactoryManufacture();
         JDBCProcessManager processManager = SQLProcessManager.getInstance();
-        ISqlDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, processManager);
+        IDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, processManager);
 
         return RepositoryController.getInstance(view, daoFactory, modelFactoryManufacture);
     }
