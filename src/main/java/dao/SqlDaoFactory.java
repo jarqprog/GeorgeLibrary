@@ -3,9 +3,6 @@ package dao;
 import factory.IDaoFactory;
 import managers.databaseManagers.DatabaseManager;
 import managers.databaseManagers.JDBCProcessManager;
-import models.Model;
-import models.book.BookDao;
-import models.worker.AuthorDao;
 
 import java.sql.Connection;
 
@@ -25,7 +22,7 @@ public class DaoFactory implements IDaoFactory {
         connection = dbManager.getConnection();
     }
 
-    public <M extends Model, T extends IDao<M>> T getDAO(Class<T> daoType) {
+    public <M, T extends IDao<M>> T getDAO(Class<T> daoType) {
 
         if( ! dbManager.isConnectionValid(connection) ) {
             connection = dbManager.getConnection();

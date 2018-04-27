@@ -1,28 +1,25 @@
 package controllers;
 
-import dao.DaoFactory;
 import dao.IDao;
 import factory.IDaoFactory;
 import factory.IModelFactoryManufacture;
-import models.book.Book;
-import models.book.BookDao;
-import models.library.ILibrary;
-import models.library.LibraryFactory;
+import models.repository.IRepository;
+import models.repository.RepositoryManufacture;
 import models.worker.Author;
 import models.worker.AuthorDao;
-import views.ILibraryView;
+import views.IRepositoryView;
 
 import java.util.List;
 
 public class LibraryController implements ILibraryController {
 
-    private ILibraryView view;
-    private ILibrary library;
+    private IRepositoryView view;
+    private IRepository library;
     private IDaoFactory daoFactory;
     private IModelFactoryManufacture modelFactoryManufacture;
 
     public static ILibraryController getInstance(
-            ILibraryView view,
+            IRepositoryView view,
             IDaoFactory daoFactory,
             IModelFactoryManufacture modelFactoryManufacture) {
 
@@ -30,12 +27,12 @@ public class LibraryController implements ILibraryController {
     }
 
     private LibraryController(
-            ILibraryView view,
+            IRepositoryView view,
             IDaoFactory daoFactory,
             IModelFactoryManufacture modelFactoryManufacture) {
 
         this.view = view;
-        this.library = modelFactoryManufacture.create(LibraryFactory.class).build(1);
+        this.library = modelFactoryManufacture.create(RepositoryManufacture.class).build(1);
         this.daoFactory = daoFactory;
         this.modelFactoryManufacture = modelFactoryManufacture;
 
