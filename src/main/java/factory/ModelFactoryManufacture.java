@@ -1,8 +1,7 @@
 package factory;
 
-import models.book.BookFactory;
-import models.library.LibraryFactory;
-import models.worker.AuthorFactory;
+import models.text.TextManufacture;
+import models.repository.RepositoryManufacture;
 
 public class ModelFactoryManufacture implements IModelFactoryManufacture {
 
@@ -13,14 +12,11 @@ public class ModelFactoryManufacture implements IModelFactoryManufacture {
         IModelFactory factory = null;
 
         switch(factoryName) {
-            case("BookFactory"):
-                factory = new BookFactory();
+            case("TextManufacture"):
+                factory = new TextManufacture();
                 break;
-            case("AuthorFactory"):
-                factory = new AuthorFactory();
-                break;
-            case("LibraryFactory"):
-                factory = new LibraryFactory();
+            case("RepositoryManufacture"):
+                factory = new RepositoryManufacture();
                 break;
         }
         return type.cast(factory);

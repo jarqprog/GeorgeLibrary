@@ -1,6 +1,6 @@
 import controllers.Root;
 
-public class Application {
+public class App {
 
     public static void main(String[] args) {
         Root.getInstance().runApp();
