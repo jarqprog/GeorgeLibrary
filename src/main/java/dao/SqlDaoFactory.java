@@ -1,42 +1,43 @@
 package dao;
 
-import factory.IDaoFactory;
 import managers.databaseManagers.DatabaseManager;
 import managers.databaseManagers.JDBCProcessManager;
+import models.human.author.SQLiteDaoAuthor;
+import models.human.user.SQLiteDaoUser;
 
 import java.sql.Connection;
 
-public class DaoFactory implements IDaoFactory {
+public class SqlDaoFactory implements IDaoFactory {
 
     private DatabaseManager dbManager;
     private JDBCProcessManager processManager;
     private Connection connection;
 
     public static IDaoFactory getInstance(DatabaseManager dbManager, JDBCProcessManager processManager) {
-        return new DaoFactory(dbManager, processManager);
+        return new SqlDaoFactory(dbManager, processManager);
     }
 
-    private DaoFactory(DatabaseManager dbManager, JDBCProcessManager processManager) {
+    private SqlDaoFactory(DatabaseManager dbManager, JDBCProcessManager processManager) {
         this.dbManager = dbManager;
         this.processManager = processManager;
         connection = dbManager.getConnection();
     }
 
-    public <M, T extends IDao<M>> T getDAO(Class<T> daoType) {
+    public <T extends Dao> T createDAO(Class<T> daoType) {
 
         if( ! dbManager.isConnectionValid(connection) ) {
             connection = dbManager.getConnection();
         }
 
         String daoName = daoType.getSimpleName();
-        IDao dao = null;
+        SqlDao dao = null;
 
         switch (daoName) {
             case ("BookDao"):
-                dao = new BookDao(connection, processManager);
+                dao = new SQLiteDaoAuthor(connection, processManager);
                 break;
             case ("AuthorDao"):
-                dao = new AuthorDao(connection, processManager);
+                dao = new SQLiteDaoUser(connection, processManager);
                 break;
         }
         return daoType.cast(dao);
