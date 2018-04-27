@@ -1,6 +1,6 @@
 package views;
 
-public class LibraryView extends View implements ILibraryView {
+public class RepositoryView extends View implements IRepositoryView {
 
 
 }
