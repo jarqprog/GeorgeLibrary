@@ -1,6 +1,6 @@
 package controllers;
 
-public interface ILibraryController {
+public interface IRepositoryController {
 
     void runMenu();
 

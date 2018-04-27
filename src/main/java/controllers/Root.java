@@ -1,17 +1,18 @@
 package controllers;
 
+import dao.ISqlDaoFactory;
 import enums.DbTables;
 import exceptions.DatabaseCreationFailure;
 import factory.ModelFactoryManufacture;
 import factory.IDaoFactory;
 import factory.IModelFactoryManufacture;
-import dao.DaoFactory;
+import dao.SqlDaoFactory;
 import enums.DbDriver;
 import enums.DbFilePath;
 import enums.DbUrl;
 import managers.databaseManagers.*;
-import views.ILibraryView;
-import views.LibraryView;
+import views.IRepositoryView;
+import views.RepositoryView;
 import views.RootView;
 
 import java.util.Arrays;
@@ -22,7 +23,7 @@ public class Root {
 
     private final DatabaseConfig databaseConfig;
     private RootView view;
-    private ILibraryController libraryController;
+    private IRepositoryController libraryController;
     private DatabaseManager databaseManager;
 
     private Root() {
@@ -43,14 +44,14 @@ public class Root {
         libraryController.runMenu();
     }
 
-    private ILibraryController createLibraryController() {
+    private IRepositoryController createLibraryController() {
 
-        ILibraryView view = new LibraryView();
+        IRepositoryView view = new RepositoryView();
         IModelFactoryManufacture modelFactoryManufacture = new ModelFactoryManufacture();
         JDBCProcessManager processManager = SQLProcessManager.getInstance();
-        IDaoFactory daoFactory = DaoFactory.getInstance(databaseManager, processManager);
+        ISqlDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, processManager);
 
-        return LibraryController.getInstance(view, daoFactory, modelFactoryManufacture);
+        return RepositoryController.getInstance(view, daoFactory, modelFactoryManufacture);
     }
 
     private DatabaseManager createSQLiteManager() {
