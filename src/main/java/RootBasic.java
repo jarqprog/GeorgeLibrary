@@ -1,31 +1,29 @@
-package controllers;
-
+import controllers.IRepositoryController;
+import controllers.RepositoryController;
 import dao.IDaoFactory;
-import enums.DbTables;
-import exceptions.DatabaseCreationFailure;
-import factory.ModelFactoryManufacture;
-import factory.IModelFactoryManufacture;
 import dao.SqlDaoFactory;
 import enums.DbDriver;
 import enums.DbFilePath;
+import enums.DbTables;
 import enums.DbUrl;
+import exceptions.DatabaseCreationFailure;
 import managers.databaseManagers.*;
-import views.IRepositoryView;
-import views.RepositoryView;
-import views.RootView;
+import terminalViews.IRepositoryView;
+import terminalViews.RepositoryView;
+import terminalViews.RootView;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Root {
+public class RootBasic implements IClient {
 
     private final DatabaseConfig databaseConfig;
     private RootView view;
     private IRepositoryController libraryController;
     private DatabaseManager databaseManager;
 
-    private Root() {
+    private RootBasic() {
         view = new RootView();
         databaseConfig = SQLiteConfig.createSQLiteConfiguration(
                             DbUrl.SQLITE,
@@ -35,8 +33,8 @@ public class Root {
         libraryController = createLibraryController();
     }
 
-    public static Root getInstance() {
-        return new Root();
+    public static RootBasic getInstance() {
+        return new RootBasic();
     }
 
     public void runApp() {
@@ -46,11 +44,10 @@ public class Root {
     private IRepositoryController createLibraryController() {
 
         IRepositoryView view = new RepositoryView();
-        IModelFactoryManufacture modelFactoryManufacture = new ModelFactoryManufacture();
         JDBCProcessManager processManager = SQLProcessManager.getInstance();
         IDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, processManager);
 
-        return RepositoryController.getInstance(view, daoFactory, modelFactoryManufacture);
+        return RepositoryController.getInstance(view, daoFactory);
     }
 
     private DatabaseManager createSQLiteManager() {
