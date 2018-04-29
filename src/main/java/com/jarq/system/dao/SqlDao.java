@@ -14,11 +14,11 @@ import java.sql.Connection;
         this.processManager = processManager;
     }
 
-    public Connection getConnection() {
+    protected Connection getConnection() {
         return connection;
     }
 
-    public JDBCProcessManager getProcessManager() {
+    protected JDBCProcessManager getProcessManager() {
         return processManager;
     }
 }

@@ -22,7 +22,7 @@ INSERT OR IGNORE INTO `Books` (ISBN,author,title,publisher,publication_year,pric
 INSERT OR IGNORE INTO `Books` (ISBN,author,title,publisher,publication_year,price,type) VALUES (9781784871581,8,'The Adventures of Tom Sawyer','5k4',2016,11.6,2);
 INSERT OR IGNORE INTO `Books` (ISBN,author,title,publisher,publication_year,price,type) VALUES (9781784871727,3,'Pride and Prejudice','5k4',2016,11.6,2);
 INSERT OR IGNORE INTO `Books` (ISBN,author,title,publisher,publication_year,price,type) VALUES (9781784871741,3,'Sense and Sensibility','5k4',2016,11.6,2);
-INSERT OR IGNORE INTO `Books` (ISBN,author,title,publisher,publication_year,price,type) VALUES (9781785150162,2,'The Ten Types of Human','2ak',2017,62.0,2);
+INSERT OR IGNORE INTO `Books` (ISBN,author,title,publisher,publication_year,price,type) VALUES (9781785150162,2,'The Ten Types of Person','2ak',2017,62.0,2);
 INSERT OR IGNORE INTO `Books` (ISBN,author,title,publisher,publication_year,price,type) VALUES (9781785151521,1,'Uncommon Type','2ak',2017,51.5,1);
 INSERT OR IGNORE INTO `Books` (ISBN,author,title,publisher,publication_year,price,type) VALUES (9781840221831,8,'Tom Sawyer Abroad & Detective','2g8',2009,11.6,1);
 INSERT OR IGNORE INTO `Books` (ISBN,author,title,publisher,publication_year,price,type) VALUES (9781840226362,8,'The Innocents Abroad','2g8',2010,11.6,2);

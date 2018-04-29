@@ -2,8 +2,8 @@ package com.jarq.system.dao;
 
 import com.jarq.system.databaseManagers.DatabaseManager;
 import com.jarq.system.databaseManagers.JDBCProcessManager;
-import com.jarq.system.models.human.author.SQLiteDaoAuthor;
-import com.jarq.system.models.human.user.SQLiteDaoUser;
+import com.jarq.system.models.address.SQLiteDaoAddress;
+import com.jarq.system.models.user.SQLiteDaoUser;
 
 import java.sql.Connection;
 
@@ -32,12 +32,13 @@ public class SqlDaoFactory implements IDaoFactory {
         String daoName = daoType.getSimpleName();
         SqlDao dao = null;
 
-        switch (daoName) {
-            case ("BookDao"):
-                dao = new SQLiteDaoAuthor(connection, processManager);
+        switch(daoName) {
+            case("SQLiteDaoAddress"):
+                dao = new SQLiteDaoAddress(connection, processManager);
                 break;
-            case ("AuthorDao"):
-                dao = new SQLiteDaoUser(connection, processManager);
+            case("SQLiteDaoUser"):
+                dao = new SQLiteDaoUser(connection, processManager,
+                        createDAO(SQLiteDaoAddress.class));
                 break;
         }
         return daoType.cast(dao);

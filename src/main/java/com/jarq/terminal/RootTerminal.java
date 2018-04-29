@@ -1,6 +1,8 @@
 package com.jarq.terminal;
 
 import com.jarq.IRoot;
+import com.jarq.system.models.address.SQLiteDaoAddress;
+import com.jarq.system.models.user.SQLiteDaoUser;
 import com.jarq.terminal.controllers.IRepositoryController;
 import com.jarq.terminal.controllers.RepositoryController;
 import com.jarq.system.dao.IDaoFactory;
@@ -41,6 +43,16 @@ public class RootTerminal implements IRoot {
     }
 
     public void runApp() {
+
+        System.out.println(DbTables.USERS.getTable());
+
+        DatabaseManager databaseManager = SQLiteManager.getSQLiteManager(databaseConfig);
+        JDBCProcessManager jdbcProcessManager = SQLProcessManager.getInstance();
+        System.out.println(SqlDaoFactory.
+                getInstance(databaseManager, jdbcProcessManager)
+                .createDAO(SQLiteDaoUser.class)
+                .createNullUser());
+
         libraryController.runMenu();
     }
 
