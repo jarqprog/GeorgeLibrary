@@ -1,4 +1,4 @@
-package com.jarq.exceptions;
+package com.jarq.system.exceptions;
 
 public class DatabaseCreationFailure extends Exception {
 
