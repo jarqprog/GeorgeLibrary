@@ -2,66 +2,62 @@ package com.jarq.system.models.address;
 
 public class NullAddress implements IAddress {
 
-    private final String data = "n/a";
-    private final int id = 0;
+    private final String notAvailable = "n/a";
+
+    NullAddress() {}
 
     @Override
-    public void setId(int id) {
-
-    }
+    public void setId(int id) {}
 
     @Override
-    public void setPostalCode(String postalCode) {
-
-    }
+    public void setPostalCode(String postalCode) {}
 
     @Override
-    public void setCity(String city) {
-
-    }
+    public void setCity(String city) {}
 
     @Override
-    public void setStreet(String street) {
-
-    }
+    public void setStreet(String street) {}
 
     @Override
-    public void setHouseNo(String houseNo) {
-
-    }
+    public void setHouseNo(String houseNo) {}
 
     @Override
-    public void setApartmentNo(String apartmentNo) {
-
-    }
+    public void setApartmentNo(String apartmentNo) {}
 
     @Override
     public int getId() {
-        return id;
+        return 0;
     }
 
     @Override
     public String getPostalCode() {
-        return data;
+        return notAvailable;
     }
 
     @Override
     public String getCity() {
-        return data;
+        return notAvailable;
     }
 
     @Override
     public String getStreet() {
-        return data;
+        return notAvailable;
     }
 
     @Override
     public String getHouseNo() {
-        return data;
+        return notAvailable;
     }
 
     @Override
     public String getApartmentNo() {
-        return data;
+        return notAvailable;
+    }
+
+    @Override
+    public String toString() {
+        return "NullAddress{" +
+                "notAvailable='" + notAvailable + '\'' +
+                '}';
     }
 }

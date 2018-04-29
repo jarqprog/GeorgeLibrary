@@ -2,71 +2,49 @@ package com.jarq.system.models.address;
 
 import com.jarq.system.dao.SqlDao;
 import com.jarq.system.databaseManagers.JDBCProcessManager;
-import com.jarq.system.models.user.IDaoUser;
-import com.jarq.system.models.user.IUser;
+import com.jarq.system.exceptions.DaoFailure;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SQLiteDaoAddress extends SqlDao implements IDaoUser {
+public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
 
     public SQLiteDaoAddress(Connection connection, JDBCProcessManager processManager) {
         super(connection, processManager);
     }
 
     @Override
-    public IUser importById(int userId) throws SQLException {
+    public IAddress createNullAddress() {
+        return new NullAddress();
+    }
 
-        String query =  "SELECT users.id, users.email, people.fname, people.lname, people.address " +
-                        "FROM users WHERE users.id=? " +
-                        "INNER JOIN people on users.people_id=people.id";
-
-        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
-        preparedStatement.setInt(1, userId);
-        ResultSet resultSet = preparedStatement.getResultSet();
-        String[] userData = getProcessManager().getObjectData(resultSet);
-
-
-
-
-
+    @Override
+    public IAddress createAddress(String postalCode, String city, String street) throws SQLException, DaoFailure {
         return null;
     }
 
-
-
-    private IUser extractUser(String[] userData) {
-
-        int idIndex = 0;
-        int emailIndex = 1;
-        int firstNameIndex = 2;
-        int lastNameIndex = 3;
-        int addressIndex = 4;
-
-        int id = Integer.parseInt(userData[idIndex]);
-//        String firstName =
-
-
-
-
-
-//          public User(int id, String firstName, String lastName, String email, String password) {
-//            super(id, firstName, lastName);
-//            setEmail(email);
-//            this.password = password;
-//        }
-
-
+    @Override
+    public IAddress importAddress(int addressId) throws SQLException, DaoFailure {
         return null;
     }
 
-//
-//    private int id;
-//    private String firstName;
-//    private String lastName;
-//    private String email;
-//    private String address;
+    @Override
+    public boolean updateAddress(IAddress address) throws SQLException, DaoFailure {
+        return false;
+    }
 
+    @Override
+    public boolean exportAddress(IAddress address) throws SQLException, DaoFailure {
+        return false;
+    }
+
+    @Override
+    public boolean removeAddress(IAddress address) throws SQLException, DaoFailure {
+        return false;
+    }
+
+    @Override
+    public boolean removeAddress(int addressId) throws SQLException, DaoFailure {
+        return false;
+    }
 }
