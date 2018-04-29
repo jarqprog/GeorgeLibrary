@@ -1,75 +1,77 @@
-package com.jarq.models.text;
+package com.jarq.system.models.text;
 
-import com.jarq.models.human.author.IAuthor;
-
-public abstract class Text {
+public class Text {
 
     private int id;
-    private IAuthor author;
+    private int repositoryId;
     private String title;
-    private String date;
+    private String creationDate;
+    private String modificationDate;
     private String content;
 
-    public Text(String title) {
-        this.id = -1;
+    public Text(int repositoryId, String title) {
+        this.id = -1;  // default for new Text which doesn't exists in database
+        this.repositoryId = repositoryId;
         this.title = title;
-        this.date = "not known";
-        this.content = "";
+        this.creationDate = "n/a";
+        this.modificationDate = "n/a";
+        this.content = "n/a";
     }
 
-    public Text(int id, String title) {
+    public Text(int id, int repositoryId, String title, String creationDate,
+                String modificationDate) {
+        this(repositoryId, title);
         this.id = id;
-        this.title = title;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Text{" +
-                "id=" + id +
-                ", human=" + author.getFullName() +
-                ", title='" + title + '\'' +
-                ", date='" + date + '\'' +
-                '}';
-    }
-
-    public String getContent() {
-        return content;
+        this.creationDate = creationDate;
+        this.modificationDate = modificationDate;
+        this.content = "n/a";
     }
 
     public int getId() {
         return id;
     }
 
-    public IAuthor getAuthor() {
-        return author;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getRepositoryId() {
+        return repositoryId;
+    }
+
+    public void setRepositoryId(int repositoryId) {
+        this.repositoryId = repositoryId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getDate() {
-        return date;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public String getCreationDate() {
+        return creationDate;
     }
 
-    public void setAuthor(IAuthor author) {
-        this.author = author;
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(String modificationDate) {
+        this.modificationDate = modificationDate;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }
