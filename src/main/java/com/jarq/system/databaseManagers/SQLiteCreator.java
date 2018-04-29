@@ -1,7 +1,7 @@
-package com.jarq.databaseManagers;
+package com.jarq.system.databaseManagers;
 
-import com.jarq.enums.DbFilePath;
-import com.jarq.exceptions.DatabaseCreationFailure;
+import com.jarq.system.enums.DbFilePath;
+import com.jarq.system.exceptions.DatabaseCreationFailure;
 
 import java.io.File;
 import java.io.FileNotFoundException;

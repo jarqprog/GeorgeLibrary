@@ -1,8 +1,8 @@
-package com.jarq.databaseManagers;
+package com.jarq.system.databaseManagers;
 
-import com.jarq.enums.DbDriver;
-import com.jarq.enums.DbFilePath;
-import com.jarq.enums.DbUrl;
+import com.jarq.system.enums.DbDriver;
+import com.jarq.system.enums.DbFilePath;
+import com.jarq.system.enums.DbUrl;
 
 public class SQLiteConfig implements DatabaseConfig {
 

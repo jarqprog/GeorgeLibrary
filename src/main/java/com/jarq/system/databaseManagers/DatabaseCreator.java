@@ -1,6 +1,6 @@
-package com.jarq.databaseManagers;
+package com.jarq.system.databaseManagers;
 
-import com.jarq.exceptions.DatabaseCreationFailure;
+import com.jarq.system.exceptions.DatabaseCreationFailure;
 
 public interface DatabaseCreator {
 

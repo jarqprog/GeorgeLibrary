@@ -1,4 +1,4 @@
-package com.jarq.databaseManagers;
+package com.jarq.system.databaseManagers;
 
 import java.sql.*;
 import java.util.List;
