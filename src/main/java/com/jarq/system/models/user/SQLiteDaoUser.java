@@ -1,7 +1,7 @@
-package com.jarq.models.human.user;
+package com.jarq.system.models.human.user;
 
-import com.jarq.dao.SqlDao;
-import com.jarq.databaseManagers.JDBCProcessManager;
+import com.jarq.system.dao.SqlDao;
+import com.jarq.system.databaseManagers.JDBCProcessManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,7 +44,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         int addressIndex = 4;
 
         int id = Integer.parseInt(userData[idIndex]);
-        String firstName =
+//        String firstName =
 
 
 
@@ -54,7 +54,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
 //            super(id, firstName, lastName);
 //            setEmail(email);
 //            this.password = password;
-        }
+//        }
 
 
         return null;

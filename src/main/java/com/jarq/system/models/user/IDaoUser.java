@@ -1,4 +1,4 @@
-package com.jarq.models.human.user;
+package com.jarq.system.models.human.user;
 
 import java.sql.SQLException;
 

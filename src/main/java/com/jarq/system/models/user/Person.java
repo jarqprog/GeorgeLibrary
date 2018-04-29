@@ -1,6 +1,6 @@
 package com.jarq.system.models.human;
 
-public abstract class Human {
+public abstract class Person {
 
     private int id;
     private String firstName;
@@ -8,7 +8,7 @@ public abstract class Human {
     private String email;
     private String address;  // todo address should be an object
 
-    public Human(String firstName, String lastName) {
+    public Person(String firstName, String lastName) {
         this.id = -1;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -16,7 +16,7 @@ public abstract class Human {
         this.address = "not known";
     }
 
-    public Human(int id, String firstName, String lastName) {
+    public Person(int id, String firstName, String lastName) {
         this(firstName, lastName);
         this.id = id;
     }
