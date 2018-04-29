@@ -1,7 +1,10 @@
+package com.jarq;
+
+import com.jarq.terminal.RootTerminal;
 
 public class App {
 
     public static void main(String[] args) {
-        RootBasic.getInstance().runApp();
+        RootTerminal.getInstance().runApp();
     }
 }
