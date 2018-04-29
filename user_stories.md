@@ -17,7 +17,7 @@ As Admin I have all the options of an ordinary user and in addition:\
     - can see list of users & basic info about repositories (eg. size);\
     - suspend User's account (so account isn't removed, but User can't login on it);\
     - remove User's account;\
-    - remove User's repository.\
+    - remove User's repository.
 
 
     
