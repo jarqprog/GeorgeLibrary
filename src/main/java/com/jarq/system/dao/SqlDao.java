@@ -1,6 +1,6 @@
-package com.jarq.dao;
+package com.jarq.system.dao;
 
-import com.jarq.databaseManagers.JDBCProcessManager;
+import com.jarq.system.databaseManagers.JDBCProcessManager;
 
 import java.sql.Connection;
 
