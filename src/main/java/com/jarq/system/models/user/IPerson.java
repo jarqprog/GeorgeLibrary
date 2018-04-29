@@ -6,9 +6,7 @@ public interface IPerson {
 
     void setName(String firstName);
 
-
     void setSurname(String lastName);
-
 
     void setEmail(String email);
 

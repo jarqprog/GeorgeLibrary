@@ -1,9 +1,15 @@
-package com.jarq.system.models.human.user;
+package com.jarq.system.models.user;
 
-public interface IUser {
+import com.jarq.system.models.repository.IRepository;
+
+import java.util.List;
+
+public interface IUser extends IPerson {
 
     void setPassword(String password);
+
     String getPassword();
-    int getRepositoryId();
+
+    List<IRepository> getRepositories();
 
 }
