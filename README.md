@@ -1,6 +1,6 @@
-# 'Text repository' is a java web application to manage texts/notes (add, modify, remove,\
-# get access to note's history)
+# 'Text repository' is a java web application to manage texts/notes (add, modify, remove, get access to note's history)
 --------------------------------
+
 # User stories:
 
 As regular User I can:\
