@@ -1,9 +1,9 @@
-package com.jarq.dao;
+package com.jarq.system.dao;
 
-import com.jarq.databaseManagers.DatabaseManager;
-import com.jarq.databaseManagers.JDBCProcessManager;
-import com.jarq.models.human.author.SQLiteDaoAuthor;
-import com.jarq.models.human.user.SQLiteDaoUser;
+import com.jarq.system.databaseManagers.DatabaseManager;
+import com.jarq.system.databaseManagers.JDBCProcessManager;
+import com.jarq.system.models.human.author.SQLiteDaoAuthor;
+import com.jarq.system.models.human.user.SQLiteDaoUser;
 
 import java.sql.Connection;
 
