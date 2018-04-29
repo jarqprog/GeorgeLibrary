@@ -2,7 +2,8 @@ package com.jarq.system.enums;
 
 public enum DbTables {
 
-    PEOPLE("people"), USERS("users"), AUTHORS("authors"), BOOKS("books"), NOTES("notes");
+    REPOSITORIES("repositories"), PEOPLE("people"), USERS("users"), AUTHORS("authors"),
+    BOOKS("books"), NOTES("notes");
 
     private String table;
 

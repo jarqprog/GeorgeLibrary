@@ -1,4 +1,4 @@
-package com.jarq.models.human;
+package com.jarq.system.models.human;
 
 public abstract class Human {
 
@@ -6,7 +6,7 @@ public abstract class Human {
     private String firstName;
     private String lastName;
     private String email;
-    private String address;
+    private String address;  // todo address should be an object
 
     public Human(String firstName, String lastName) {
         this.id = -1;
