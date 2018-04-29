@@ -1,4 +1,6 @@
-public interface IClient {
+package com.jarq;
+
+public interface IRoot {
 
     void runApp();
 }
