@@ -2,6 +2,9 @@ package com.jarq.system.models.address;
 
 public class NullAddress implements IAddress {
 
+    private final String data = "n/a";
+    private final int id = 0;
+
     @Override
     public void setId(int id) {
 
@@ -34,31 +37,31 @@ public class NullAddress implements IAddress {
 
     @Override
     public int getId() {
-        return 0;
+        return id;
     }
 
     @Override
     public String getPostalCode() {
-        return "";
+        return data;
     }
 
     @Override
     public String getCity() {
-        return "";
+        return data;
     }
 
     @Override
     public String getStreet() {
-        return "";
+        return data;
     }
 
     @Override
     public String getHouseNo() {
-        return "";
+        return data;
     }
 
     @Override
     public String getApartmentNo() {
-        return "";
+        return data;
     }
 }
