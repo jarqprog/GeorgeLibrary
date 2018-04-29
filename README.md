@@ -30,4 +30,4 @@ mvn clean package
 
 java -jar target/TextRepository-1.0-SNAPSHOT-shaded.jar
 
-used patterns: mvc, dao, factory.
+used patterns: mvc, dao, factory, null object.
