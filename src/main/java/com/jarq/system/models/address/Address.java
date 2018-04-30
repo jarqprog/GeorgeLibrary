@@ -72,4 +72,15 @@ public class Address extends Model implements IAddress {
     public String getApartmentNo() {
         return apartmentNo;
     }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "postalCode='" + postalCode + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNo='" + houseNo + '\'' +
+                ", apartmentNo='" + apartmentNo + '\'' +
+                "} " + super.toString();
+    }
 }
