@@ -1,53 +1,35 @@
 package com.jarq.system.models.repository;
 
+import com.jarq.system.models.Model;
+import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Repository implements IRepository {
+public class Repository extends Model implements IRepository {
 
-    private int id;
     private String name;
     private String creationDate;
-    private String lastModificationDate;
-    private List<Text> texts;
+    private String lastModificationDate = "-";
+    private List<IText> texts = new ArrayList<>();
     private final int ownerId;
 
-    Repository(String name, String creationDate, int ownerId) {
-        this.id = 0;
+    Repository(int id, String name, String creationDate, int ownerId) {
+        setId(id);
         this.name = name;
         this.creationDate = creationDate;
-        this.lastModificationDate = "n/a";
         this.ownerId = ownerId;
     }
 
-    Repository(int id, String name, String creationDate,
-               String lastModificationDate, int ownerId) {
-        this(name, creationDate, ownerId);
-        this.id = id;
-        this.name = name;
-        this.creationDate = creationDate;
-        this.lastModificationDate = lastModificationDate;
-    }
-
     @Override
-    public void setTexts(List<Text> texts) {
+    public void setTexts(List<IText> texts) {
         this.texts = texts;
     }
 
     @Override
-    public List<Text> getTexts() {
+    public List<IText> getTexts() {
         return texts;
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override
