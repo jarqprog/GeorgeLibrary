@@ -10,17 +10,13 @@ public class Address extends Model implements IAddress {
     private String houseNo;
     private String apartmentNo;
 
-    Address(String postalCode, String city, String street, String houseNo) {
+    Address(int id, String postalCode, String city, String street, String houseNo) {
+        setId(id);
         this.postalCode = postalCode;
         this.city = city;
         this.street = street;
         this.houseNo = houseNo;
-        this.apartmentNo = "";
-    }
-
-    Address(int id, String postalCode, String city, String street, String houseNo) {
-        this(postalCode, city, street, houseNo);
-        setId(id);
+        this.apartmentNo = "-";
     }
 
     @Override

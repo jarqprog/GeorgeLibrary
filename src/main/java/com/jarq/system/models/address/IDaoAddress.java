@@ -3,7 +3,7 @@ package com.jarq.system.models.address;
 import com.jarq.system.dao.Dao;
 import com.jarq.system.exceptions.DaoFailure;
 
-import java.sql.SQLException;
+import java.util.List;
 
 public interface IDaoAddress extends Dao {
 
@@ -20,7 +20,9 @@ public interface IDaoAddress extends Dao {
 
     IAddress importAddress(int addressId) throws DaoFailure;
 
-    boolean exportAddress(IAddress address) throws DaoFailure;
+    List<IAddress> importAllAddresses() throws DaoFailure;
+
+    boolean updateAddress(IAddress address) throws DaoFailure;
 
     boolean removeAddress(IAddress address) throws DaoFailure;
 
