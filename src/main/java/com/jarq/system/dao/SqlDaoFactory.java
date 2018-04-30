@@ -1,7 +1,7 @@
 package com.jarq.system.dao;
 
-import com.jarq.system.databaseManagers.DatabaseManager;
-import com.jarq.system.databaseManagers.JDBCProcessManager;
+import com.jarq.system.managers.databaseManagers.DatabaseManager;
+import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.models.address.SQLiteDaoAddress;
 import com.jarq.system.models.user.SQLiteDaoUser;
 
