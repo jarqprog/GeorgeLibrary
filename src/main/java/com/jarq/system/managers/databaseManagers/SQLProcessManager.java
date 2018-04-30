@@ -83,9 +83,11 @@ public class SQLProcessManager implements JDBCProcessManager {
         return true;
     }
 
-    public boolean executeUpdate(PreparedStatement preparedStatement) {
+    public boolean executeStatement(PreparedStatement preparedStatement) {
         try {
-            preparedStatement.executeUpdate();
+            if( preparedStatement.executeUpdate() == 0 ) {
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
