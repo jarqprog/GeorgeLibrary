@@ -6,7 +6,6 @@ import com.jarq.system.enums.DbTables;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
 
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -14,7 +13,6 @@ import java.sql.SQLException;
 public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
 
     private final String defaultTable = DbTables.ADDRESSES.getTable();
-
 
     public SQLiteDaoAddress(Connection connection, JDBCProcessManager processManager) {
         super(connection, processManager);
@@ -27,16 +25,18 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
 
     @Override
     public IAddress createAddress(String postalCode, String city, String street, String houseNo)
-            throws SQLException, DaoFailure {
+            throws DaoFailure {
         String emptyApartmentNo = "";
         return createAddress(postalCode, city, street, houseNo, emptyApartmentNo);
     }
 
     @Override
     public IAddress createAddress(String postalCode, String city, String street, String houseNo, String apartmentNo)
-            throws SQLException, DaoFailure {
+            throws DaoFailure {
         IAddress address = new Address(postalCode, city, street, houseNo);
         address.setApartmentNo(apartmentNo);
+
+        // idsBefore & idsAfter to get id for new created address:
         String[] idsBefore = getCurrentValuesCollectionFromGivenLabel(DbTables.ADDRESSES, DbLabels.ID);
         boolean isSaved = saveAddress(address);
         if(! isSaved ) {
@@ -44,6 +44,7 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         }
         String[] idsAfter = getCurrentValuesCollectionFromGivenLabel(DbTables.ADDRESSES, DbLabels.ID);
         String newId = findNewValueInCollection(idsBefore, idsAfter);
+
         try {
             int addressId = Integer.parseInt(newId);
             address.setId(addressId);
@@ -55,28 +56,30 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
     }
 
     @Override
-    public IAddress importAddress(int addressId) throws SQLException, DaoFailure {
+    public IAddress importAddress(int addressId) throws DaoFailure {
         return null;
     }
 
     @Override
-    public boolean updateAddress(IAddress address) throws SQLException, DaoFailure {
-        return false;
+    public boolean exportAddress(IAddress address) throws DaoFailure {
+        return saveAddress(address);
     }
 
     @Override
-    public boolean exportAddress(IAddress address) throws SQLException, DaoFailure {
-        return false;
+    public boolean removeAddress(IAddress address) throws DaoFailure {
+        return removeAddress(address.getId());
     }
 
     @Override
-    public boolean removeAddress(IAddress address) throws SQLException, DaoFailure {
-        return false;
-    }
-
-    @Override
-    public boolean removeAddress(int addressId) throws SQLException, DaoFailure {
-        return false;
+    public boolean removeAddress(int addressId) throws DaoFailure {
+        try {
+            String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
+            PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, addressId);
+            return getProcessManager().executeStatement(preparedStatement);
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     private boolean saveAddress(IAddress address) throws DaoFailure {
@@ -86,7 +89,7 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         try {
             String addressId = String.valueOf(address.getId());
             if(addressId.equals(nullModelId)) {  // address is nullModel - skip saving
-                return false;
+                throw new DaoFailure("Blocked saving null object");
             }
 
             String postalCode = address.getPostalCode();
@@ -107,8 +110,7 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
                                 "WHERE id=?", defaultTable);
             }
 
-            PreparedStatement preparedStatement;
-            preparedStatement = getConnection().prepareStatement(query);
+            PreparedStatement preparedStatement = getConnection().prepareStatement(query);
             preparedStatement.setString(1, postalCode);
             preparedStatement.setString(2, city);
             preparedStatement.setString(3, street);
@@ -116,10 +118,9 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
             preparedStatement.setString(5, apartmentNo);
 
             if (!addressId.equals(newAddressId)) {
-                preparedStatement.setInt(5, Integer.valueOf(addressId));
+                preparedStatement.setInt(6, Integer.valueOf(addressId));
             }
-            getProcessManager().executeUpdate(preparedStatement);
-            return true;
+            return getProcessManager().executeStatement(preparedStatement);
         } catch (Exception ex) {
             throw new DaoFailure(ex.getMessage());
         }
