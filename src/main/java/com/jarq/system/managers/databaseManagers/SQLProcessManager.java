@@ -12,9 +12,11 @@ public class SQLProcessManager implements JDBCProcessManager {
 
     private SQLProcessManager() {}
 
-    public String[] getObjectData(ResultSet resultSet) {
+    public String[] getObjectData(PreparedStatement preparedStatement) {
+        // every array keeps data from a single record
         String[] objectData = new String[0];
-        try {
+        try ( ResultSet resultSet = preparedStatement.executeQuery() ) {
+
             if (resultSet.isBeforeFirst()) {
                 ResultSetMetaData meta = resultSet.getMetaData();
                 int colCounter = meta.getColumnCount();
@@ -26,21 +28,22 @@ public class SQLProcessManager implements JDBCProcessManager {
                     }
                     objectData = columnList.toArray(objectData);
                 }
-                closeResources(resultSet);
             }
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         } finally {
-            closeResources(resultSet);
+            closeResources(preparedStatement);
         }
+
         return objectData;
     }
 
-    public List<String[]> getObjectsDataCollection(ResultSet resultSet) {
-
+    public List<String[]> getObjectsDataCollection(PreparedStatement preparedStatement) {
+        // every nested array in list keeps data from a single record
         List<String[]> objectsDataCollection = new ArrayList<>();
 
-        try {
+        try ( ResultSet resultSet = preparedStatement.executeQuery() ) {
+
             if (resultSet.isBeforeFirst()) {
                 ResultSetMetaData meta = resultSet.getMetaData();
                 int colCounter = meta.getColumnCount();
@@ -58,7 +61,7 @@ public class SQLProcessManager implements JDBCProcessManager {
         } catch(Exception e){
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         } finally {
-            closeResources(resultSet);
+            closeResources(preparedStatement);
         }
         return objectsDataCollection;
     }
@@ -76,36 +79,28 @@ public class SQLProcessManager implements JDBCProcessManager {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            if (preparedStatement != null) {
-                closeResources(preparedStatement);
-            }
+            closeResources(preparedStatement);
         }
         return true;
     }
 
     public boolean executeStatement(PreparedStatement preparedStatement) {
         try {
-            if( preparedStatement.executeUpdate() == 0 ) {
-                return false;
-            }
+            return preparedStatement.executeUpdate() != 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         } finally {
-            if (preparedStatement != null) {
-                closeResources(preparedStatement);
-            }
+            closeResources(preparedStatement);
         }
-        return true;
     }
 
     private <T extends AutoCloseable> void closeResources(T resources) {
-        if(resources != null) {
-            try {
-                resources.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            resources.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -2,14 +2,13 @@ package com.jarq.system.managers.databaseManagers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 
 public interface JDBCProcessManager {
 
-    String[] getObjectData(ResultSet resultSet);
+    String[] getObjectData(PreparedStatement preparedStatement);
 
-    List<String[]> getObjectsDataCollection(ResultSet resultSet);
+    List<String[]> getObjectsDataCollection(PreparedStatement preparedStatement);
 
     boolean executeBatch(PreparedStatement preparedStatement, Connection connection);
 
