@@ -32,25 +32,30 @@ public abstract class SqlDao implements Dao {
 
     protected String[] getCurrentValuesCollectionFromGivenLabel(DbTables databaseTable,
                                                                 DbLabels databaseLabel)
-            throws SQLException {
+            throws DaoFailure {
 
-        // return table with values collection from label of given database table
-        int idIndex = 0;
-        String[] currentIds = new String[0];
-        String query = String.format("Select %s from %s", databaseLabel.getLabel(), databaseTable.getTable());
+        try {
+            // return table with values collection from label of given database table
+            int idIndex = 0;
+            String[] currentIds = new String[0];
+            String query = String.format("Select %s from %s", databaseLabel.getLabel(), databaseTable.getTable());
 
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        List<String[]> currentIdsCollection = processManager.getObjectsDataCollection(resultSet);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<String[]> currentIdsCollection = processManager.getObjectsDataCollection(resultSet);
 
-        if (currentIdsCollection != null) {
-            currentIds = new String[currentIdsCollection.size()];
-            for (int i = 0; i < currentIdsCollection.size(); i++) {
+            if (currentIdsCollection != null) {
+                currentIds = new String[currentIdsCollection.size()];
+                for (int i = 0; i < currentIdsCollection.size(); i++) {
 
-                currentIds[i] = currentIdsCollection.get(i)[idIndex];
+                    currentIds[i] = currentIdsCollection.get(i)[idIndex];
+                }
             }
+            return currentIds;
+
+        } catch(SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
         }
-        return currentIds;
     }
 
     protected String findNewValueInCollection(String[] oldValuesCollection,
