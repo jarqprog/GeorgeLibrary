@@ -13,10 +13,12 @@ import java.util.List;
 
 public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
 
-    private final String defaultTable = DbTables.ADDRESSES.getTable();
+    private final String defaultTable;
 
-    public SQLiteDaoAddress(Connection connection, JDBCProcessManager processManager) {
+    public SQLiteDaoAddress(Connection connection, JDBCProcessManager processManager,
+                            DbTables defaultTable) {
         super(connection, processManager);
+        this.defaultTable = defaultTable.getTable();
     }
 
     @Override
