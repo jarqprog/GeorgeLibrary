@@ -1,8 +1,10 @@
 package com.jarq.terminal;
 
 import com.jarq.IRoot;
+import com.jarq.system.exceptions.DaoFailure;
+import com.jarq.system.models.address.IAddress;
+import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.address.SQLiteDaoAddress;
-import com.jarq.system.models.user.SQLiteDaoUser;
 import com.jarq.terminal.controllers.IRepositoryController;
 import com.jarq.terminal.controllers.RepositoryController;
 import com.jarq.system.dao.IDaoFactory;
@@ -12,7 +14,7 @@ import com.jarq.system.enums.DbFilePath;
 import com.jarq.system.enums.DbTables;
 import com.jarq.system.enums.DbUrl;
 import com.jarq.system.exceptions.DatabaseCreationFailure;
-import com.jarq.system.databaseManagers.*;
+import com.jarq.system.managers.databaseManagers.*;
 import com.jarq.terminal.views.IRepositoryView;
 import com.jarq.terminal.views.RepositoryView;
 import com.jarq.terminal.views.RootView;
@@ -44,16 +46,28 @@ public class RootTerminal implements IRoot {
 
     public void runApp() {
 
-        System.out.println(DbTables.USERS.getTable());
+        // for tests:
 
-        DatabaseManager databaseManager = SQLiteManager.getSQLiteManager(databaseConfig);
         JDBCProcessManager jdbcProcessManager = SQLProcessManager.getInstance();
-        System.out.println(SqlDaoFactory.
-                getInstance(databaseManager, jdbcProcessManager)
-                .createDAO(SQLiteDaoUser.class)
-                .createNullUser());
+
+        IDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, jdbcProcessManager);
+        IDaoAddress daoAddress = daoFactory.createDAO(SQLiteDaoAddress.class);
+
+        IAddress fake = daoAddress.createNullAddress();
+        System.out.println(fake);
+        try {
+
+            List<IAddress> addresses = daoAddress.importAllAddresses();
+            addresses.forEach(System.out::println);
+            System.out.println(addresses);
+
+
+        } catch (DaoFailure e) {
+            e.printStackTrace();
+        }
 
         libraryController.runMenu();
+        databaseManager.closeConnection();
     }
 
     private IRepositoryController createLibraryController() {

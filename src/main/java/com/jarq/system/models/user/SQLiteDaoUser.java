@@ -1,14 +1,12 @@
 package com.jarq.system.models.user;
 
 import com.jarq.system.dao.SqlDao;
-import com.jarq.system.databaseManagers.JDBCProcessManager;
+import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLiteDaoUser extends SqlDao implements IDaoUser {
