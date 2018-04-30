@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
@@ -72,7 +73,21 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
 
     @Override
     public List<IRepository> importRepositoriesByOwnerId(int ownerId) throws DaoFailure {
-        return null;
+        List<IRepository> repositories = new ArrayList<>();
+        String query = String.format("SELECT * FROM %s WHERE owner_id=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, ownerId);
+
+            List<String[]> repositoriesData = getProcessManager()
+                    .getObjectsDataCollection(preparedStatement);
+            for(String[] data : repositoriesData) {
+                repositories.add(extractRepository(data));
+            }
+            return repositories;
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
