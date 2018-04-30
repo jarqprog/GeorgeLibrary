@@ -1,4 +1,4 @@
-package com.jarq.system.databaseManagers;
+package com.jarq.system.managers.databaseManagers;
 
 import java.sql.*;
 import java.util.List;
@@ -61,6 +61,40 @@ public class SQLProcessManager implements JDBCProcessManager {
             closeResources(resultSet);
         }
         return objectsDataCollection;
+    }
+
+    public boolean executeBatch(PreparedStatement preparedStatement, Connection connection) {
+        try {
+            connection.setAutoCommit(false);
+            preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (preparedStatement != null) {
+                closeResources(preparedStatement);
+            }
+        }
+        return true;
+    }
+
+    public boolean executeUpdate(PreparedStatement preparedStatement) {
+        try {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (preparedStatement != null) {
+                closeResources(preparedStatement);
+            }
+        }
+        return true;
     }
 
     private <T extends AutoCloseable> void closeResources(T resources) {
