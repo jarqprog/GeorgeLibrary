@@ -3,21 +3,28 @@ package com.jarq.system.models.address;
 import com.jarq.system.dao.Dao;
 import com.jarq.system.exceptions.DaoFailure;
 
-import java.sql.SQLException;
+import java.util.List;
 
 public interface IDaoAddress extends Dao {
 
     IAddress createNullAddress();
 
-    IAddress createAddress(String postalCode, String city, String street) throws SQLException, DaoFailure;
+    IAddress createAddress(String postalCode, String city,
+                           String street, String houseNo)
+            throws DaoFailure;
 
-    IAddress importAddress(int addressId) throws SQLException, DaoFailure;
+    IAddress createAddress(String postalCode, String city,
+                           String street, String houseNo,
+                           String apartmentNo)
+            throws DaoFailure;
 
-    boolean updateAddress(IAddress address) throws SQLException, DaoFailure;
+    IAddress importAddress(int addressId) throws DaoFailure;
 
-    boolean exportAddress(IAddress address) throws SQLException, DaoFailure;
+    List<IAddress> importAllAddresses() throws DaoFailure;
 
-    boolean removeAddress(IAddress address) throws SQLException, DaoFailure;
+    boolean updateAddress(IAddress address) throws DaoFailure;
 
-    boolean removeAddress(int addressId) throws SQLException, DaoFailure;
+    boolean removeAddress(IAddress address) throws DaoFailure;
+
+    boolean removeAddress(int addressId) throws DaoFailure;
 }

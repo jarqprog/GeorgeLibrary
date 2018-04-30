@@ -1,14 +1,13 @@
 package com.jarq.system.models.repository;
 
 import com.jarq.system.models.text.Text;
+import com.jarq.system.models.NullModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NullRepository implements IRepository {
-
-    private final String notAvailable = "n/a";
-
+public class NullRepository extends NullModel implements IRepository {
+    
     NullRepository() {}
 
     @Override
@@ -20,16 +19,8 @@ public class NullRepository implements IRepository {
     }
 
     @Override
-    public int getId() {
-        return 0;
-    }
-
-    @Override
-    public void setId(int id) {}
-
-    @Override
     public String getName() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
@@ -37,7 +28,7 @@ public class NullRepository implements IRepository {
 
     @Override
     public String getCreationDate() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
@@ -45,7 +36,7 @@ public class NullRepository implements IRepository {
 
     @Override
     public String getLastModificationDate() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
@@ -59,7 +50,7 @@ public class NullRepository implements IRepository {
     @Override
     public String toString() {
         return "NullRepository{" +
-                "notAvailable='" + notAvailable + '\'' +
+                "getNotAvailable()='" + getNotAvailable() + '\'' +
                 '}';
     }
 }
