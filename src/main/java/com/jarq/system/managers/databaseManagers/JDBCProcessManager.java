@@ -13,5 +13,5 @@ public interface JDBCProcessManager {
 
     boolean executeBatch(PreparedStatement preparedStatement, Connection connection);
 
-    boolean executeUpdate(PreparedStatement preparedStatement);
+    boolean executeStatement(PreparedStatement preparedStatement);
 }
