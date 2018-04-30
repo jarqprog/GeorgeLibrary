@@ -1,5 +1,6 @@
 package com.jarq.system.dao;
 
+import com.jarq.system.enums.DbTables;
 import com.jarq.system.managers.databaseManagers.DatabaseManager;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.models.address.SQLiteDaoAddress;
@@ -34,11 +35,11 @@ public class SqlDaoFactory implements IDaoFactory {
 
         switch(daoName) {
             case("SQLiteDaoAddress"):
-                dao = new SQLiteDaoAddress(connection, processManager);
+                dao = new SQLiteDaoAddress(connection, processManager, DbTables.ADDRESSES);
                 break;
             case("SQLiteDaoUser"):
                 dao = new SQLiteDaoUser(connection, processManager,
-                        createDAO(SQLiteDaoAddress.class));
+                        createDAO(SQLiteDaoAddress.class), DbTables.USERS);
                 break;
         }
         return daoType.cast(dao);
