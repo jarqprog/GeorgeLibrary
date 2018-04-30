@@ -4,11 +4,11 @@ import com.jarq.system.models.Model;
 
 public class Text extends Model implements IText {
 
-    private int repositoryId;
     private String title;
     private String creationDate;
     private String modificationDate = "-";
     private String content = "-";
+    private int repositoryId;
 
     public Text(int id, String title, String creationDate, int repositoryId) {
         setId(id);
