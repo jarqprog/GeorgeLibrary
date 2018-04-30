@@ -58,7 +58,15 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
 
     @Override
     public IUser importUser(int UserId) throws DaoFailure {
-        return null;
+        String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, UserId);
+            String[] userData = getProcessManager().getObjectData(preparedStatement);
+            return extractUser(userData);
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
@@ -88,20 +96,26 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
 
     private IUser extractUser(String[] userData) throws DaoFailure {
 
-        int idIndex = 0;
-        int emailIndex = 1;
-        int firstNameIndex = 2;
-        int lastNameIndex = 3;
-        int addressIndex = 4;
+        int ID_INDEX = 0;
+        int NAME_INDEX = 1;
+        int SURNAME_INDEX = 2;
+        int EMAIL_INDEX = 3;
+        int PASSWORD_INDEX = 4;
+        int ADDRESS_INDEX = 5;
 
         try {
-            int id = Integer.parseInt(userData[idIndex]);
-//        String firstName =
-            return createNullUser();
+            int id = Integer.parseInt(userData[ID_INDEX]);
+            String name = userData[NAME_INDEX];
+            String surname = userData[SURNAME_INDEX];
+            String email = userData[EMAIL_INDEX];
+            String password = userData[PASSWORD_INDEX];
+            int addressId = Integer.parseInt(userData[ADDRESS_INDEX]);
+            IAddress address = daoAddress.importAddress(addressId);
+
+            return new User(id, name, surname, email, password, address);
 
         } catch (Exception ex) {
             throw new DaoFailure(ex.getMessage());
         }
-
     }
 }
