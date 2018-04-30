@@ -128,9 +128,9 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
 
     @Override
     public boolean removeAddress(int addressId) throws DaoFailure {
-        try {
-            String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
-            PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
+
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, addressId);
             return getProcessManager().executeStatement(preparedStatement);
         } catch (SQLException ex) {
