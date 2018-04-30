@@ -9,7 +9,11 @@ public interface IDaoAddress extends Dao {
 
     IAddress createNullAddress();
 
-    IAddress createAddress(String postalCode, String city, String street) throws SQLException, DaoFailure;
+    IAddress createAddress(String postalCode, String city, String street, String houseNo)
+            throws SQLException, DaoFailure;
+
+    IAddress createAddress(String postalCode, String city, String street, String houseNo, String apartmentNo)
+            throws SQLException, DaoFailure;
 
     IAddress importAddress(int addressId) throws SQLException, DaoFailure;
 
