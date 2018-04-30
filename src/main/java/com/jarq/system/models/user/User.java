@@ -1,38 +1,29 @@
 package com.jarq.system.models.user;
 
+import com.jarq.system.models.Model;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.repository.IRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class User implements IUser {
+public class User extends Model implements IUser {
 
-    private int id;
     private String name;
     private String surname;
     private String email;
-    private IAddress address;
     private String password;
-    private List<IRepository> repositories;
+    private IAddress address;
+    private List<IRepository> repositories = new ArrayList<>();
 
 
-    public User(String name, String surname, String email, IAddress address) {
-        this.id = 0;
+    User(int id, String name, String surname, String email, String password, IAddress address) {
+        setId(id);
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.address = address;
-        this.password = "123";  // default password (should be changed)
-        this.repositories = new ArrayList<>();
-    }
-
-    public User(int id, String name, String surname, IAddress address,
-                String email, String password, List<IRepository> repositories) {
-        this(name, surname, email, address);
-        this.id = id;
         this.password = password;
-        this.repositories = repositories;
+        this.address = address;
     }
 
     @Override
@@ -58,11 +49,6 @@ public class User implements IUser {
     @Override
     public String getFullName() {
         return String.format("%s %s", name, surname);
-    }
-
-    @Override
-    public int getId() {
-        return id;
     }
 
     @Override
@@ -103,7 +89,7 @@ public class User implements IUser {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +

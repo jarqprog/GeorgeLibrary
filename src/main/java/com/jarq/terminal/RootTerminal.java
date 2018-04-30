@@ -5,6 +5,9 @@ import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.address.SQLiteDaoAddress;
+import com.jarq.system.models.user.IDaoUser;
+import com.jarq.system.models.user.IUser;
+import com.jarq.system.models.user.SQLiteDaoUser;
 import com.jarq.terminal.controllers.IRepositoryController;
 import com.jarq.terminal.controllers.RepositoryController;
 import com.jarq.system.dao.IDaoFactory;
@@ -53,9 +56,23 @@ public class RootTerminal implements IRoot {
         IDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, jdbcProcessManager);
         IDaoAddress daoAddress = daoFactory.createDAO(SQLiteDaoAddress.class);
 
-        IAddress fake = daoAddress.createNullAddress();
+
+        IDaoUser daoUser = daoFactory.createDAO(SQLiteDaoUser.class);
+
+        IUser fake = daoUser.createNullUser();
         System.out.println(fake);
+
+
         try {
+
+            System.out.println(daoUser.removeUser(3));
+
+            List<IUser> users = daoUser.importAllUsers();
+            users.forEach(System.out::println);
+
+            IUser jarek = users.get(0);
+            jarek.setPassword("ohohoho++asasas");
+            System.out.println(daoUser.updateUser(jarek));
 
             List<IAddress> addresses = daoAddress.importAllAddresses();
             addresses.forEach(System.out::println);
