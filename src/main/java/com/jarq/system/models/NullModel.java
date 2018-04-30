@@ -2,7 +2,7 @@ package com.jarq.system.models;
 
 public abstract class NullModel {
 
-    private final int id = -2;  // common for all null
+    private final int id = -1;  // common for all null models
 
     public int getId() {
         return id;
