@@ -92,7 +92,28 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
 
     @Override
     public boolean updateRepository(IRepository repository) throws DaoFailure {
-        return false;
+
+        int id = repository.getId();
+        String name = repository.getName();
+        String creationDate = repository.getCreationDate();
+        String lastModificationDate = repository.getLastModificationDate();
+        int ownerId = repository.getOwnerId();
+
+        String query = String.format(   "UPDATE %s SET name=?, creation_date=?, last_modification_date=?, " +
+                "owner_id=? WHERE id=?", defaultTable);
+
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, creationDate);
+            preparedStatement.setString(3, lastModificationDate);
+            preparedStatement.setInt(4, ownerId);
+            preparedStatement.setInt(5, id);
+
+            return getProcessManager().executeStatement(preparedStatement);
+
+        } catch(SQLException ex){
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
