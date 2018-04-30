@@ -2,7 +2,6 @@ package com.jarq.system.models.repository;
 
 import com.jarq.system.dao.Dao;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.models.address.IAddress;
 
 import java.util.List;
 
@@ -10,8 +9,7 @@ public interface IDaoRepository extends Dao {
     
     IRepository createNullRepository();
 
-    IRepository createRepository(String name, String surname, String email, IAddress address)
-            throws DaoFailure;
+    IRepository createRepository(String name, int ownerId) throws DaoFailure;
 
     IRepository importRepository(int repositoryId) throws DaoFailure;
 

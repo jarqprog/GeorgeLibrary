@@ -2,7 +2,6 @@ package com.jarq.system.models.repository;
 
 import com.jarq.system.models.Model;
 import com.jarq.system.models.text.IText;
-import com.jarq.system.models.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,5 +64,16 @@ public class Repository extends Model implements IRepository {
     @Override
     public int getOwnerId() {
         return ownerId;
+    }
+
+    @Override
+    public String toString() {
+        return "Repository{" +
+                "name='" + name + '\'' +
+                ", creationDate='" + creationDate + '\'' +
+                ", lastModificationDate='" + lastModificationDate + '\'' +
+                ", texts=" + texts +
+                ", ownerId=" + ownerId +
+                "} " + super.toString();
     }
 }
