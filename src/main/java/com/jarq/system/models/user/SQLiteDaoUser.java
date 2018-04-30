@@ -1,22 +1,28 @@
 package com.jarq.system.models.user;
 
 import com.jarq.system.dao.SqlDao;
+import com.jarq.system.enums.DbTables;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
+import com.jarq.system.models.address.Address;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 public class SQLiteDaoUser extends SqlDao implements IDaoUser {
 
     private final IDaoAddress daoAddress;
+    private final String defaultTable;
 
     public SQLiteDaoUser(Connection connection, JDBCProcessManager processManager,
-                         IDaoAddress daoAddress) {
+                         IDaoAddress daoAddress, DbTables defaultTable) {
         super(connection, processManager);
         this.daoAddress = daoAddress;
+        this.defaultTable = defaultTable.getTable();
     }
 
     @Override
@@ -25,43 +31,59 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
     }
 
     @Override
-    public IUser createUser(String name, String surname, String email, IAddress address)
-            throws SQLException, DaoFailure {
+    public IUser createUser(String name, String surname, String email, IAddress address) throws DaoFailure {
+        int id = getLowestFreeIdFromGivenTable(defaultTable);
+        final String temporaryPassword = "123";
+        IUser user = new User(id, name, surname, email, temporaryPassword, address);
 
-                String query =  "SELECT users.id, users.email, people.fname, people.lname, people.address " +
-                        "FROM users WHERE users.id=? " +
-                        "INNER JOIN people on users.people_id=people.id";
+        String query = String.format("INSERT INTO %s " +
+                "VALUES(?, ?, ?, ?, ?, ?)", defaultTable);
 
-//        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
-//        preparedStatement.setInt(1, userId);
-//        ResultSet resultSet = preparedStatement.getResultSet();
-//        String[] userData = getProcessManager().getObjectData(resultSet);
-        return createNullUser();
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, name);
+            preparedStatement.setString(3, surname);
+            preparedStatement.setString(4, email);
+            preparedStatement.setString(5, temporaryPassword);
+            preparedStatement.setInt(6, address.getId());
+
+            getProcessManager().executeStatement(preparedStatement);
+
+            return user;
+
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
-    public IUser importUser(int userId) throws SQLException, DaoFailure {
-        return createNullUser();
+    public IUser importUser(int UserId) throws DaoFailure {
+        return null;
     }
 
     @Override
-    public boolean updateUser(IUser user) throws SQLException, DaoFailure {
+    public List<IUser> importAllUsers() throws DaoFailure {
+        return null;
+    }
+
+    @Override
+    public boolean updateUser(IUser User) throws DaoFailure {
         return false;
     }
 
     @Override
-    public boolean exportUser(IUser user) throws SQLException, DaoFailure {
+    public boolean removeUser(IUser User) throws DaoFailure {
         return false;
     }
 
     @Override
-    public boolean removeUser(IUser user) throws SQLException, DaoFailure {
+    public boolean removeUser(int UserId) throws DaoFailure {
         return false;
     }
 
     @Override
-    public boolean removeUser(int userId) throws SQLException, DaoFailure {
-        return false;
+    public IUser importUserWithRepositories(int UserId) throws DaoFailure {
+        return null;
     }
 
     private IUser extractUser(String[] userData) throws DaoFailure {
