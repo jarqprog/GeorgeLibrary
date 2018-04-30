@@ -13,7 +13,7 @@ public interface IDaoRepository extends Dao {
 
     IRepository importRepository(int repositoryId) throws DaoFailure;
 
-    List<IRepository> importAllRepositories() throws DaoFailure;
+    List<IRepository> importRepositoriesByOwnerId(int ownerId) throws DaoFailure;
 
     boolean updateRepository(IRepository repository) throws DaoFailure;
 

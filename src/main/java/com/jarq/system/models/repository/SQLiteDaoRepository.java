@@ -59,11 +59,19 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
 
     @Override
     public IRepository importRepository(int repositoryId) throws DaoFailure {
-        return null;
+        String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, repositoryId);
+            String[] repositoryData = getProcessManager().getObjectData(preparedStatement);
+            return extractRepository(repositoryData);
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
-    public List<IRepository> importAllRepositories() throws DaoFailure {
+    public List<IRepository> importRepositoriesByOwnerId(int ownerId) throws DaoFailure {
         return null;
     }
 
@@ -91,5 +99,30 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return now.format(formatter);
+    }
+
+    private IRepository extractRepository(String[] repositoryData) throws DaoFailure {
+
+        int ID_INDEX = 0;
+        int NAME_INDEX = 1;
+        int CREATION_DATE_INDEX = 2;
+        int MODIFICATION_DATE_INDEX = 3;
+        int OWNER_ID_INDEX = 4;
+
+        try {
+            int id = Integer.parseInt(repositoryData[ID_INDEX]);
+            String name = repositoryData[NAME_INDEX];
+            String creationDate = repositoryData[CREATION_DATE_INDEX];
+            String lastModificationDate = repositoryData[MODIFICATION_DATE_INDEX];
+            int ownerId = Integer.parseInt(repositoryData[OWNER_ID_INDEX]);
+
+            IRepository repository = new Repository(id, name, creationDate, ownerId);
+            repository.setLastModificationDate(lastModificationDate);
+
+            return repository;
+
+        } catch (Exception ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 }
