@@ -13,15 +13,15 @@ public interface IDaoUser extends Dao {
     IUser createUser(String name, String surname, String email, IAddress address)
             throws DaoFailure;
 
-    IUser importUser(int UserId) throws DaoFailure;
+    IUser importUser(int userId) throws DaoFailure;
 
     List<IUser> importAllUsers() throws DaoFailure;
 
-    boolean updateUser(IUser User) throws DaoFailure;
+    boolean updateUser(IUser user) throws DaoFailure;
 
-    boolean removeUser(IUser User) throws DaoFailure;
+    boolean removeUser(IUser user) throws DaoFailure;
 
-    boolean removeUser(int UserId) throws DaoFailure;
+    boolean removeUser(int userId) throws DaoFailure;
 
-    IUser importUserWithRepositories(int UserId) throws DaoFailure;
+    IUser importUserWithRepositories(int userId) throws DaoFailure;
 }
