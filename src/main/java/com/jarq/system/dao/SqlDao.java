@@ -53,7 +53,7 @@ public abstract class SqlDao implements Dao {
 
             Collections.sort(idCollection);
 
-            for(int i=MINIMUM_ID_VALUE; i<idCollectionLength+1; i++) {
+            for(int i=MINIMUM_ID_VALUE; i<=idCollectionLength+1; i++) {
                 if(! idCollection.contains(i) ) {
                     return i;  // return first not occupied lowest value
                 }
