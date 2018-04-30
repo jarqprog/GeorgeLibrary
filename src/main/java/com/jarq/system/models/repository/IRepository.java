@@ -1,14 +1,14 @@
 package com.jarq.system.models.repository;
 
-import com.jarq.system.models.text.Text;
+import com.jarq.system.models.text.IText;
 
 import java.util.List;
 
 public interface IRepository {
 
-    void setTexts(List<Text> texts);
+    void setTexts(List<IText> texts);
 
-    List<Text> getTexts();
+    List<IText> getTexts();
 
     int getId();
 
