@@ -10,18 +10,18 @@ public class Address implements IAddress {
     private String apartmentNo;
 
 
-    public Address(String postalCode, String city, String street) {
+    Address(String postalCode, String city, String street, String houseNo) {
         this.id = -1;
         this.postalCode = postalCode;
         this.city = city;
         this.street = street;
-        this.houseNo = "not known";
-        this.apartmentNo = "not knows";
+        this.houseNo = houseNo;
+        this.apartmentNo = "not known";
     }
 
 
-    public Address(int id, String postalCode, String city, String street) {
-        this(postalCode, city, street);
+    Address(int id, String postalCode, String city, String street, String houseNo) {
+        this(postalCode, city, street, houseNo);
         this.id = id;
     }
 
