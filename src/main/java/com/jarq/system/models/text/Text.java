@@ -1,38 +1,20 @@
 package com.jarq.system.models.text;
 
-public class Text {
+import com.jarq.system.models.Model;
 
-    private int id;
+public class Text extends Model implements IText {
+
     private int repositoryId;
     private String title;
     private String creationDate;
-    private String modificationDate;
-    private String content;
+    private String modificationDate = "-";
+    private String content = "-";
 
-    public Text(int repositoryId, String title) {
-        this.id = -1;  // default for new Text which doesn't exists in database
-        this.repositoryId = repositoryId;
+    public Text(int id, String title, String creationDate, int repositoryId) {
+        setId(id);
         this.title = title;
-        this.creationDate = "n/a";
-        this.modificationDate = "n/a";
-        this.content = "n/a";
-    }
-
-    public Text(int id, int repositoryId, String title, String creationDate,
-                String modificationDate) {
-        this(repositoryId, title);
-        this.id = id;
         this.creationDate = creationDate;
-        this.modificationDate = modificationDate;
-        this.content = "n/a";
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.repositoryId = repositoryId;
     }
 
     public int getRepositoryId() {
