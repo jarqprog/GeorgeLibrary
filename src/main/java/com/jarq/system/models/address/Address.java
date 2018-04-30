@@ -1,33 +1,26 @@
 package com.jarq.system.models.address;
 
-public class Address implements IAddress {
+import com.jarq.system.models.Model;
 
-    private int id;
+public class Address extends Model implements IAddress {
+
     private String postalCode;
     private String city;
     private String street;
     private String houseNo;
     private String apartmentNo;
 
-
     Address(String postalCode, String city, String street, String houseNo) {
-        this.id = -1;
         this.postalCode = postalCode;
         this.city = city;
         this.street = street;
         this.houseNo = houseNo;
-        this.apartmentNo = "not known";
+        this.apartmentNo = "";
     }
-
 
     Address(int id, String postalCode, String city, String street, String houseNo) {
         this(postalCode, city, street, houseNo);
-        this.id = id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
+        setId(id);
     }
 
     @Override
@@ -53,11 +46,6 @@ public class Address implements IAddress {
     @Override
     public void setApartmentNo(String apartmentNo) {
         this.apartmentNo = apartmentNo;
-    }
-
-    @Override
-    public int getId() {
-        return id;
     }
 
     @Override
