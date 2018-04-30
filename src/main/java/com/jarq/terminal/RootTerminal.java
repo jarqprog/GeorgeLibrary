@@ -65,10 +65,14 @@ public class RootTerminal implements IRoot {
 
         try {
 
-            IUser firstUser = daoUser.createUser("Jarek", "Kucharczyk",
-                    "jarek@gmail.com", daoAddress.importAddress(1));
+            System.out.println(daoUser.removeUser(3));
 
-            System.out.println(firstUser);
+            List<IUser> users = daoUser.importAllUsers();
+            users.forEach(System.out::println);
+
+            IUser jarek = users.get(0);
+            jarek.setPassword("ohohoho++asasas");
+            System.out.println(daoUser.updateUser(jarek));
 
             List<IAddress> addresses = daoAddress.importAllAddresses();
             addresses.forEach(System.out::println);
