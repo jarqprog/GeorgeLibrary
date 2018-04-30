@@ -4,6 +4,7 @@ import com.jarq.system.enums.DbTables;
 import com.jarq.system.managers.databaseManagers.DatabaseManager;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.models.address.SQLiteDaoAddress;
+import com.jarq.system.models.text.SQLiteDaoText;
 import com.jarq.system.models.user.SQLiteDaoUser;
 
 import java.sql.Connection;
@@ -34,6 +35,9 @@ public class SqlDaoFactory implements IDaoFactory {
         SqlDao dao = null;
 
         switch(daoName) {
+            case("SQLiteDaoText"):
+                dao = new SQLiteDaoText(connection, processManager, DbTables.TEXTS);
+                break;
             case("SQLiteDaoAddress"):
                 dao = new SQLiteDaoAddress(connection, processManager, DbTables.ADDRESSES);
                 break;
