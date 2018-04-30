@@ -54,6 +54,11 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     }
 
     @Override
+    public boolean removeTextsByRepositoryId(int repositoryId) throws DaoFailure {
+        return false;
+    }
+
+    @Override
     public IText importTextWithContent(int textId) throws DaoFailure {
         return null;
     }
