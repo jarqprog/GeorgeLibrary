@@ -10,7 +10,7 @@ public class Text extends Model implements IText {
     private String content = "-";
     private int repositoryId;
 
-    public Text(int id, String title, String creationDate, int repositoryId) {
+    Text(int id, String title, String creationDate, int repositoryId) {
         setId(id);
         this.title = title;
         this.creationDate = creationDate;

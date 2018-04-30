@@ -14,7 +14,7 @@ public interface IDaoText extends Dao {
 
     IText importText(int textId) throws DaoFailure;
 
-    List<IText> importAllTexts() throws DaoFailure;
+    List<IText> importTextsByRepositoryId(int repositoryId) throws DaoFailure;
 
     boolean updateText(IText text) throws DaoFailure;
 
