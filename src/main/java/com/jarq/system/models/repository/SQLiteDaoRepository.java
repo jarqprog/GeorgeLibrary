@@ -32,11 +32,11 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
     }
 
     @Override
-    public IRepository createRepository(String name, int ownerId) throws DaoFailure {
+    public IRepository createRepository(String name, int userId) throws DaoFailure {
 
         int id = getLowestFreeIdFromGivenTable(defaultTable);
         String creationDateTime = getCurrentDateTime();
-        IRepository repository = new Repository(id, name, creationDateTime, ownerId);
+        IRepository repository = new Repository(id, name, creationDateTime, userId);
         repository.setLastModificationDate(creationDateTime);
 
         String query = String.format("INSERT INTO %s " +
@@ -47,7 +47,7 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, creationDateTime);
             preparedStatement.setString(4, creationDateTime);
-            preparedStatement.setInt(5, ownerId);
+            preparedStatement.setInt(5, userId);
 
             getProcessManager().executeStatement(preparedStatement);
 
@@ -72,11 +72,11 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
     }
 
     @Override
-    public List<IRepository> importRepositoriesByOwnerId(int ownerId) throws DaoFailure {
+    public List<IRepository> importRepositoriesByUserId(int userId) throws DaoFailure {
         List<IRepository> repositories = new ArrayList<>();
-        String query = String.format("SELECT * FROM %s WHERE owner_id=?", defaultTable);
+        String query = String.format("SELECT * FROM %s WHERE user_id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
-            preparedStatement.setInt(1, ownerId);
+            preparedStatement.setInt(1, userId);
 
             List<String[]> repositoriesData = getProcessManager()
                     .getObjectsDataCollection(preparedStatement);
@@ -97,16 +97,16 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
         String name = repository.getName();
         String creationDate = repository.getCreationDate();
         String lastModificationDate = repository.getLastModificationDate();
-        int ownerId = repository.getOwnerId();
+        int userId = repository.getUserId();
 
         String query = String.format(   "UPDATE %s SET name=?, creation_date=?, last_modification_date=?, " +
-                "owner_id=? WHERE id=?", defaultTable);
+                "user_id=? WHERE id=?", defaultTable);
 
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, creationDate);
             preparedStatement.setString(3, lastModificationDate);
-            preparedStatement.setInt(4, ownerId);
+            preparedStatement.setInt(4, userId);
             preparedStatement.setInt(5, id);
 
             return getProcessManager().executeStatement(preparedStatement);
@@ -127,9 +127,10 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
 
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
             preparedStatement.setInt(1, repositoryId);
-            boolean isRepositoryRemoved = getProcessManager().executeStatement(preparedStatement);
-            boolean areTextsRemoved = daoText.removeTextsByRepositoryId(repositoryId);
-            return isRepositoryRemoved && areTextsRemoved;
+//            boolean isRepositoryRemoved = getProcessManager().executeStatement(preparedStatement);
+//            boolean areTextsRemoved = daoText.removeTextsByRepositoryId(repositoryId);
+//            return isRepositoryRemoved && areTextsRemoved;
+            return getProcessManager().executeStatement(preparedStatement);
 
         } catch (SQLException ex) {
             throw new DaoFailure(ex.getMessage());
@@ -137,11 +138,11 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
     }
 
     @Override
-    public boolean removeRepositoriesByOwnerId(int ownerId) throws DaoFailure {
-        String query = String.format("SELECT id FROM %s WHERE owner_id=?", defaultTable);
+    public boolean removeRepositoriesByUserId(int userId) throws DaoFailure {
+        String query = String.format("SELECT id FROM %s WHERE user_id=?", defaultTable);
 
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
-            preparedStatement.setInt(1, ownerId);
+            preparedStatement.setInt(1, userId);
             List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
             List<Integer> idCollection = gatherIdFromNestedList(nestedCollection);
             for(int repositoryId : idCollection) {
@@ -171,16 +172,16 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
         int NAME_INDEX = 1;
         int CREATION_DATE_INDEX = 2;
         int MODIFICATION_DATE_INDEX = 3;
-        int OWNER_ID_INDEX = 4;
+        int USER_ID_INDEX = 4;
 
         try {
             int id = Integer.parseInt(repositoryData[ID_INDEX]);
             String name = repositoryData[NAME_INDEX];
             String creationDate = repositoryData[CREATION_DATE_INDEX];
             String lastModificationDate = repositoryData[MODIFICATION_DATE_INDEX];
-            int ownerId = Integer.parseInt(repositoryData[OWNER_ID_INDEX]);
+            int userId = Integer.parseInt(repositoryData[USER_ID_INDEX]);
 
-            IRepository repository = new Repository(id, name, creationDate, ownerId);
+            IRepository repository = new Repository(id, name, creationDate, userId);
             repository.setLastModificationDate(lastModificationDate);
 
             return repository;
