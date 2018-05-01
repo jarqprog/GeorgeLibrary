@@ -118,12 +118,40 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
 
     @Override
     public boolean removeRepository(IRepository repository) throws DaoFailure {
-        return false;
+        return removeRepository(repository.getId());
     }
 
     @Override
     public boolean removeRepository(int repositoryId) throws DaoFailure {
-        return false;
+        String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
+
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
+            preparedStatement.setInt(1, repositoryId);
+            boolean isRepositoryRemoved = getProcessManager().executeStatement(preparedStatement);
+            boolean areTextsRemoved = daoText.removeTextsByRepositoryId(repositoryId);
+            return isRepositoryRemoved && areTextsRemoved;
+
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public boolean removeRepositoriesByOwnerId(int ownerId) throws DaoFailure {
+        String query = String.format("SELECT id FROM %s WHERE owner_id=?", defaultTable);
+
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
+            preparedStatement.setInt(1, ownerId);
+            List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
+            List<Integer> idCollection = gatherIdFromNestedList(nestedCollection);
+            for(int repositoryId : idCollection) {
+                removeRepository(repositoryId);
+            }
+            return true;
+
+        } catch (Exception ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override

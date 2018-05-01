@@ -21,6 +21,8 @@ public interface IDaoRepository extends Dao {
 
     boolean removeRepository(int repositoryId) throws DaoFailure;
 
+    boolean removeRepositoriesByOwnerId(int ownerId) throws DaoFailure;
+
     IRepository importRepositoryWithTexts(int repositoryId) throws DaoFailure;
 
 }
