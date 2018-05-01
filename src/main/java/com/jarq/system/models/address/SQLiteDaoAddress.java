@@ -27,22 +27,22 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
     }
 
     @Override
-    public IAddress createAddress(String postalCode, String city, String street, String houseNo)
+    public IAddress createAddress(String postalCode, String city, String street, String houseNo, int userId)
             throws DaoFailure {
         String emptyApartmentNo = "";
-        return createAddress(postalCode, city, street, houseNo, emptyApartmentNo);
+        return createAddress(postalCode, city, street, houseNo, emptyApartmentNo, userId);
     }
 
     @Override
-    public IAddress createAddress(String postalCode, String city, String street, String houseNo, String apartmentNo)
+    public IAddress createAddress(String postalCode, String city, String street, String houseNo, String apartmentNo, int userId)
             throws DaoFailure {
 
         int id = getLowestFreeIdFromGivenTable(defaultTable);
-        IAddress address = new Address(id, postalCode, city, street, houseNo);
+        IAddress address = new Address(id, postalCode, city, street, houseNo, userId);
         address.setApartmentNo(apartmentNo);
 
         String query = String.format("INSERT INTO %s " +
-                "VALUES(?, ?, ?, ?, ?, ?)", defaultTable);
+                "VALUES(?, ?, ?, ?, ?, ?, ?)", defaultTable);
 
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, id);
@@ -51,6 +51,7 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
             preparedStatement.setString(4, street);
             preparedStatement.setString(5, houseNo);
             preparedStatement.setString(6, apartmentNo);
+            preparedStatement.setInt(7, userId);
 
             getProcessManager().executeStatement(preparedStatement);
 
@@ -67,8 +68,20 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, addressId);
-            String[] addressData = getProcessManager().getObjectData(preparedStatement);
-            return extractAddress(addressData);
+            return extractAddressFromStatement(preparedStatement);
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public IAddress importAddressByUserId(int userId) throws DaoFailure {
+
+        String query = String.format("SELECT * FROM %s WHERE user_id=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, userId);
+            return extractAddressFromStatement(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
@@ -84,7 +97,7 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
 
             List<String[]> addressesData = getProcessManager().getObjectsDataCollection(preparedStatement);
             for(String[] data : addressesData) {
-                addresses.add(extractAddress(data));
+                addresses.add(extractAddressFromTable(data));
             }
             return addresses;
 
@@ -102,9 +115,10 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         String street = address.getStreet();
         String houseNo = address.getHouseNo();
         String apartmentNo = address.getApartmentNo();
+        int userId = address.getUserId();
 
         String query = String.format(   "UPDATE %s SET postal_code=?, city=?, street=?, " +
-                                        "house_no=?, apartment_no=? " +
+                                        "house_no=?, apartment_no=?, user_id=? " +
                                         "WHERE id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setString(1, postalCode);
@@ -112,7 +126,8 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
             preparedStatement.setString(3, street);
             preparedStatement.setString(4, houseNo);
             preparedStatement.setString(5, apartmentNo);
-            preparedStatement.setInt(6, id);
+            preparedStatement.setInt(6, userId);
+            preparedStatement.setInt(7, id);
 
             return getProcessManager().executeStatement(preparedStatement);
 
@@ -138,7 +153,26 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         }
     }
 
-    private IAddress extractAddress(String[] addressData) throws DaoFailure {
+    @Override
+    public boolean removeAddressByUserId(int userId) throws DaoFailure {
+        String query = String.format("DELETE FROM %s WHERE user_id=?", defaultTable);
+
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, userId);
+            return getProcessManager().executeStatement(preparedStatement);
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+
+
+    private IAddress extractAddressFromStatement(PreparedStatement preparedStatement) throws DaoFailure {
+        String[] addressData = getProcessManager().getObjectData(preparedStatement);
+        return extractAddressFromTable(addressData);
+    }
+
+    private IAddress extractAddressFromTable(String[] addressData) throws DaoFailure {
 
         int ID_INDEX = 0;
         int POSTAL_CODE_INDEX = 1;
@@ -146,6 +180,7 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         int STREET_INDEX = 3;
         int HOUSE_NO_INDEX = 4;
         int APARTMENT_NO_INDEX = 5;
+        int USER_ID_INDEX = 6;
 
         try {
             int id = Integer.parseInt(addressData[ID_INDEX]);
@@ -154,7 +189,8 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
             String street = addressData[STREET_INDEX];
             String houseNo = addressData[HOUSE_NO_INDEX];
             String apartmentNo = addressData[APARTMENT_NO_INDEX];
-            IAddress address = new Address(id, postalCode, city, street, houseNo);
+            int userId = Integer.parseInt(addressData[USER_ID_INDEX]);
+            IAddress address = new Address(id, postalCode, city, street, houseNo, userId);
             address.setApartmentNo(apartmentNo);
             return address;
 
