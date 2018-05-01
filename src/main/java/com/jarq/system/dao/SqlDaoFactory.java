@@ -53,14 +53,11 @@ public class SqlDaoFactory implements IDaoFactory {
                 break;
             case("SQLiteDaoUser"):
                 dao = new SQLiteDaoUser(connection, processManager,
-                        createDAO(SQLiteDaoAddress.class),
-                        createDAO(SQLiteDaoRepository.class),
-                        DbTables.USERS);
+                        createDAO(SQLiteDaoAddress.class), DbTables.USERS);
                 break;
             case("SQLiteDaoRepository"):
                 dao = new SQLiteDaoRepository(connection, processManager,
-                        createDAO(SQLiteDaoText.class), DbTables.REPOSITORIES,
-                        dateTimer);
+                        DbTables.REPOSITORIES, dateTimer);
                 break;
         }
         return daoType.cast(dao);
