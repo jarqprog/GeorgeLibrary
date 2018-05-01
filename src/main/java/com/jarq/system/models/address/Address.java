@@ -1,33 +1,23 @@
 package com.jarq.system.models.address;
 
-public class Address implements IAddress {
+import com.jarq.system.models.Model;
 
-    private int id;
+public class Address extends Model implements IAddress {
+
     private String postalCode;
     private String city;
     private String street;
     private String houseNo;
-    private String apartmentNo;
+    private String apartmentNo = "-";
+    private final int userId;
 
-
-    public Address(String postalCode, String city, String street) {
-        this.id = -1;
+    Address(int id, String postalCode, String city, String street, String houseNo, int userId) {
+        setId(id);
         this.postalCode = postalCode;
         this.city = city;
         this.street = street;
-        this.houseNo = "not known";
-        this.apartmentNo = "not knows";
-    }
-
-
-    public Address(int id, String postalCode, String city, String street) {
-        this(postalCode, city, street);
-        this.id = id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
+        this.houseNo = houseNo;
+        this.userId = userId;
     }
 
     @Override
@@ -56,11 +46,6 @@ public class Address implements IAddress {
     }
 
     @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
     public String getPostalCode() {
         return postalCode;
     }
@@ -83,5 +68,22 @@ public class Address implements IAddress {
     @Override
     public String getApartmentNo() {
         return apartmentNo;
+    }
+
+    @Override
+    public int getUserId() {
+        return userId;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "postalCode='" + postalCode + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNo='" + houseNo + '\'' +
+                ", apartmentNo='" + apartmentNo + '\'' +
+                ", userId=" + userId +
+                "} " + super.toString();
     }
 }

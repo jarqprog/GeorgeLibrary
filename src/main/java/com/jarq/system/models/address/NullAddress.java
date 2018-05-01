@@ -1,13 +1,10 @@
 package com.jarq.system.models.address;
 
-public class NullAddress implements IAddress {
+import com.jarq.system.models.NullModel;
 
-    private final String notAvailable = "n/a";
+public class NullAddress extends NullModel implements IAddress {
 
     NullAddress() {}
-
-    @Override
-    public void setId(int id) {}
 
     @Override
     public void setPostalCode(String postalCode) {}
@@ -25,39 +22,37 @@ public class NullAddress implements IAddress {
     public void setApartmentNo(String apartmentNo) {}
 
     @Override
-    public int getId() {
-        return 0;
-    }
-
-    @Override
     public String getPostalCode() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
     public String getCity() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
     public String getStreet() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
     public String getHouseNo() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
     public String getApartmentNo() {
-        return notAvailable;
+        return getNotAvailable();
+    }
+
+    @Override
+    public int getUserId() {
+        return 0;
     }
 
     @Override
     public String toString() {
-        return "NullAddress{" +
-                "notAvailable='" + notAvailable + '\'' +
-                '}';
+        return "NullAddress{} " + super.toString();
     }
 }

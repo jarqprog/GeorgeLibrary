@@ -1,24 +1,32 @@
 package com.jarq.system.models.user;
 
 import com.jarq.system.dao.SqlDao;
-import com.jarq.system.databaseManagers.JDBCProcessManager;
+import com.jarq.system.enums.DbTables;
+import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
+import com.jarq.system.models.repository.IDaoRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SQLiteDaoUser extends SqlDao implements IDaoUser {
 
     private final IDaoAddress daoAddress;
+    private final IDaoRepository daoRepository;
+    private final String defaultTable;
 
     public SQLiteDaoUser(Connection connection, JDBCProcessManager processManager,
-                         IDaoAddress daoAddress) {
+                         IDaoAddress daoAddress, IDaoRepository daoRepository,
+                         DbTables defaultTable) {
         super(connection, processManager);
         this.daoAddress = daoAddress;
+        this.daoRepository = daoRepository;
+        this.defaultTable = defaultTable.getTable();
     }
 
     @Override
@@ -27,61 +35,138 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
     }
 
     @Override
-    public IUser createUser(String name, String surname, String email, IAddress address)
-            throws SQLException, DaoFailure {
+    public IUser createUser(String name, String surname, String email) throws DaoFailure {
+        int id = getLowestFreeIdFromGivenTable(defaultTable);
+        final String temporaryPassword = "123";
+        IAddress initialAddress = daoAddress.createNullAddress();
+        IUser user = new User(id, name, surname, email, temporaryPassword, initialAddress);
 
-                String query =  "SELECT users.id, users.email, people.fname, people.lname, people.address " +
-                        "FROM users WHERE users.id=? " +
-                        "INNER JOIN people on users.people_id=people.id";
+        String query = String.format("INSERT INTO %s " +
+                "VALUES(?, ?, ?, ?, ?)", defaultTable);
 
-//        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
-//        preparedStatement.setInt(1, userId);
-//        ResultSet resultSet = preparedStatement.getResultSet();
-//        String[] userData = getProcessManager().getObjectData(resultSet);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, name);
+            preparedStatement.setString(3, surname);
+            preparedStatement.setString(4, email);
+            preparedStatement.setString(5, temporaryPassword);
+
+            getProcessManager().executeStatement(preparedStatement);
+
+            return user;
+
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public IUser importUser(int userId) throws DaoFailure {
+        String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, userId);
+            String[] userData = getProcessManager().getObjectData(preparedStatement);
+            return extractUser(userData);
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<IUser> importAllUsers() throws DaoFailure {
+        List<IUser> users = new ArrayList<>();
+        String query = String.format("SELECT * FROM %s", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+
+            List<String[]> usersData = getProcessManager().getObjectsDataCollection(preparedStatement);
+            for(String[] data : usersData) {
+                users.add(extractUser(data));
+            }
+            return users;
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateUser(IUser user) throws DaoFailure {
+
+        int id = user.getId();
+        String name = user.getName();
+        String surname = user.getSurname();
+        String email = user.getEmail();
+        String password = user.getPassword();
+
+        String query = String.format(   "UPDATE %s SET name=?, surname=?, email=?, " +
+                                        "password=? WHERE id=?", defaultTable);
+
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, surname);
+            preparedStatement.setString(3, email);
+            preparedStatement.setString(4, password);
+            preparedStatement.setInt(5, id);
+
+            return getProcessManager().executeStatement(preparedStatement);
+
+        } catch(SQLException ex){
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public boolean removeUser(IUser user) throws DaoFailure {
+        return removeUser(user.getId());
+    }
+
+    @Override
+    public boolean removeUser(int userId) throws DaoFailure {
+        String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
+
+//        int addressId = importUser(userId).getAddress().getId();
+
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
+            preparedStatement.setInt(1, userId);
+//            boolean isUserRemoved = getProcessManager().executeStatement(preparedStatement);
+//            boolean isAddressRemoved = daoAddress.removeAddress(addressId);
+//            boolean areRepositoriesRemoved = daoRepository.removeRepositoriesByOwnerId(userId);
+
+//            return isUserRemoved && isAddressRemoved && areRepositoriesRemoved;
+            return getProcessManager().executeStatement(preparedStatement);
+
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public IUser importUserWithRepositories(int userId) throws DaoFailure {  // todo
         return createNullUser();
-    }
-
-    @Override
-    public IUser importUser(int userId) throws SQLException, DaoFailure {
-        return createNullUser();
-    }
-
-    @Override
-    public boolean updateUser(IUser user) throws SQLException, DaoFailure {
-        return false;
-    }
-
-    @Override
-    public boolean exportUser(IUser user) throws SQLException, DaoFailure {
-        return false;
-    }
-
-    @Override
-    public boolean removeUser(IUser user) throws SQLException, DaoFailure {
-        return false;
-    }
-
-    @Override
-    public boolean removeUser(int userId) throws SQLException, DaoFailure {
-        return false;
     }
 
     private IUser extractUser(String[] userData) throws DaoFailure {
 
-        int idIndex = 0;
-        int emailIndex = 1;
-        int firstNameIndex = 2;
-        int lastNameIndex = 3;
-        int addressIndex = 4;
+        int ID_INDEX = 0;
+        int NAME_INDEX = 1;
+        int SURNAME_INDEX = 2;
+        int EMAIL_INDEX = 3;
+        int PASSWORD_INDEX = 4;
 
         try {
-            int id = Integer.parseInt(userData[idIndex]);
-//        String firstName =
-            return createNullUser();
+            int id = Integer.parseInt(userData[ID_INDEX]);
+            String name = userData[NAME_INDEX];
+            String surname = userData[SURNAME_INDEX];
+            String email = userData[EMAIL_INDEX];
+            String password = userData[PASSWORD_INDEX];
+
+            IAddress address = daoAddress.importAddressByUserId(id);
+
+            return new User(id, name, surname, email, password, address);
 
         } catch (Exception ex) {
             throw new DaoFailure(ex.getMessage());
         }
-
     }
 }

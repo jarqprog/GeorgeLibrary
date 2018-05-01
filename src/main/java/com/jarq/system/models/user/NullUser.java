@@ -1,5 +1,6 @@
 package com.jarq.system.models.user;
 
+import com.jarq.system.models.NullModel;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.repository.IRepository;
@@ -7,12 +8,10 @@ import com.jarq.system.models.repository.IRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NullUser implements IUser {
-
-    private final String notAvailable = "n/a";
+public class NullUser extends NullModel implements IUser {
+    
     private final IDaoAddress daoAddress;
-
-
+    
     NullUser(IDaoAddress daoAddress) {
         this.daoAddress = daoAddress;
     }
@@ -22,7 +21,7 @@ public class NullUser implements IUser {
 
     @Override
     public String getPassword() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
@@ -52,27 +51,22 @@ public class NullUser implements IUser {
 
     @Override
     public String getFullName() {
-        return notAvailable;
-    }
-
-    @Override
-    public int getId() {
-        return 0;
+        return getNotAvailable();
     }
 
     @Override
     public String getName() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
     public String getSurname() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
     public String getEmail() {
-        return notAvailable;
+        return getNotAvailable();
     }
 
     @Override
@@ -82,8 +76,6 @@ public class NullUser implements IUser {
 
     @Override
     public String toString() {
-        return "NullUser{" +
-                "notAvailable='" + notAvailable + '\'' +
-                '}';
+        return "NullUser{} " + super.toString();
     }
 }

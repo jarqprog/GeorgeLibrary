@@ -1,4 +1,4 @@
-package com.jarq.system.databaseManagers;
+package com.jarq.system.managers.databaseManagers;
 
 import com.jarq.system.enums.DbFilePath;
 import com.jarq.system.exceptions.DatabaseCreationFailure;
