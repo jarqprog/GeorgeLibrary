@@ -7,6 +7,8 @@ import com.jarq.system.helpers.IDateTimer;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 public class SQLiteDaoText extends SqlDao implements IDaoText {
@@ -29,20 +31,28 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     @Override
     public IText createText(String title, int repositoryId) throws DaoFailure {
 
+        int id = getLowestFreeIdFromGivenTable(defaultTable);
+        String creationDate = dateTimer.getCurrentDateTime();
+        IText text = new Text(id, title, creationDate, repositoryId);
 
 
-//        Text(int id, String title, String creationDate, int repositoryId) {
-//            setId(id);
-//            this.title = title;
-//            this.creationDate = creationDate;
-//            this.repositoryId = repositoryId;
-//        }
+        String query = String.format("INSERT INTO %s " +
+                "VALUES(?, ?, ?, ?, ?, ?)", defaultTable);
 
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, title);
+            preparedStatement.setString(3, creationDate);
+            preparedStatement.setString(4, creationDate);
+            preparedStatement.setInt(5, repositoryId);
+            preparedStatement.setString(6, "");  // content
 
+            getProcessManager().executeStatement(preparedStatement);
+            return text;
 
-
-
-        return null;
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
