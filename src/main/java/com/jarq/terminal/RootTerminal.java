@@ -99,7 +99,32 @@ public class RootTerminal implements IRoot {
 //            List<IText> nnTexts = daoText.importTextsByRepositoryId(nnRepos.get(0).getId());
 //            System.out.println(nnTexts);
 
+            // creating texts for repo 3
+//            IText text001 = daoText.createText("nie wiem co tu npisać", 3);
+//            daoText.createText("nie wiem co tu npisać1", 3);
+//            daoText.createText("nie wiem co tu npisać2", 3);
+//            daoText.createText("nie wiem co tu npisać3", 3);
+//            System.out.println(text001);
 
+
+            // test for importing texts
+//            IText text = daoText.importTextWithContent(1);
+//            System.out.println(text);
+//
+//            List<IText> texts = daoText.importTextsByRepositoryId(3);
+//            System.out.println(texts);
+
+//            // test for update
+//
+//            text.setModificationDate("2015-10-10");
+//            text.setContent("bla bla bla");
+//
+//            System.out.println(text);
+//            System.out.println(daoText.updateTextWithContent(text));
+
+
+            // test to remove
+            System.out.println(daoText.removeTextsByRepositoryId(3));
 
 
         } catch (DaoFailure e) {
