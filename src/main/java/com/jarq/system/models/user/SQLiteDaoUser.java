@@ -35,13 +35,14 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
     }
 
     @Override
-    public IUser createUser(String name, String surname, String email, IAddress address) throws DaoFailure {
+    public IUser createUser(String name, String surname, String email) throws DaoFailure {
         int id = getLowestFreeIdFromGivenTable(defaultTable);
         final String temporaryPassword = "123";
-        IUser user = new User(id, name, surname, email, temporaryPassword, address);
+        IAddress initialAddress = daoAddress.createNullAddress();
+        IUser user = new User(id, name, surname, email, temporaryPassword, initialAddress);
 
         String query = String.format("INSERT INTO %s " +
-                "VALUES(?, ?, ?, ?, ?, ?)", defaultTable);
+                "VALUES(?, ?, ?, ?, ?)", defaultTable);
 
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, id);
@@ -49,7 +50,6 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
             preparedStatement.setString(3, surname);
             preparedStatement.setString(4, email);
             preparedStatement.setString(5, temporaryPassword);
-            preparedStatement.setInt(6, address.getId());
 
             getProcessManager().executeStatement(preparedStatement);
 
@@ -98,19 +98,16 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         String surname = user.getSurname();
         String email = user.getEmail();
         String password = user.getPassword();
-        int addressId = user.getAddress().getId();
 
         String query = String.format(   "UPDATE %s SET name=?, surname=?, email=?, " +
-                "password=?, address_id=? " +
-                "WHERE id=?", defaultTable);
+                                        "password=? WHERE id=?", defaultTable);
 
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, surname);
             preparedStatement.setString(3, email);
             preparedStatement.setString(4, password);
-            preparedStatement.setInt(5, addressId);
-            preparedStatement.setInt(6, id);
+            preparedStatement.setInt(5, id);
 
             return getProcessManager().executeStatement(preparedStatement);
 
@@ -128,15 +125,16 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
     public boolean removeUser(int userId) throws DaoFailure {
         String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
 
-        int addressId = importUser(userId).getAddress().getId();
+//        int addressId = importUser(userId).getAddress().getId();
 
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
             preparedStatement.setInt(1, userId);
-            boolean isUserRemoved = getProcessManager().executeStatement(preparedStatement);
-            boolean isAddressRemoved = daoAddress.removeAddress(addressId);
-            boolean areRepositoriesRemoved = daoRepository.removeRepositoriesByOwnerId(userId);
+//            boolean isUserRemoved = getProcessManager().executeStatement(preparedStatement);
+//            boolean isAddressRemoved = daoAddress.removeAddress(addressId);
+//            boolean areRepositoriesRemoved = daoRepository.removeRepositoriesByOwnerId(userId);
 
-            return isUserRemoved && isAddressRemoved && areRepositoriesRemoved;
+//            return isUserRemoved && isAddressRemoved && areRepositoriesRemoved;
+            return getProcessManager().executeStatement(preparedStatement);
 
         } catch (SQLException ex) {
             throw new DaoFailure(ex.getMessage());
@@ -155,7 +153,6 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         int SURNAME_INDEX = 2;
         int EMAIL_INDEX = 3;
         int PASSWORD_INDEX = 4;
-        int ADDRESS_INDEX = 5;
 
         try {
             int id = Integer.parseInt(userData[ID_INDEX]);
@@ -163,8 +160,8 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
             String surname = userData[SURNAME_INDEX];
             String email = userData[EMAIL_INDEX];
             String password = userData[PASSWORD_INDEX];
-            int addressId = Integer.parseInt(userData[ADDRESS_INDEX]);
-            IAddress address = daoAddress.importAddress(addressId);
+
+            IAddress address = daoAddress.importAddressByUserId(id);
 
             return new User(id, name, surname, email, password, address);
 

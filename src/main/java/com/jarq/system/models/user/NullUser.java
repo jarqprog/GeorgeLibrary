@@ -76,8 +76,6 @@ public class NullUser extends NullModel implements IUser {
 
     @Override
     public String toString() {
-        return "NullUser{" +
-                "getNotAvailable()='" + getNotAvailable() + '\'' +
-                '}';
+        return "NullUser{} " + super.toString();
     }
 }

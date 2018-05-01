@@ -2,7 +2,6 @@ package com.jarq.system.models.user;
 
 import com.jarq.system.dao.Dao;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.models.address.IAddress;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ public interface IDaoUser extends Dao {
 
     IUser createNullUser();
 
-    IUser createUser(String name, String surname, String email, IAddress address)
+    IUser createUser(String name, String surname, String email)
             throws DaoFailure;
 
     IUser importUser(int userId) throws DaoFailure;
