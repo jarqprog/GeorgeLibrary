@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class SqlDao implements Dao {
 
@@ -29,13 +30,26 @@ public abstract class SqlDao implements Dao {
         return processManager;
     }
 
-    protected int getLowestFreeIdFromGivenTable(String defaultDatabaseTable) throws DaoFailure {
+    protected List<Integer> gatherIdFromNestedList(List<String[]> nestedList)
+            throws DaoFailure {
+        int ID_INDEX = 0;
+        try {
+
+            return nestedList.stream()
+                    .map(s -> Integer.parseInt(s[ID_INDEX]))
+                    .collect(Collectors.toList());
+        } catch (Exception ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    protected int getLowestFreeIdFromGivenTable(String databaseTable) throws DaoFailure {
         // to avoid relying on database autoincrement mechanic
         final String ID_LABEL = "id";
         final int MINIMUM_ID_VALUE = 1;
         String EXCEPTION_INFO = "Couldn't gather lowest free id, exception occurred. ";
 
-        String query = String.format("SELECT %s FROM %s", ID_LABEL, defaultDatabaseTable);
+        String query = String.format("SELECT %s FROM %s", ID_LABEL, databaseTable);
 
         try ( PreparedStatement preparedStatement = connection.prepareStatement(query);
               ResultSet resultSet = preparedStatement.executeQuery() ) {
