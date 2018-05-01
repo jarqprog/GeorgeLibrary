@@ -34,7 +34,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     }
 
     @Override
-    public List<IText> importAllTexts() throws DaoFailure {
+    public List<IText> importTextsByRepositoryId(int repositoryId) throws DaoFailure {
         return null;
     }
 
@@ -50,6 +50,11 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
 
     @Override
     public boolean removeText(int textId) throws DaoFailure {
+        return false;
+    }
+
+    @Override
+    public boolean removeTextsByRepositoryId(int repositoryId) throws DaoFailure {
         return false;
     }
 

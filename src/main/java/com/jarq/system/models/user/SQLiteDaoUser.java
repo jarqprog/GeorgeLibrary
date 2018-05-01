@@ -4,9 +4,9 @@ import com.jarq.system.dao.SqlDao;
 import com.jarq.system.enums.DbTables;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.models.address.Address;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
+import com.jarq.system.models.repository.IDaoRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,12 +17,15 @@ import java.util.List;
 public class SQLiteDaoUser extends SqlDao implements IDaoUser {
 
     private final IDaoAddress daoAddress;
+    private final IDaoRepository daoRepository;
     private final String defaultTable;
 
     public SQLiteDaoUser(Connection connection, JDBCProcessManager processManager,
-                         IDaoAddress daoAddress, DbTables defaultTable) {
+                         IDaoAddress daoAddress, IDaoRepository daoRepository,
+                         DbTables defaultTable) {
         super(connection, processManager);
         this.daoAddress = daoAddress;
+        this.daoRepository = daoRepository;
         this.defaultTable = defaultTable.getTable();
     }
 
@@ -131,9 +134,9 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
             preparedStatement.setInt(1, userId);
             boolean isUserRemoved = getProcessManager().executeStatement(preparedStatement);
             boolean isAddressRemoved = daoAddress.removeAddress(addressId);
+            boolean areRepositoriesRemoved = daoRepository.removeRepositoriesByOwnerId(userId);
 
-            // repositories should be removed
-            return isUserRemoved && isAddressRemoved;
+            return isUserRemoved && isAddressRemoved && areRepositoriesRemoved;
 
         } catch (SQLException ex) {
             throw new DaoFailure(ex.getMessage());
@@ -141,7 +144,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
     }
 
     @Override
-    public IUser importUserWithRepositories(int userId) throws DaoFailure {
+    public IUser importUserWithRepositories(int userId) throws DaoFailure {  // todo
         return createNullUser();
     }
 

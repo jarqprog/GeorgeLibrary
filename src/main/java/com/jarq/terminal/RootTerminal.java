@@ -5,6 +5,9 @@ import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.address.SQLiteDaoAddress;
+import com.jarq.system.models.repository.IDaoRepository;
+import com.jarq.system.models.repository.IRepository;
+import com.jarq.system.models.repository.SQLiteDaoRepository;
 import com.jarq.system.models.text.IDaoText;
 import com.jarq.system.models.text.SQLiteDaoText;
 import com.jarq.system.models.user.IDaoUser;
@@ -59,12 +62,16 @@ public class RootTerminal implements IRoot {
         IDaoAddress daoAddress = daoFactory.createDAO(SQLiteDaoAddress.class);
         IDaoUser daoUser = daoFactory.createDAO(SQLiteDaoUser.class);
         IDaoText daoText = daoFactory.createDAO(SQLiteDaoText.class);
-
-
+        IDaoRepository daoRepository = daoFactory.createDAO(SQLiteDaoRepository.class);
 
         try {
-            daoText.removeText(1);
-            System.out.println(daoText.createNullText());
+            System.out.println(daoRepository.importRepositoriesByOwnerId(3));
+
+            daoUser.removeUser(3);
+//            System.out.println(daoRepository.removeRepository(4));
+//            System.out.println(daoRepository.importRepositoriesByOwnerId(2));
+//            System.out.println(daoRepository.removeRepositoriesByOwnerId(2));
+//            System.out.println(daoRepository.importRepositoriesByOwnerId(2));
 
 
 

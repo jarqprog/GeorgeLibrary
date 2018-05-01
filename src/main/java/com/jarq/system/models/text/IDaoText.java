@@ -14,13 +14,15 @@ public interface IDaoText extends Dao {
 
     IText importText(int textId) throws DaoFailure;
 
-    List<IText> importAllTexts() throws DaoFailure;
+    List<IText> importTextsByRepositoryId(int repositoryId) throws DaoFailure;
 
     boolean updateText(IText text) throws DaoFailure;
 
     boolean removeText(IText text) throws DaoFailure;
 
     boolean removeText(int textId) throws DaoFailure;
+
+    boolean removeTextsByRepositoryId(int repositoryId) throws DaoFailure;
 
     IText importTextWithContent(int textId) throws DaoFailure;
 

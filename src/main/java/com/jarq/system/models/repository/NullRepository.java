@@ -1,6 +1,6 @@
 package com.jarq.system.models.repository;
 
-import com.jarq.system.models.text.Text;
+import com.jarq.system.models.text.IText;
 import com.jarq.system.models.NullModel;
 
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ public class NullRepository extends NullModel implements IRepository {
     NullRepository() {}
 
     @Override
-    public void setTexts(List<Text> texts) {}
+    public void setTexts(List<IText> texts) {}
 
     @Override
-    public List<Text> getTexts() {
+    public List<IText> getTexts() {
         return new ArrayList<>();
     }
 
