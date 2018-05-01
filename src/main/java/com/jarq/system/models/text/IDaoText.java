@@ -9,7 +9,7 @@ public interface IDaoText extends Dao {
 
     IText createNullText();
 
-    IText createText(int id, String title, String creationDate, int repositoryId)
+    IText createText(String title, int repositoryId)
             throws DaoFailure;
 
     IText importText(int textId) throws DaoFailure;
@@ -17,6 +17,8 @@ public interface IDaoText extends Dao {
     List<IText> importTextsByRepositoryId(int repositoryId) throws DaoFailure;
 
     boolean updateText(IText text) throws DaoFailure;
+
+    boolean updateTextWithContent(IText text) throws DaoFailure;
 
     boolean removeText(IText text) throws DaoFailure;
 
