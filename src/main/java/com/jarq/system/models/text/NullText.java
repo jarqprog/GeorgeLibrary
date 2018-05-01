@@ -48,8 +48,6 @@ public class NullText extends NullModel implements IText {
 
     @Override
     public String toString() {
-        return "NullText{" +
-                "getNotAvailable()='" + getNotAvailable() + '\'' +
-                '}';
+        return "NullText{} " + super.toString();
     }
 }

@@ -56,4 +56,15 @@ public class Text extends Model implements IText {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public String toString() {
+        return "Text{" +
+                "title='" + title + '\'' +
+                ", creationDate='" + creationDate + '\'' +
+                ", modificationDate='" + modificationDate + '\'' +
+                ", content='" + content + '\'' +
+                ", repositoryId=" + repositoryId +
+                "} " + super.toString();
+    }
 }
