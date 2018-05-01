@@ -12,13 +12,13 @@ public class Repository extends Model implements IRepository {
     private String creationDate;
     private String lastModificationDate = "-";
     private List<IText> texts = new ArrayList<>();
-    private final int ownerId;
+    private final int userId;
 
-    Repository(int id, String name, String creationDate, int ownerId) {
+    Repository(int id, String name, String creationDate, int userId) {
         setId(id);
         this.name = name;
         this.creationDate = creationDate;
-        this.ownerId = ownerId;
+        this.userId = userId;
     }
 
     @Override
@@ -62,8 +62,8 @@ public class Repository extends Model implements IRepository {
     }
 
     @Override
-    public int getOwnerId() {
-        return ownerId;
+    public int getUserId() {
+        return userId;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Repository extends Model implements IRepository {
                 ", creationDate='" + creationDate + '\'' +
                 ", lastModificationDate='" + lastModificationDate + '\'' +
                 ", texts=" + texts +
-                ", ownerId=" + ownerId +
+                ", userId=" + userId +
                 "} " + super.toString();
     }
 }

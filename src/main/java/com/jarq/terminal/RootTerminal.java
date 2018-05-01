@@ -9,6 +9,7 @@ import com.jarq.system.models.repository.IDaoRepository;
 import com.jarq.system.models.repository.IRepository;
 import com.jarq.system.models.repository.SQLiteDaoRepository;
 import com.jarq.system.models.text.IDaoText;
+import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.SQLiteDaoText;
 import com.jarq.system.models.user.IDaoUser;
 import com.jarq.system.models.user.IUser;
@@ -65,13 +66,20 @@ public class RootTerminal implements IRoot {
         IDaoRepository daoRepository = daoFactory.createDAO(SQLiteDaoRepository.class);
 
         try {
-            System.out.println(daoRepository.importRepositoriesByOwnerId(3));
 
-            daoUser.removeUser(3);
-//            System.out.println(daoRepository.removeRepository(4));
-//            System.out.println(daoRepository.importRepositoriesByOwnerId(2));
-//            System.out.println(daoRepository.removeRepositoriesByOwnerId(2));
-//            System.out.println(daoRepository.importRepositoriesByOwnerId(2));
+            IUser janek = daoUser.importUser(2);
+            System.out.println(janek);
+            List<IRepository> repos = daoRepository.importRepositoriesByUserId(2);
+            System.out.println(repos);
+
+            IUser nn = daoUser.importUser(3);
+            System.out.println(nn);
+            List<IRepository> nnRepos = daoRepository.importRepositoriesByUserId(3);
+            System.out.println(nnRepos);
+
+//            List<IText> nnTexts = daoText.importTextsByRepositoryId(nnRepos.get(0).getId());
+//            System.out.println(nnTexts);
+
 
 
 

@@ -9,11 +9,11 @@ public interface IDaoRepository extends Dao {
     
     IRepository createNullRepository();
 
-    IRepository createRepository(String name, int ownerId) throws DaoFailure;
+    IRepository createRepository(String name, int userId) throws DaoFailure;
 
     IRepository importRepository(int repositoryId) throws DaoFailure;
 
-    List<IRepository> importRepositoriesByOwnerId(int ownerId) throws DaoFailure;
+    List<IRepository> importRepositoriesByUserId(int userId) throws DaoFailure;
 
     boolean updateRepository(IRepository repository) throws DaoFailure;
 
@@ -21,7 +21,7 @@ public interface IDaoRepository extends Dao {
 
     boolean removeRepository(int repositoryId) throws DaoFailure;
 
-    boolean removeRepositoriesByOwnerId(int ownerId) throws DaoFailure;
+    boolean removeRepositoriesByUserId(int userId) throws DaoFailure;
 
     IRepository importRepositoryWithTexts(int repositoryId) throws DaoFailure;
 

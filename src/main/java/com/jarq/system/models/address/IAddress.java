@@ -26,4 +26,6 @@ public interface IAddress {
     String getHouseNo();
 
     String getApartmentNo();
+
+    int getUserId();
 }

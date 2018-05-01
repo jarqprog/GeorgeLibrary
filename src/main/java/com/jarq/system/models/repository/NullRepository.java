@@ -43,15 +43,14 @@ public class NullRepository extends NullModel implements IRepository {
     public void setLastModificationDate(String lastModificationDate) {}
 
     @Override
-    public int getOwnerId() {
+    public int getUserId() {
         return 0;
     }
 
+
     @Override
     public String toString() {
-        return "NullRepository{" +
-                "getNotAvailable()='" + getNotAvailable() + '\'' +
-                '}';
+        return "NullRepository{} " + super.toString();
     }
 }
 

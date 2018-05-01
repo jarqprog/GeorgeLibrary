@@ -47,9 +47,12 @@ public class NullAddress extends NullModel implements IAddress {
     }
 
     @Override
+    public int getUserId() {
+        return 0;
+    }
+
+    @Override
     public String toString() {
-        return "NullAddress{" +
-                "getNotAvailable()='" + getNotAvailable() + '\'' +
-                '}';
+        return "NullAddress{} " + super.toString();
     }
 }

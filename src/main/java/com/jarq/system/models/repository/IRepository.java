@@ -26,5 +26,5 @@ public interface IRepository {
 
     void setLastModificationDate(String lastModificationDate);
 
-    int getOwnerId();
+    int getUserId();
 }

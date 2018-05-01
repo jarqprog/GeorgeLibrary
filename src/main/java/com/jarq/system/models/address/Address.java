@@ -8,15 +8,16 @@ public class Address extends Model implements IAddress {
     private String city;
     private String street;
     private String houseNo;
-    private String apartmentNo;
+    private String apartmentNo = "-";
+    private final int userId;
 
-    Address(int id, String postalCode, String city, String street, String houseNo) {
+    Address(int id, String postalCode, String city, String street, String houseNo, int userId) {
         setId(id);
         this.postalCode = postalCode;
         this.city = city;
         this.street = street;
         this.houseNo = houseNo;
-        this.apartmentNo = "-";
+        this.userId = userId;
     }
 
     @Override
@@ -70,6 +71,11 @@ public class Address extends Model implements IAddress {
     }
 
     @Override
+    public int getUserId() {
+        return userId;
+    }
+
+    @Override
     public String toString() {
         return "Address{" +
                 "postalCode='" + postalCode + '\'' +
@@ -77,6 +83,7 @@ public class Address extends Model implements IAddress {
                 ", street='" + street + '\'' +
                 ", houseNo='" + houseNo + '\'' +
                 ", apartmentNo='" + apartmentNo + '\'' +
+                ", userId=" + userId +
                 "} " + super.toString();
     }
 }
