@@ -112,17 +112,39 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
 
     @Override
     public boolean removeText(IText text) throws DaoFailure {
-        return false;
+        return removeText(text.getId());
     }
 
     @Override
     public boolean removeText(int textId) throws DaoFailure {
-        return false;
+
+        String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
+
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, textId);
+            return getProcessManager().executeStatement(preparedStatement);
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
+
     }
 
     @Override
     public boolean removeTextsByRepositoryId(int repositoryId) throws DaoFailure {
-        return false;
+
+        String query = String.format("SELECT id FROM %s WHERE repository_id=? ", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, repositoryId);
+            List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
+            List<Integer> idsCollection = gatherIdFromNestedList(nestedCollection);
+            boolean isDone = false;
+            for(int id : idsCollection) {
+                isDone = removeText(id);
+            }
+            return isDone;
+        } catch (Exception ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     private IText extractTextFromStatement(PreparedStatement preparedStatement, boolean withContent)
