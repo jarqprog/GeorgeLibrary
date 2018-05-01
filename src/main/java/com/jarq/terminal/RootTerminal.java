@@ -2,6 +2,8 @@ package com.jarq.terminal;
 
 import com.jarq.IRoot;
 import com.jarq.system.exceptions.DaoFailure;
+import com.jarq.system.helpers.DateTimer;
+import com.jarq.system.helpers.IDateTimer;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.address.SQLiteDaoAddress;
@@ -58,14 +60,21 @@ public class RootTerminal implements IRoot {
         // for tests:
 
         JDBCProcessManager jdbcProcessManager = SQLProcessManager.getInstance();
+        IDateTimer dateTimer = new DateTimer();
 
-        IDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, jdbcProcessManager);
+        IDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, jdbcProcessManager, dateTimer);
         IDaoAddress daoAddress = daoFactory.createDAO(SQLiteDaoAddress.class);
         IDaoUser daoUser = daoFactory.createDAO(SQLiteDaoUser.class);
         IDaoText daoText = daoFactory.createDAO(SQLiteDaoText.class);
         IDaoRepository daoRepository = daoFactory.createDAO(SQLiteDaoRepository.class);
 
         try {
+
+            List<IUser> users = daoUser.importAllUsers();
+            System.out.println(users);
+
+            List<IAddress> addresses = daoAddress.importAllAddresses();
+            System.out.println(addresses);
 
             IUser janek = daoUser.importUser(2);
             System.out.println(janek);
@@ -76,6 +85,16 @@ public class RootTerminal implements IRoot {
             System.out.println(nn);
             List<IRepository> nnRepos = daoRepository.importRepositoriesByUserId(3);
             System.out.println(nnRepos);
+
+
+            // create repo
+
+            IRepository repository = daoRepository.createRepository("Nowe", 3);
+            System.out.println(repository);
+
+            // remove repo
+//            System.out.println(daoRepository.removeRepositoriesByUserId(3));
+
 
 //            List<IText> nnTexts = daoText.importTextsByRepositoryId(nnRepos.get(0).getId());
 //            System.out.println(nnTexts);
@@ -95,7 +114,8 @@ public class RootTerminal implements IRoot {
 
         IRepositoryView view = new RepositoryView();
         JDBCProcessManager processManager = SQLProcessManager.getInstance();
-        IDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, processManager);
+        IDateTimer dateTimer = new DateTimer();
+        IDaoFactory daoFactory = SqlDaoFactory.getInstance(databaseManager, processManager, dateTimer);
 
         return RepositoryController.getInstance(view, daoFactory);
     }

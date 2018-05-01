@@ -3,14 +3,13 @@ package com.jarq.system.models.repository;
 import com.jarq.system.dao.SqlDao;
 import com.jarq.system.enums.DbTables;
 import com.jarq.system.exceptions.DaoFailure;
+import com.jarq.system.helpers.IDateTimer;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.models.text.IDaoText;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +17,15 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
 
     private final IDaoText daoText;
     private final String defaultTable;
+    private final IDateTimer dateTimer;
 
     public SQLiteDaoRepository(Connection connection, JDBCProcessManager processManager,
-                               IDaoText daoText, DbTables defaultTable) {
+                               IDaoText daoText, DbTables defaultTable,
+                               IDateTimer dateTimer) {
         super(connection, processManager);
         this.daoText = daoText;
         this.defaultTable = defaultTable.getTable();
+        this.dateTimer = dateTimer;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
     public IRepository createRepository(String name, int userId) throws DaoFailure {
 
         int id = getLowestFreeIdFromGivenTable(defaultTable);
-        String creationDateTime = getCurrentDateTime();
+        String creationDateTime = dateTimer.getCurrentDateTime();
         IRepository repository = new Repository(id, name, creationDateTime, userId);
         repository.setLastModificationDate(creationDateTime);
 
@@ -158,12 +160,6 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
     @Override
     public IRepository importRepositoryWithTexts(int repositoryId) throws DaoFailure {
         return null;
-    }
-
-    private String getCurrentDateTime() {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return now.format(formatter);
     }
 
     private IRepository extractRepository(String[] repositoryData) throws DaoFailure {
