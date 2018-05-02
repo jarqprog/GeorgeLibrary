@@ -20,7 +20,7 @@ public class RepositoryFileWriterTest extends AbstractTest {
 
     @Before
     public void setUp() {
-        writer = RepositoryFileWriter.getInstance(StandardCharsets.UTF_8);
+        writer = RepoWriter.getInstance(StandardCharsets.UTF_8);
 
     }
 
@@ -28,7 +28,7 @@ public class RepositoryFileWriterTest extends AbstractTest {
     public void getInstance() {
 
         assertNotNull(writer);
-        assertTrue(writer instanceof RepositoryFileWriter);
+        assertTrue(writer instanceof RepoWriter);
     }
 
     @Test
