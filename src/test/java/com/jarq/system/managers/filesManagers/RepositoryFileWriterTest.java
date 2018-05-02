@@ -1,9 +1,7 @@
-package com.jarq.system.managers;
+package com.jarq.system.managers.filesManagers;
 
 import com.jarq.AbstractTest;
 import com.jarq.system.enums.RepositoriesPath;
-import com.jarq.system.managers.filesManagers.IContentWriter;
-import com.jarq.system.managers.filesManagers.RepositoryFileWriter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,7 +35,8 @@ public class RepositoryFileWriterTest extends AbstractTest {
     public void writeContent() throws IOException {
 
         String testFilepath = RepositoriesPath
-                .TEST_FILES_REPOSITORY.getPath() + "writerTextFile.md";
+                .TEST_FILES_REPOSITORY.getPath() +
+                RepositoriesPath.WRITER_TEST_FILE.getPath();
 
         writer.writeContent(testFilepath, getTestText());
 
