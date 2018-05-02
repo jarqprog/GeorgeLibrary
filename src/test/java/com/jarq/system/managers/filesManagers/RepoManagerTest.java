@@ -12,19 +12,19 @@ import java.nio.file.Paths;
 import static java.nio.file.Files.deleteIfExists;
 import static org.junit.Assert.*;
 
-public class RepoPathManagerTest extends AbstractTest {
+public class RepoManagerTest extends AbstractTest {
 
-    private IPathManager pathManager;
+    private IRepoManager pathManager;
 
     @Before
     public void setup() {
-        pathManager = RepoPathManager.getInstance();
+//        pathManager = RepoManager.getInstance();
     }
 
     @Test
     public void getInstance() {
         assertNotNull(pathManager);
-        assertTrue(pathManager instanceof RepoPathManager);
+        assertTrue(pathManager instanceof RepoManager);
     }
 
     @Test

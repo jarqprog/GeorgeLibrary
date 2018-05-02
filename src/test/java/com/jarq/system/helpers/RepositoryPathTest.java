@@ -41,7 +41,8 @@ public class RepositoryPathTest extends AbstractTest {
         String expected = baseDirectory + "10" + sep + "1" + sep +
                 "5" + sep + "2011_10_08_10_22_01" + fileExtension;
 
-        String output = repositoryPath.build(userId, repositoryId, textId, modificationDate);
+        String output = "";
+//        String output = repositoryPath.buildFullPath(userId, repositoryId, textId, modificationDate);
 
         assertEquals(expected, output);
     }
