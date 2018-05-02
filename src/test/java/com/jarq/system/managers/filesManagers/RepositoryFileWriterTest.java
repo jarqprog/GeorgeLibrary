@@ -2,6 +2,8 @@ package com.jarq.system.managers;
 
 import com.jarq.AbstractTest;
 import com.jarq.system.enums.RepositoriesPath;
+import com.jarq.system.managers.filesManagers.IContentWriter;
+import com.jarq.system.managers.filesManagers.RepositoryFileWriter;
 import org.junit.Before;
 import org.junit.Test;
 
