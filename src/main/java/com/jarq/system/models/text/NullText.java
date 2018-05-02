@@ -12,9 +12,6 @@ public class NullText extends NullModel implements IText {
     }
 
     @Override
-    public void setRepositoryId(int repositoryId) {}
-
-    @Override
     public String getTitle() {
         return getNotAvailable();
     }
@@ -45,6 +42,11 @@ public class NullText extends NullModel implements IText {
 
     @Override
     public void setContent(String content) {}
+
+    @Override
+    public int getUserId() {
+        return 0;
+    }
 
     @Override
     public String toString() {

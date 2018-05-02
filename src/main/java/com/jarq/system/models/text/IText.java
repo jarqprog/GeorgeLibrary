@@ -8,8 +8,6 @@ public interface IText {
 
     int getRepositoryId();
 
-    void setRepositoryId(int repositoryId);
-
     String getTitle();
 
     void setTitle(String title);
@@ -25,4 +23,6 @@ public interface IText {
     String getContent();
 
     void setContent(String content);
+
+    int getUserId();
 }
