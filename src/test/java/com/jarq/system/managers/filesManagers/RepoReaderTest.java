@@ -10,22 +10,20 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
 
-public class RepositoryFileReaderTest extends AbstractTest {
+public class RepoReaderTest extends AbstractTest {
 
     private IContentReader<String> contentReader;
-    private String testFile = RepositoriesPath
-            .TEST_FILES_REPOSITORY.getPath() +
-            RepositoriesPath.READER_TEST_FILE.getPath();
+    private String testFile = RepositoriesPath.READER_TEST_FILE.getPath();
 
     @Before
     public void setUp() {
-        contentReader = RepositoryFileReader.getInstance(StandardCharsets.UTF_8);
+        contentReader = RepoReader.getInstance(StandardCharsets.UTF_8);
     }
 
     @Test
     public void getInstance() {
         assertNotNull(contentReader);
-        assertTrue(contentReader instanceof RepositoryFileReader);
+        assertTrue(contentReader instanceof RepoReader);
     }
 
     @Test

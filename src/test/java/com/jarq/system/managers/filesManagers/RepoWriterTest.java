@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
-public class RepositoryFileWriterTest extends AbstractTest {
+public class RepoWriterTest extends AbstractTest {
 
     private IContentWriter<String> writer;
 
@@ -34,9 +34,7 @@ public class RepositoryFileWriterTest extends AbstractTest {
     @Test
     public void writeContent() throws IOException {
 
-        String testFilepath = RepositoriesPath
-                .TEST_FILES_REPOSITORY.getPath() +
-                RepositoriesPath.WRITER_TEST_FILE.getPath();
+        String testFilepath = RepositoriesPath.WRITER_TEST_FILE.getPath();
 
         writer.writeContent(testFilepath, getTestText());
 
