@@ -1,6 +1,6 @@
 package com.jarq.system.dao;
 
-import com.jarq.system.enums.DbTables;
+import com.jarq.system.enums.DbTable;
 import com.jarq.system.helpers.IDateTimer;
 import com.jarq.system.managers.databaseManagers.DatabaseManager;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
@@ -46,18 +46,18 @@ public class SqlDaoFactory implements IDaoFactory {
 
         switch(daoName) {
             case("SQLiteDaoText"):
-                dao = new SQLiteDaoText(connection, processManager, DbTables.TEXTS, dateTimer);
+                dao = new SQLiteDaoText(connection, processManager, DbTable.TEXTS, dateTimer);
                 break;
             case("SQLiteDaoAddress"):
-                dao = new SQLiteDaoAddress(connection, processManager, DbTables.ADDRESSES);
+                dao = new SQLiteDaoAddress(connection, processManager, DbTable.ADDRESSES);
                 break;
             case("SQLiteDaoUser"):
                 dao = new SQLiteDaoUser(connection, processManager,
-                        createDAO(SQLiteDaoAddress.class), DbTables.USERS);
+                        createDAO(SQLiteDaoAddress.class), DbTable.USERS);
                 break;
             case("SQLiteDaoRepository"):
                 dao = new SQLiteDaoRepository(connection, processManager,
-                        DbTables.REPOSITORIES, dateTimer);
+                        DbTable.REPOSITORIES, dateTimer);
                 break;
         }
         return daoType.cast(dao);

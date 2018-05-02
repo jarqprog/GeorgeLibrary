@@ -37,19 +37,24 @@ public class RepoReaderTest extends AbstractTest {
 
     private String getTestText() {
 
-        return "She had a troop of pretty engaging children, mostly girls, only one of\n" +
-                "whom she was ever known to kiss or caress, and to the others she was\n" +
-                "worse than the traditional stepmother of fairy tale. It was only\n" +
-                "afterwards I learned that those proud creatures I, in my abject\n" +
-                "solitude, hated and envied, lived in the same deadly fear of her with\n" +
-                "which her cold blue eyes and thin cruel lips inspired me with.\n" +
-                "\n" +
-                "But there were, thank God! many bright hours for me, untroubled by her\n" +
-                "shadow. I was a little sovereign lady in my nurse's kindly village,\n" +
-                "admired and never thwarted. I toddled imperiously among a small world in\n" +
-                "corduroy breeches and linsey skirts, roaming unwatched the fields and\n" +
-                "lanes from daylight until dark. We sat upon green banks and made daisy\n" +
-                "chains, and dabbled delightedly with the sand of the pond edges, while\n" +
-                "we gurgled and chattered and screamed at the swans.";
+        return "My nurse loved me devotedly, and of course \n" +
+                "spoiled me. Most of the villagers helped her \n" +
+                "in this good work, so that the first seven years \n" +
+                "of my childhood, in spite of baby-face unblest by \n" +
+                "mother’s kiss, were its happiest period. Women \n" +
+                "who do not love their children do well to put \n" +
+                "them out to nurse. The contrast of my life at \n" +
+                "home and the years spent with these rustic \n" +
+                "strangers is very shocking. The one petted, \n" +
+                "cherished, and untroubled; the other full of dark \n" +
+                "terrors and hate, and a loneliness such as grown \n" +
+                "humanity cannot understand without experience \n" +
+                "of that bitterest of all tragedies — unloved and \n" +
+                "ill-treated childhood. But I was only reminded \n" +
+                "of my sorrow at nurse’s on the rare occasion \n" +
+                "of my mother’s visits, or when nurse once a \n" +
+                "month put me into my best clothes, after wash- \n" +
+                "ing my face with blue mottled soap — >a thing I \n" +
+                "detested — and carried me off on the mail-car to";
     }
 }
