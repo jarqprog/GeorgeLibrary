@@ -2,10 +2,7 @@ package com.jarq.system.managers;
 
 import com.jarq.system.enums.RepositoriesPath;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class FileContent implements IContentReader<String> {
 
@@ -21,7 +18,7 @@ public class FileContent implements IContentReader<String> {
 
     @Override
     public String readContent(String filePath) throws IOException {
-        String fullPath = repositoryPath + filePath;
+        String fullPath = (repositoryPath + filePath).replaceAll("/", File.separator);
         String line;
         String nextLine = "\n";
         StringBuilder sb = new StringBuilder();
@@ -34,5 +31,11 @@ public class FileContent implements IContentReader<String> {
             throw new IOException(e);
         }
         return sb.toString();
+    }
+
+    @Override
+    public String readContentAnotherWay(String filePath) throws IOException {
+
+        return null;
     }
 }
