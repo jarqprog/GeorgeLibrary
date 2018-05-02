@@ -2,6 +2,7 @@ package com.jarq.system.helpers.repositoryPath;
 
 import com.jarq.system.enums.FileExtension;
 import com.jarq.system.enums.RepositoriesPath;
+import com.jarq.system.models.text.IText;
 
 import java.io.File;
 
@@ -22,17 +23,34 @@ public class RepositoryPath implements IRepositoryPath {
     }
 
     @Override
-    public String build(int userId, int repositoryId, int textId, String textModificationDate) {
-        return String.format("%s%s%s%s%s%s%s%s%s",
-                        repositoryPath,
-                        userId,
-                        separator,
-                        repositoryId,
-                        separator,
-                        textId,
-                        separator,
-                        buildFilename(textModificationDate),
-                        fileExtension);
+    public String buildFullPath(IText text) {
+//        return String.format("%s%s%s%s%s%s%s%s%s",
+//                        repositoryPath,
+//                        userId,
+//                        separator,
+//                        repositoryId,
+//                        separator,
+//                        textId,
+//                        separator,
+//                        buildFilename(textModificationDate),
+//                        fileExtension);
+
+        return "";
+    }
+
+    @Override
+    public String buildTextDirectory(IText text) {
+        return null;
+    }
+
+    @Override
+    public String buildRepoDirectory(IText text) {
+        return null;
+    }
+
+    @Override
+    public String buildUserDirectory(IText text) {
+        return null;
     }
 
     private String buildFilename(String textModificationDate) {
