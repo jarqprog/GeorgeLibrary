@@ -6,13 +6,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class RepositoryFileReader extends RepositoryFile implements IContentReader<String> {
+public class RepoReader extends RepositoryFile implements IContentReader<String> {
 
     public static IContentReader<String> getInstance(Charset charset) {
-        return new RepositoryFileReader(charset);
+        return new RepoReader(charset);
     }
 
-    private RepositoryFileReader(Charset charset) {
+    private RepoReader(Charset charset) {
         super(charset);
     }
 
