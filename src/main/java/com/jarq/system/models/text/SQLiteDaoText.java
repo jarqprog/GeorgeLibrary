@@ -1,7 +1,7 @@
 package com.jarq.system.models.text;
 
 import com.jarq.system.dao.SqlDao;
-import com.jarq.system.enums.DbTables;
+import com.jarq.system.enums.DbTable;
 import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.helpers.IDateTimer;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
@@ -18,7 +18,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     private final IDateTimer dateTimer;
 
     public SQLiteDaoText(Connection connection, JDBCProcessManager processManager,
-                         DbTables defaultTable, IDateTimer dateTimer) {
+                         DbTable defaultTable, IDateTimer dateTimer) {
         super(connection, processManager);
         this.defaultTable = defaultTable.getTable();
         this.dateTimer = dateTimer;

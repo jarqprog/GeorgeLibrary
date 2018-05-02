@@ -1,7 +1,7 @@
 package com.jarq.system.models.user;
 
 import com.jarq.system.dao.SqlDao;
-import com.jarq.system.enums.DbTables;
+import com.jarq.system.enums.DbTable;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.models.address.IAddress;
@@ -19,7 +19,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
     private final String defaultTable;
 
     public SQLiteDaoUser(Connection connection, JDBCProcessManager processManager,
-                         IDaoAddress daoAddress, DbTables defaultTable) {
+                         IDaoAddress daoAddress, DbTable defaultTable) {
         super(connection, processManager);
         this.daoAddress = daoAddress;
         this.defaultTable = defaultTable.getTable();
