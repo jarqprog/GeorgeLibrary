@@ -2,7 +2,7 @@ package com.jarq.system.managers.filesManagers;
 
 import java.io.IOException;
 
-public interface IPathManager {
+public interface IRepoManager {
 
     // return true if path exists
     boolean inspect(String fullFilepath);

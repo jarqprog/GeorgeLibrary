@@ -1,18 +1,24 @@
 package com.jarq.system.managers.filesManagers;
 
+import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class RepoPathManager implements IPathManager {
+public class RepoManager implements IRepoManager {
 
-    public static IPathManager getInstance() {
-        return new RepoPathManager();
+    private final IRepositoryPath repositoryPath;
+
+    public static IRepoManager getInstance(IRepositoryPath repositoryPath) {
+        return new RepoManager(repositoryPath);
     }
 
-    private RepoPathManager() {}
+    private RepoManager(IRepositoryPath repositoryPath) {
+        this.repositoryPath = repositoryPath;
+    }
 
     @Override
     public boolean inspect(String fullFilepath) {
