@@ -1,12 +1,12 @@
 package com.jarq.system.enums;
 
-public enum Charsets {
+public enum Charset {
 
     UTF8("UTF-8");
 
     private String charset;
 
-    Charsets(String charset) {
+    Charset(String charset) {
         this.charset = charset;
     }
 

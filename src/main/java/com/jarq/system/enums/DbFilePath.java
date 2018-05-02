@@ -1,5 +1,7 @@
 package com.jarq.system.enums;
 
+import java.io.File;
+
 public enum DbFilePath {
 
     DB_SETUP_SCRIPT("src/main/resources/setup_script.sql"),
@@ -12,6 +14,6 @@ public enum DbFilePath {
     }
 
     public String getPath(){
-        return filePath;
+        return filePath.replaceAll("/", File.separator);  // platform independent;
     }
 }

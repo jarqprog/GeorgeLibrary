@@ -1,6 +1,6 @@
 package com.jarq.system.enums;
 
-public enum DbLabels {
+public enum DbLabel {
 
     ID;
 

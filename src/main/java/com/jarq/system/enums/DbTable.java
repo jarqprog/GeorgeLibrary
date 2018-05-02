@@ -1,6 +1,6 @@
 package com.jarq.system.enums;
 
-public enum DbTables {
+public enum DbTable {
 
     REPOSITORIES, USERS, TEXTS, ADDRESSES;
 

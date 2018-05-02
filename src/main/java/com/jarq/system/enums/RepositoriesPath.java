@@ -1,5 +1,7 @@
 package com.jarq.system.enums;
 
+import java.io.File;
+
 public enum RepositoriesPath {
 
     FILES_REPOSITORY("src/main/resources/repositories/"),
@@ -13,6 +15,6 @@ public enum RepositoriesPath {
     }
 
     public String getPath() {
-        return path;
+        return path.replaceAll("/", File.separator);  // platform independent
     }
 }
