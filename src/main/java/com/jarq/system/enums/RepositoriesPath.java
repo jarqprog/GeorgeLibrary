@@ -6,7 +6,8 @@ public enum RepositoriesPath {
 
     FILES_REPOSITORY("src/main/resources/repositories/"),
     TEST_FILES_REPOSITORY("src/main/resources/testRepositories/"),
-    TEST_FILE("test");
+    READER_TEST_FILE("readerTextFile.md"),
+    WRITER_TEST_FILE("writerTextFile.md");
 
     private String path;
 
