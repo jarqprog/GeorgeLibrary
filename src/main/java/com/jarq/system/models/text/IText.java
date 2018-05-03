@@ -1,10 +1,13 @@
 package com.jarq.system.models.text;
 
-public interface IText {
+import com.jarq.system.models.Identifiable;
+import com.jarq.system.models.content.IContent;
+
+import java.util.List;
+
+public interface IText extends Identifiable {
 
     int getId();
-
-    void setId(int id);
 
     int getRepositoryId();
 
@@ -14,15 +17,13 @@ public interface IText {
 
     String getCreationDate();
 
-    void setCreationDate(String creationDate);
-
     String getModificationDate();
 
     void setModificationDate(String modificationDate);
 
-    String getContent();
+    List<IContent> getContents();
 
-    void setContent(String content);
+    void setContents(List<IContent> contents);
 
     int getUserId();
 }
