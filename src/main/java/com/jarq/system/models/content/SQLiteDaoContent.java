@@ -91,17 +91,40 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
 
     @Override
     public boolean removeContent(IContent content) throws DaoFailure {
-        return false;
+        return removeContent(content.getId());
     }
 
     @Override
     public boolean removeContent(int contentId) throws DaoFailure {
-        return false;
+        String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
+
+
+        // implement removing files!!!!
+
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, contentId);
+            return getProcessManager().executeStatement(preparedStatement);
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
     public boolean removeContentsByTextId(int textId) throws DaoFailure {
-        return false;
+
+        String query = String.format("SELECT id FROM %s WHERE text_id=? ", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, textId);
+            List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
+            List<Integer> idsCollection = gatherIdFromNestedList(nestedCollection);
+            boolean isDone = false;
+            for(int id : idsCollection) {
+                isDone = removeContent(id);
+            }
+            return isDone;
+        } catch (Exception ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     private IContent extractContent(String[] contentData) throws DaoFailure {
