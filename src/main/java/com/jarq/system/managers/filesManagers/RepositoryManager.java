@@ -4,6 +4,7 @@ import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.models.content.IContent;
 import com.jarq.system.models.repository.IRepository;
 import com.jarq.system.models.text.IText;
+import com.jarq.system.models.user.IUser;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,9 +64,15 @@ public class RepositoryManager implements IRepositoryManager {
     public boolean removeRepository(IRepository repository) throws IOException {
 
         String path = repositoryPath.repositoryDir(repository);
+        return deleteDirectory(path);
+    }
 
+    @Override
+    public boolean removeUserRepositories(IUser user) throws IOException {
         return false;
     }
+
+
 
     private boolean create(String fullFilepath) throws IOException {
         if (! hasFile(fullFilepath) ) {
@@ -82,16 +89,20 @@ public class RepositoryManager implements IRepositoryManager {
                 Files.isReadable(path);
     }
 
-    private boolean deleteDirectory(String pathToBeDeleted) throws IOException {
-        Path path = Paths.get(pathToBeDeleted);
+    private boolean deleteDirectory(String pathToRemove) throws IOException {
+        checkRemovalSecurity(pathToRemove);  // throws exception if repo is in danger
+        Path path = Paths.get(pathToRemove);
         return Files.walk(path)
             .sorted(Comparator.reverseOrder())
             .map(Path::toFile).allMatch(File::delete);
-
-//        return true;
-
     }
 
+    private void checkRemovalSecurity(String pathToRemove) throws IOException {
 
-
+        // stop removing if 'border' subdirectory is in danger
+        String[] pathAsArray = pathToRemove.split(File.separator);
+        if( pathAsArray[pathAsArray.length-1].equals("border") ) {
+            throw new IOException("Stop! Can not delete it further, repository in danger!");
+        }
+    }
 }
