@@ -15,7 +15,9 @@ public enum RepositoriesPath {
     MANAGER_PATH_REMOVE_FILE_TEST("src/main/resources/testRepositories/border/" +
             "repositoryManager/removeFile/1/1/1/2018_10_10_20_21_21.md"),
     MANAGER_PATH_REMOVE_TEXT_DIRECTORY_TEST("src/main/resources/testRepositories/border/" +
-            "repositoryManager/removeTextDirectory/1/1/1/");
+            "repositoryManager/removeTextDirectory/1/1/1/1/"),
+    MANAGER_PATH_REMOVE_REPOSITORY_TEST("src/main/resources/testRepositories/border/" +
+            "repositoryManager/removeRepository/1/1/");
 
     private String path;
 
