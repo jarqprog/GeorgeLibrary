@@ -1,7 +1,7 @@
 package com.jarq.system.dao;
 
 import com.jarq.system.enums.DbTable;
-import com.jarq.system.helpers.IDateTimer;
+import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.managers.databaseManagers.DatabaseManager;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.models.address.SQLiteDaoAddress;

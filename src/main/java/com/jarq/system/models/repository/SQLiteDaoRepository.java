@@ -3,7 +3,7 @@ package com.jarq.system.models.repository;
 import com.jarq.system.dao.SqlDao;
 import com.jarq.system.enums.DbTable;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.helpers.IDateTimer;
+import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 
 import java.sql.Connection;

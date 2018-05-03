@@ -3,7 +3,7 @@ package com.jarq.system.models.text;
 import com.jarq.system.dao.SqlDao;
 import com.jarq.system.enums.DbTable;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.helpers.IDateTimer;
+import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 
 import java.sql.Connection;
@@ -76,7 +76,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, textId);
 
-            // implementation file managers
+            // implementation filepath managers
 
             return extractTextFromStatement(preparedStatement);
 
@@ -162,7 +162,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     }
 
     private IText extractTextFromTable(String[] textData) throws DaoFailure {
-        //  without content to avoid overloading system
+        //  without filepath to avoid overloading system
 
         int ID_INDEX = 0;
         int TITLE_INDEX = 1;

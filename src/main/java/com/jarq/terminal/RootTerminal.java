@@ -2,17 +2,13 @@ package com.jarq.terminal;
 
 import com.jarq.IRoot;
 import com.jarq.system.enums.DbTable;
-import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.helpers.DateTimer;
-import com.jarq.system.helpers.IDateTimer;
-import com.jarq.system.models.address.IAddress;
+import com.jarq.system.helpers.datetimer.DateTimer;
+import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.address.SQLiteDaoAddress;
 import com.jarq.system.models.repository.IDaoRepository;
-import com.jarq.system.models.repository.IRepository;
 import com.jarq.system.models.repository.SQLiteDaoRepository;
 import com.jarq.system.models.text.IDaoText;
-import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.SQLiteDaoText;
 import com.jarq.system.models.user.IDaoUser;
 
