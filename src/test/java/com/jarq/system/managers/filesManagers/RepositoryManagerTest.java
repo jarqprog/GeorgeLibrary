@@ -6,6 +6,12 @@ import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.models.content.Content;
 import com.jarq.system.models.content.IContent;
+import com.jarq.system.models.repository.IRepository;
+import com.jarq.system.models.repository.Repository;
+import com.jarq.system.models.text.IText;
+import com.jarq.system.models.text.Text;
+import com.jarq.system.models.user.IUser;
+import com.jarq.system.models.user.User;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +22,7 @@ import java.nio.file.Paths;
 
 import static java.nio.file.Files.deleteIfExists;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.booleanThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -96,15 +103,120 @@ public class RepositoryManagerTest extends AbstractTest {
     }
 
     @Test
-    public void removeFile() {
+    public void removeFile() throws Exception {
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_FILE_TEST.getPath();
+
+        prepareFilepathForTest(pathToRemove);
+
+        when(content.getFilepath()).thenReturn(pathToRemove);
+
+        boolean isRemoved = repositoryManager.removeFile(content);
+        boolean secondCheck = ! checkIfFileExists(pathToRemove);
+
+        assertTrue(isRemoved && secondCheck);
     }
 
     @Test
-    public void removeTextDirectory() {
+    public void removeTextDirectory() throws Exception {
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_TEXT_DIRECTORY_TEST.getPath();
+
+        prepareDirectoryPathForTest(pathToRemove);
+
+        IText text = mock(Text.class);
+
+        when(repositoryPath.textDir(text)).thenReturn(pathToRemove);
+
+        boolean isRemoved = repositoryManager.removeTextDirectory(text);
+        boolean secondCheck = ! checkIfDirectoryExists(pathToRemove);
+
+        assertTrue(isRemoved && secondCheck);
     }
 
     @Test
-    public void removeRepository() {
+    public void removeTextDirectory_when_dir_contains_files() throws Exception {
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_FILE_TEST.getPath();
+
+        prepareFilepathForTest(pathToRemove);
+
+        IText text = mock(Text.class);
+
+        when(repositoryPath.textDir(text)).thenReturn(pathToRemove);
+
+        assertTrue(repositoryManager
+                .removeTextDirectory(text) && ! checkIfFileExists(pathToRemove));
+    }
+
+
+    @Test
+    public void removeRepository() throws Exception {
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_REPOSITORY_TEST.getPath();
+
+        prepareDirectoryPathForTest(pathToRemove);
+
+        prepareFilepathForTest(pathToRemove+"1.txt");
+
+        IRepository repository = mock(Repository.class);
+
+        when(repositoryPath.repositoryDir(repository)).thenReturn(pathToRemove);
+
+        boolean result = repositoryManager.removeRepository(repository);
+        boolean secondCheck = ! checkIfDirectoryExists(pathToRemove);
+
+        assertTrue(result && secondCheck);
+    }
+
+    @Test
+    public void removeUserRepositories() throws Exception {
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_USER_REPOSITORIES_TEST.getPath();
+
+        prepareDirectoryPathForTest(pathToRemove);
+
+        IUser user = mock(User.class);
+
+        when(repositoryPath.userDir(user)).thenReturn(pathToRemove);
+
+        boolean result = repositoryManager.removeUserRepositories(user);
+        boolean secondCheck = ! checkIfDirectoryExists(pathToRemove);
+
+        assertTrue(result && secondCheck);
+    }
+
+    @Test(expected = IOException.class)
+    public void removePath_security_check() throws Exception {
+
+        // in case of invalid path - removing shouldn't goes behind 'border'
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_SECURITY_ALERT_TEST.getPath();
+
+        prepareDirectoryPathForTest(pathToRemove);
+
+        IUser user = mock(User.class);
+
+        when(repositoryPath.userDir(user)).thenReturn(pathToRemove);
+
+        repositoryManager.removeUserRepositories(user);  // can be called on any method, I use user
+
+    }
+
+    private void prepareFilepathForTest(String path) throws Exception {
+        if(! checkIfFileExists(path) ) {
+            if(! createFile(path) ) {
+                throw new Exception("Can't continue test, path wasn't created!");
+            }
+        }
+    }
+
+    private void prepareDirectoryPathForTest(String path) throws Exception {
+        if(! checkIfDirectoryExists(path) ) {
+            if(! createDirs(path) ) {
+                throw new Exception("Can't continue test, path wasn't created!");
+            }
+        }
     }
 
     private void removePath(String filepath) throws IOException {
@@ -112,8 +224,24 @@ public class RepositoryManagerTest extends AbstractTest {
         deleteIfExists(path);
     }
 
+    private boolean createFile(String filepath) throws IOException {
+        File path = new File(filepath);
+        path.getParentFile().mkdirs();
+        return path.createNewFile();
+    }
+
+    private boolean createDirs(String dirsPath) {
+        File path = new File(dirsPath);
+        return path.mkdirs();
+    }
+
     private boolean checkIfFileExists(String filepath) {
         File f = new File(filepath);
         return f.exists() && !f.isDirectory();
+    }
+
+    private boolean checkIfDirectoryExists(String dirsPath) {
+        File dir = new File(dirsPath);
+        return dir.exists() && dir.isDirectory();
     }
 }

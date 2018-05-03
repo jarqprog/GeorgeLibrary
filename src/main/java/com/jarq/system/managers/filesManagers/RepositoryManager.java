@@ -4,12 +4,16 @@ import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.models.content.IContent;
 import com.jarq.system.models.repository.IRepository;
 import com.jarq.system.models.text.IText;
+import com.jarq.system.models.user.IUser;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
+
+import static java.nio.file.Files.deleteIfExists;
 
 public class RepositoryManager implements IRepositoryManager {
 
@@ -43,27 +47,27 @@ public class RepositoryManager implements IRepositoryManager {
 
     @Override
     public boolean removeFile(IContent content) throws IOException {
-        String path = content.getFilepath();
-        return false;
+        String filepath = content.getFilepath();
+        Path path = Paths.get(filepath);
+        return deleteIfExists(path);
     }
 
     @Override
     public boolean removeTextDirectory(IText text) throws IOException {
-
         String path = repositoryPath.textDir(text);
-
-        ///
-
-
-        return false;
+        return deletePath(path);
     }
 
     @Override
     public boolean removeRepository(IRepository repository) throws IOException {
-
         String path = repositoryPath.repositoryDir(repository);
+        return deletePath(path);
+    }
 
-        return false;
+    @Override
+    public boolean removeUserRepositories(IUser user) throws IOException {
+        String path = repositoryPath.userDir(user);
+        return deletePath(path);
     }
 
     private boolean create(String fullFilepath) throws IOException {
@@ -75,30 +79,35 @@ public class RepositoryManager implements IRepositoryManager {
         return false;
     }
 
-
     private boolean checkIfPathExists(Path path) {
         return  Files.isRegularFile(path) &
                 Files.isReadable(path);
     }
 
-    private boolean deleteDirectory(File dir) {
-//        if (dir.isDirectory()) {
-//            File[] children = dir.listFiles();
-//            for (int i = 0; i < children.length; i++) {
-//                boolean success = deleteDirectory(children[i]);
-//                if (!success) {
-//                    return false;
-//                }
-//
-//            }
-//        }
-//        System.out.println("removing filepath or directory : " + dir.getName());
-//        return dir.delete();
-
-        return false;
-
+    private boolean deletePath(String pathToRemove) throws IOException {
+        // be careful!
+        checkRemovalSecurity(pathToRemove);  // throws exception if repo is in danger
+        Path path = Paths.get(pathToRemove);
+        return Files.walk(path)
+            .sorted(Comparator.reverseOrder())
+            .map(Path::toFile).allMatch(File::delete);
     }
 
+    private void checkRemovalSecurity(String pathToRemove) throws IOException {
 
+        // stop removing if 'border' subdirectory is in danger (or dirs behind 'border')
+        String[] pathAsArray = pathToRemove.split(File.separator);
+        boolean con1, con2, con3, con4, con5, con6;
+        String currentDirectory = pathAsArray[pathAsArray.length-1];
+        con1 = currentDirectory.equals("border");
+        con2 = currentDirectory.equals("repositories");
+        con3 = currentDirectory.equals("testRepositories");
+        con4 = currentDirectory.equals("resources");
+        con5 = currentDirectory.equals("main");
+        con6 = currentDirectory.equals("src");
 
+        if( con1 || con2 || con3 || con4 || con5 || con6 ) {
+            throw new IOException("Stop! Can not delete it further, repository in danger!");
+        }
+    }
 }

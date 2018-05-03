@@ -25,6 +25,8 @@ import com.jarq.terminal.views.IRepositoryView;
 import com.jarq.terminal.views.RepositoryView;
 import com.jarq.terminal.views.RootView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,6 +59,7 @@ public class RootTerminal implements IRoot {
         try {
 
 //            contentTestingAndManager();
+
 
 
 
@@ -194,10 +197,6 @@ public class RootTerminal implements IRoot {
 //        for(IContent content : contents) {
 //            System.out.println(content);
 //        }
-
-
-
-
 
     }
 
