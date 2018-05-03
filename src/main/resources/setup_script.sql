@@ -1,12 +1,18 @@
+BEGIN TRANSACTION;
 DROP TABLE IF EXISTS `contents`;
 CREATE TABLE IF NOT EXISTS `contents` (
 	`id`	INTEGER NOT NULL UNIQUE,
-	`filepath`	TEXT NOT NULL UNIQUE,
+	`filepath`	TEXT NOT NULL,
 	`creation_date`	TEXT NOT NULL,
 	`text_id`	INTEGER NOT NULL,
 	FOREIGN KEY(`text_id`) REFERENCES `texts`(`id`),
 	PRIMARY KEY(`id`)
 );
+INSERT INTO `contents` (id,filepath,creation_date,text_id) VALUES (1,'src/main/resources/repositories/border/jel.txt001/1.txt','2018-05-03 16:01:32',1);
+INSERT INTO `contents` (id,filepath,creation_date,text_id) VALUES (2,'src/main/resources/repositories/border/2/1/14/2018_05_03_18_12_18.md','2018-05-03 18:12:18',14);
+INSERT INTO `contents` (id,filepath,creation_date,text_id) VALUES (3,'src/main/resources/repositories/border/2/1/15/2018_05_03_18_12_23.md','2018-05-03 18:12:23',15);
+INSERT INTO `contents` (id,filepath,creation_date,text_id) VALUES (4,'src/main/resources/repositories/border/2/1/13/2018_05_03_18_31_32.md','2018-05-03 18:31:32',13);
+INSERT INTO `contents` (id,filepath,creation_date,text_id) VALUES (5,'src/main/resources/repositories/border/2/1/16/2018_05_03_18_12_27.md','2018-05-03 18:12:27',16);
 DROP TABLE IF EXISTS `texts`;
 CREATE TABLE IF NOT EXISTS `texts` (
 	`id`	INTEGER NOT NULL UNIQUE,
@@ -15,8 +21,8 @@ CREATE TABLE IF NOT EXISTS `texts` (
 	`last_modification_date`	TEXT NOT NULL,
 	`repository_id`	INTEGER NOT NULL,
 	`user_id`	INTEGER NOT NULL,
-	FOREIGN KEY(`repository_id`) REFERENCES `repositories`(`id`),
-	PRIMARY KEY(`id`)
+	PRIMARY KEY(`id`),
+	FOREIGN KEY(`repository_id`) REFERENCES `repositories`(`id`)
 );
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (1,'Rozdzial1','2018-05-01 10:01','2018-05-01 10:30',1,1);
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (2,'Rozdzial2','2018-05-01 10:01','2018-05-01 10:30',1,1);
@@ -26,6 +32,14 @@ INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (6,'rob1','2018-02-01 10:01','2018-05-01 10:30',3,3);
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (7,'rob2','2018-02-01 10:01','2018-05-01 10:30',3,3);
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (8,'rob13','2018-02-01 10:01','2018-05-01 10:30',3,3);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (9,'W pustyni i w puszczy','2018-05-03 17:21:55','2018-05-03 17:21:55',1,2);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (10,'W pustyni i w puszczy11','2018-05-03 17:43:23','2018-05-03 17:43:23',1,2);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (11,'W pustyni i w puszczy11','2018-05-03 17:44:09','2018-05-03 17:44:09',1,2);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (12,'W pustyni i w puszczy11','2018-05-03 17:44:28','2018-05-03 17:44:28',1,2);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (13,'W pustyni i w puszczy11','2018-05-03 17:46:10','2018-05-03 17:46:10',1,2);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (14,'W pustyni i w puszczy11','2018-05-03 18:12:18','2018-05-03 18:12:18',1,2);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (15,'W pustyni i w puszczy11','2018-05-03 18:12:22','2018-05-03 18:12:22',1,2);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (16,'W pustyni i w puszczy11','2018-05-03 18:12:27','2018-05-03 18:12:27',1,2);
 DROP TABLE IF EXISTS `repositories`;
 CREATE TABLE IF NOT EXISTS `repositories` (
 	`id`	INTEGER NOT NULL UNIQUE,
@@ -60,9 +74,10 @@ CREATE TABLE IF NOT EXISTS `addresses` (
 	`house_no`	TEXT NOT NULL,
 	`apartment_no`	TEXT DEFAULT '-',
 	`user_id`	INTEGER NOT NULL,
-	FOREIGN KEY(`user_id`) REFERENCES `users`(`id`),
-	PRIMARY KEY(`id`)
+	PRIMARY KEY(`id`),
+	FOREIGN KEY(`user_id`) REFERENCES `users`(`id`)
 );
 INSERT INTO `addresses` (id,postal_code,city,street,house_no,apartment_no,user_id) VALUES (1,'30-830','Kraków','Nad Potokiem','109','207',1);
 INSERT INTO `addresses` (id,postal_code,city,street,house_no,apartment_no,user_id) VALUES (2,'30-100','Kraków','Rynek Główny','2','-',2);
 INSERT INTO `addresses` (id,postal_code,city,street,house_no,apartment_no,user_id) VALUES (3,'42-125','Biała','Górska','120','-',3);
+COMMIT;
