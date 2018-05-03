@@ -1,8 +1,9 @@
 package com.jarq.system.models.user;
 
+import com.jarq.system.models.Identifiable;
 import com.jarq.system.models.address.IAddress;
 
-public interface IPerson {
+public interface IPerson extends Identifiable {
 
     void setName(String firstName);
 
@@ -13,8 +14,6 @@ public interface IPerson {
     void setAddress(IAddress address);
 
     String getFullName();
-
-    int getId();
 
     String getName();
 

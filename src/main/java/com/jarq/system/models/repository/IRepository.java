@@ -1,18 +1,15 @@
 package com.jarq.system.models.repository;
 
+import com.jarq.system.models.Identifiable;
 import com.jarq.system.models.text.IText;
 
 import java.util.List;
 
-public interface IRepository {
+public interface IRepository extends Identifiable {
 
     void setTexts(List<IText> texts);
 
     List<IText> getTexts();
-
-    int getId();
-
-    void setId(int id);
 
     String getName();
 

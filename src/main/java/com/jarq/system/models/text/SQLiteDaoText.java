@@ -1,9 +1,9 @@
 package com.jarq.system.models.text;
 
 import com.jarq.system.dao.SqlDao;
-import com.jarq.system.enums.DbTables;
+import com.jarq.system.enums.DbTable;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.helpers.IDateTimer;
+import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 
 import java.sql.Connection;
@@ -18,7 +18,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     private final IDateTimer dateTimer;
 
     public SQLiteDaoText(Connection connection, JDBCProcessManager processManager,
-                         DbTables defaultTable, IDateTimer dateTimer) {
+                         DbTable defaultTable, IDateTimer dateTimer) {
         super(connection, processManager);
         this.defaultTable = defaultTable.getTable();
         this.dateTimer = dateTimer;
@@ -30,15 +30,15 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     }
 
     @Override
-    public IText createText(String title, int repositoryId) throws DaoFailure {
+    public IText createText(String title, int repositoryId, int userId) throws DaoFailure {
 
         int id = getLowestFreeIdFromGivenTable(defaultTable);
         String creationDate = dateTimer.getCurrentDateTime();
-        IText text = new Text(id, title, creationDate, repositoryId);
+        IText text = new Text(id, title, creationDate, repositoryId, userId);
 
 
         String query = String.format("INSERT INTO %s " +
-                "VALUES(?, ?, ?, ?, ?, ?)", defaultTable);
+                "VALUES(?, ?, ?, ?, ?, ?, ?)", defaultTable);
 
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, id);
@@ -46,7 +46,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
             preparedStatement.setString(3, creationDate);
             preparedStatement.setString(4, creationDate);
             preparedStatement.setInt(5, repositoryId);
-            preparedStatement.setString(6, "");  // content
+            preparedStatement.setInt(6, userId);
 
             getProcessManager().executeStatement(preparedStatement);
             return text;
@@ -62,7 +62,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, textId);
-            return extractTextFromStatement(preparedStatement, false);
+            return extractTextFromStatement(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
@@ -75,7 +75,10 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, textId);
-            return extractTextFromStatement(preparedStatement, true);
+
+            // implementation filepath managers
+
+            return extractTextFromStatement(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
@@ -91,7 +94,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
             List<IText> texts = new ArrayList<>();
 
             for(String[] data : dataCollection) {
-                texts.add(extractTextFromTable(data, false));
+                texts.add(extractTextFromTable(data));
             }
             return texts;
 
@@ -102,12 +105,16 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
 
     @Override
     public boolean updateText(IText text) throws DaoFailure {
-        return update(text, false);
+        return update(text);
     }
 
     @Override
     public boolean updateTextWithContent(IText text) throws DaoFailure {
-        return update(text, true);
+
+
+        // it will be implementation with files managers
+
+        return update(text);
     }
 
     @Override
@@ -147,21 +154,22 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         }
     }
 
-    private IText extractTextFromStatement(PreparedStatement preparedStatement, boolean withContent)
+    private IText extractTextFromStatement(PreparedStatement preparedStatement)
             throws DaoFailure {
 
         String[] textData = getProcessManager().getObjectData(preparedStatement);
-        return extractTextFromTable(textData, withContent);
+        return extractTextFromTable(textData);
     }
 
-    private IText extractTextFromTable(String[] textData, boolean withContent) throws DaoFailure {
-        //  without content to avoid overloading system
+    private IText extractTextFromTable(String[] textData) throws DaoFailure {
+        //  without filepath to avoid overloading system
 
         int ID_INDEX = 0;
         int TITLE_INDEX = 1;
         int CREATION_DATE_INDEX = 2;
         int LAST_MODIFICATION_DATE_INDEX = 3;
         int REPOSITORY_ID_INDEX = 4;
+        int USER_ID_INDEX = 5;
 
         try {
             int id = Integer.parseInt(textData[ID_INDEX]);
@@ -169,16 +177,11 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
             String creationDate = textData[CREATION_DATE_INDEX];
             String lastModificationDate = textData[LAST_MODIFICATION_DATE_INDEX];
             int repositoryId = Integer.parseInt(textData[REPOSITORY_ID_INDEX]);
+            int userId = Integer.parseInt(textData[USER_ID_INDEX]);
 
-            IText text = new Text(id, title, creationDate, repositoryId);
-
-            if(withContent) {  // probably it will be changed (filepath in database, text in file)
-                int CONTENT_INDEX = 5;
-                String content = textData[CONTENT_INDEX];
-                text.setContent(content);
-            }
-
+            IText text = new Text(id, title, creationDate, repositoryId, userId);
             text.setModificationDate(lastModificationDate);
+
             return text;
 
         } catch (Exception ex) {
@@ -186,43 +189,24 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         }
     }
 
-    private boolean update(IText text, boolean shouldUpdateContent) throws DaoFailure {
-
-        // todo (content will be kept in file)
+    private boolean update(IText text) throws DaoFailure {
 
         int id = text.getId();
         String title = text.getTitle();
-        String creationDate = text.getCreationDate();
         String lastModificationDate = text.getModificationDate();
-        int repositoryId = text.getRepositoryId();
 
-        String query;
+        // other values are constant
+        String query = String.format(   "UPDATE %s SET title=?, last_modification_date=? " +
+                                        "WHERE id=?", defaultTable);
 
-        if(shouldUpdateContent) {
-            query = String.format("UPDATE %s SET title=?, creation_date=?, " +
-                    "last_modification_date=?, repository_id=?, content=? " +
-                    "WHERE id=?", defaultTable);
-        } else {
-            query = String.format("UPDATE %s SET title=?, creation_date=?, " +
-                    "last_modification_date=?, repository_id=? " +
-                    "WHERE id=?", defaultTable);
-        }
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setString(1, title);
-            preparedStatement.setString(2, creationDate);
-            preparedStatement.setString(3, lastModificationDate);
-            preparedStatement.setInt(4, repositoryId);
+            preparedStatement.setString(2, lastModificationDate);
+            preparedStatement.setInt(3, id);
 
-            if(shouldUpdateContent) {
-                String content = text.getContent();
-                preparedStatement.setString(5, content);
-                preparedStatement.setInt(6, id);
-            } else {
-                preparedStatement.setInt(5, id);
-            }
             return getProcessManager().executeStatement(preparedStatement);
 
-        } catch(SQLException ex){
+        } catch(SQLException ex) {
             throw new DaoFailure(ex.getMessage());
         }
     }

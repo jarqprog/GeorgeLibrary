@@ -1,7 +1,7 @@
 package com.jarq.system.models.address;
 
 import com.jarq.system.dao.SqlDao;
-import com.jarq.system.enums.DbTables;
+import com.jarq.system.enums.DbTable;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
 
@@ -16,7 +16,7 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
     private final String defaultTable;
 
     public SQLiteDaoAddress(Connection connection, JDBCProcessManager processManager,
-                            DbTables defaultTable) {
+                            DbTable defaultTable) {
         super(connection, processManager);
         this.defaultTable = defaultTable.getTable();
     }

@@ -1,9 +1,8 @@
 package com.jarq.system.models.address;
 
-public interface IAddress {
+import com.jarq.system.models.Identifiable;
 
-
-    void setId(int id);
+public interface IAddress extends Identifiable {
 
     void setPostalCode(String postalCode);
 
@@ -14,8 +13,6 @@ public interface IAddress {
     void setHouseNo(String houseNo);
 
     void setApartmentNo(String apartmentNo);
-
-    int getId();
 
     String getPostalCode();
 
