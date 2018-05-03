@@ -3,6 +3,8 @@ package com.jarq.system.dao;
 import com.jarq.AbstractTest;
 import com.jarq.system.helpers.datetimer.DateTimer;
 import com.jarq.system.helpers.datetimer.IDateTimer;
+import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
+import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.managers.databaseManagers.DatabaseManager;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.managers.databaseManagers.SQLProcessManager;
@@ -35,9 +37,11 @@ public class SqlDaoFactoryTest extends AbstractTest {
         JDBCProcessManager processManager = mock(SQLProcessManager.class);
         IDateTimer dateTimer = mock(DateTimer.class);
         Connection connection = mock(Connection.class);
+        IRepositoryPath repositoryPath = mock(RepositoryPath.class);
 
         when(databaseManager.getConnection()).thenReturn(connection);
-        daoFactory = SqlDaoFactory.getInstance(databaseManager, processManager, dateTimer);
+        daoFactory = SqlDaoFactory
+                .getInstance(databaseManager, processManager, dateTimer, repositoryPath);
     }
 
     @Test

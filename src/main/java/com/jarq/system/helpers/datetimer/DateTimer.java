@@ -9,11 +9,11 @@ public class DateTimer implements IDateTimer {
 
     private final String formatter;
 
-    public static IDateTimer getInstane(DateTimerFormatter dateTimerFormatter) {
+    public static IDateTimer getInstance(DateTimerFormatter dateTimerFormatter) {
         return new DateTimer(dateTimerFormatter.getFormatter());
     }
 
-    public static IDateTimer getInstane() {
+    public static IDateTimer getInstance() {
         return new DateTimer();
     }
 

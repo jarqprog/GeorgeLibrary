@@ -4,15 +4,15 @@ import com.jarq.system.models.Model;
 
 public class Content extends Model implements IContent {
 
-    private final int textId;
     private final String filepath;
     private final String creationDate;
+    private final int textId;
 
-    Content(int id, int textId, String filepath, String creationDate) {
+    Content(int id, String filepath, String creationDate, int textId) {
         setId(id);
-        this.textId = textId;
         this.filepath = filepath;
         this.creationDate = creationDate;
+        this.textId = textId;
     }
 
     @Override

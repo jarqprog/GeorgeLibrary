@@ -3,25 +3,26 @@ package com.jarq.system.models.content;
 import com.jarq.system.dao.SqlDao;
 import com.jarq.system.enums.DbTable;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
+import com.jarq.system.models.text.IText;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SQLiteDaoContent extends SqlDao implements IDaoContent {
 
     private final String defaultTable;
-    private final IDateTimer dateTimer;
+    private final IRepositoryPath repositoryPath;
 
     public SQLiteDaoContent(Connection connection, JDBCProcessManager processManager,
-                            DbTable defaultTable, IDateTimer dateTimer) {
+                            DbTable defaultTable, IRepositoryPath repositoryPath) {
         super(connection, processManager);
         this.defaultTable = defaultTable.getTable();
-        this.dateTimer = dateTimer;
+        this.repositoryPath = repositoryPath;
     }
 
     @Override
@@ -30,9 +31,12 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
     }
 
     @Override
-    public IContent createContent(int textId, String filepath) throws DaoFailure {
+    public IContent createContent(IText text) throws DaoFailure {
+
         int id = getLowestFreeIdFromGivenTable(defaultTable);
-        String creationDate = dateTimer.getCurrentDateTime();
+        String filepath = repositoryPath.filepath(text);
+        String creationDate = text.getModificationDate();
+        int textId = text.getId();
 
         String query = String.format("INSERT INTO %s " +
                 "VALUES(?, ?, ?, ?)", defaultTable);
@@ -44,7 +48,7 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
             preparedStatement.setInt(4, textId);
 
             getProcessManager().executeStatement(preparedStatement);
-            return new Content(id, textId, filepath, creationDate);
+            return new Content(id, filepath, creationDate, textId);
 
         } catch (SQLException ex) {
             throw new DaoFailure(ex.getMessage());
@@ -53,26 +57,93 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
 
     @Override
     public IContent importContent(int contentId) throws DaoFailure {
-        return null;
+
+        String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
+        
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, contentId);
+            String[] contentData = getProcessManager().getObjectData(preparedStatement);
+            return extractContent(contentData);
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
+        
     }
 
     @Override
     public List<IContent> importContentsByTextId(int textId) throws DaoFailure {
-        return null;
+        String query = String.format("SELECT * FROM %s WHERE text_id=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, textId);
+            List<String[]> dataCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
+            List<IContent> contents = new ArrayList<>();
+
+            for(String[] data : dataCollection) {
+                contents.add(extractContent(data));
+            }
+            return contents;
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
     public boolean removeContent(IContent content) throws DaoFailure {
-        return false;
+        return removeContent(content.getId());
     }
 
     @Override
     public boolean removeContent(int contentId) throws DaoFailure {
-        return false;
+        String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
+
+
+        // implement removing files!!!!
+
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, contentId);
+            return getProcessManager().executeStatement(preparedStatement);
+        } catch (SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
     public boolean removeContentsByTextId(int textId) throws DaoFailure {
-        return false;
+
+        String query = String.format("SELECT id FROM %s WHERE text_id=? ", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, textId);
+            List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
+            List<Integer> idsCollection = gatherIdFromNestedList(nestedCollection);
+            boolean isDone = false;
+            for(int id : idsCollection) {
+                isDone = removeContent(id);
+            }
+            return isDone;
+        } catch (Exception ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    private IContent extractContent(String[] contentData) throws DaoFailure {
+
+        int ID_INDEX = 0;
+        int FILE_PATH_INDEX = 1;
+        int CREATION_DATE_INDEX = 2;
+        int TEXT_ID_INDEX = 3;
+        
+        try {
+            int id = Integer.parseInt(contentData[ID_INDEX]);
+            String filepath = contentData[FILE_PATH_INDEX];
+            String creationDate = contentData[CREATION_DATE_INDEX];
+            int textId = Integer.parseInt(contentData[TEXT_ID_INDEX]);
+
+            return new Content(id, filepath, creationDate, textId);
+
+        } catch (Exception ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 }
