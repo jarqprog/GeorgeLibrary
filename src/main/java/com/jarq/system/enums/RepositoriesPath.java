@@ -10,7 +10,8 @@ public enum RepositoriesPath {
     WRITER_TEST_FILE("src/main/resources/testRepositories/writerTextFile.md"),
     MANAGER_PATH_HAS_FILE_TEST("src/main/resources/testRepositories/border/repositoryManager/hasFile/1.md"),
     MANAGER_PATH_CREATION_TEST("src/main/resources/testRepositories/border/repositoryManager/create/1/1/1.md"),
-    MANAGER_PATH_DEMOLISH_TEST("src/main/resources/testRepositories/border/repositoryManager/demolish/1.md");
+    MANAGER_PATH_REMOVE_FILE_TEST("src/main/resources/testRepositories/border/" +
+            "repositoryManager/removeFile/1/1/1/2018_10_10_20_21_21.md");
 
     private String path;
 

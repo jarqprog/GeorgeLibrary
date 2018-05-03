@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static java.nio.file.Files.deleteIfExists;
+
 public class RepositoryManager implements IRepositoryManager {
 
     private final IRepositoryPath repositoryPath;
@@ -43,8 +45,9 @@ public class RepositoryManager implements IRepositoryManager {
 
     @Override
     public boolean removeFile(IContent content) throws IOException {
-        String path = content.getFilepath();
-        return false;
+        String filepath = content.getFilepath();
+        Path path = Paths.get(filepath);
+        return deleteIfExists(path);
     }
 
     @Override

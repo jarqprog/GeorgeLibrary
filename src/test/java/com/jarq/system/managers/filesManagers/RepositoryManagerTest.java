@@ -96,7 +96,10 @@ public class RepositoryManagerTest extends AbstractTest {
     }
 
     @Test
-    public void removeFile() {
+    public void removeFile() throws IOException {
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_FILE_TEST.getPath();
+
+        System.out.println(createFile(pathToRemove));
     }
 
     @Test
@@ -112,8 +115,16 @@ public class RepositoryManagerTest extends AbstractTest {
         deleteIfExists(path);
     }
 
+    private boolean createFile(String filepath) throws IOException {
+        File path = new File(filepath);
+        path.getParentFile().mkdirs();
+        return path.createNewFile();
+    }
+
     private boolean checkIfFileExists(String filepath) {
         File f = new File(filepath);
         return f.exists() && !f.isDirectory();
     }
+
+
 }
