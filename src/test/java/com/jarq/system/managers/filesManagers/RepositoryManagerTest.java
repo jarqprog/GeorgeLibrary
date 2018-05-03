@@ -10,6 +10,8 @@ import com.jarq.system.models.repository.IRepository;
 import com.jarq.system.models.repository.Repository;
 import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.Text;
+import com.jarq.system.models.user.IUser;
+import com.jarq.system.models.user.User;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -174,15 +176,14 @@ public class RepositoryManagerTest extends AbstractTest {
 
         prepareDirectoryPathForTest(pathToRemove);
 
-        IRepository repository = mock(Repository.class);
+        IUser user = mock(User.class);
 
-        when(repositoryPath.repositoryDir(repository)).thenReturn(pathToRemove);
+        when(repositoryPath.userDir(user)).thenReturn(pathToRemove);
 
-        boolean result = repositoryManager.removeRepository(repository);
+        boolean result = repositoryManager.removeUserRepositories(user);
         boolean secondCheck = ! checkIfDirectoryExists(pathToRemove);
 
         assertTrue(result && secondCheck);
-
     }
 
     private void prepareFilepathForTest(String path) throws Exception {
