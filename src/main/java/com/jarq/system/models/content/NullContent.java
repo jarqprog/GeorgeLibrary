@@ -4,6 +4,8 @@ import com.jarq.system.models.NullModel;
 
 public class NullContent extends NullModel implements IContent {
 
+    NullContent() {}
+
     @Override
     public int getTextId() {
         return 0;
