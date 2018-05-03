@@ -1,13 +1,17 @@
 package com.jarq.system.models.text;
 
 import com.jarq.system.models.Model;
+import com.jarq.system.models.content.IContent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Text extends Model implements IText {
 
     private String title;
-    private String creationDate;
+    private final String creationDate;
     private String modificationDate = "-";
-    private String content = "-";
+    private List<IContent> contents = new ArrayList<>();
     private final int repositoryId;
     private final int userId;
 
@@ -41,11 +45,6 @@ public class Text extends Model implements IText {
     }
 
     @Override
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    @Override
     public String getModificationDate() {
         return modificationDate;
     }
@@ -56,13 +55,13 @@ public class Text extends Model implements IText {
     }
 
     @Override
-    public String getContent() {
-        return content;
+    public List<IContent> getContents() {
+        return contents;
     }
 
     @Override
-    public void setContent(String content) {
-        this.content = content;
+    public void setContents(List<IContent> contents) {
+        this.contents = contents;
     }
 
     @Override
@@ -70,15 +69,4 @@ public class Text extends Model implements IText {
         return userId;
     }
 
-    @Override
-    public String toString() {
-        return "Text{" +
-                "title='" + title + '\'' +
-                ", creationDate='" + creationDate + '\'' +
-                ", modificationDate='" + modificationDate + '\'' +
-                ", content='" + content + '\'' +
-                ", repositoryId=" + repositoryId +
-                ", userId=" + userId +
-                "} " + super.toString();
-    }
 }

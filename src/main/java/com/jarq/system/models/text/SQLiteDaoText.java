@@ -111,6 +111,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     @Override
     public boolean updateTextWithContent(IText text) throws DaoFailure {
 
+
         // it will be implementation with files managers
 
         return update(text);
@@ -169,7 +170,6 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         int LAST_MODIFICATION_DATE_INDEX = 3;
         int REPOSITORY_ID_INDEX = 4;
         int USER_ID_INDEX = 5;
-
 
         try {
             int id = Integer.parseInt(textData[ID_INDEX]);
