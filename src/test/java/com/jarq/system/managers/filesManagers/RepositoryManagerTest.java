@@ -1,0 +1,100 @@
+package com.jarq.system.managers.filesManagers;
+
+import com.jarq.AbstractTest;
+import com.jarq.system.enums.RepositoriesPath;
+import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
+import com.jarq.system.helpers.repositoryPath.RepositoryPath;
+import com.jarq.system.models.content.Content;
+import com.jarq.system.models.content.IContent;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static java.nio.file.Files.deleteIfExists;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class RepositoryManagerTest extends AbstractTest {
+
+    private IRepositoryManager repositoryManager;
+    private IContent content;
+
+    private IRepositoryPath repositoryPath;
+
+    @Before
+    public void setUp() throws Exception {
+
+        content = mock(Content.class);
+        repositoryPath = mock(RepositoryPath.class);
+        repositoryManager = RepositoryManager.getInstance(repositoryPath);
+    }
+
+    @Test
+    public void getInstance() {
+        assertNotNull(repositoryManager);
+        assertTrue(repositoryManager instanceof RepositoryManager);
+    }
+
+    @Test
+    public void hasFile_should_be_true() {
+
+        String filepath = RepositoriesPath.MANAGER_PATH_HAS_FILE_TEST.getPath();
+
+        when(content.getFilepath()).thenReturn(filepath);
+
+        assertTrue(repositoryManager.hasFile(content));
+
+    }
+
+    @Test
+    public void hasFile_should_be_false() {
+
+        String fakePath = "123";
+
+        when(content.getFilepath()).thenReturn(fakePath);
+
+        assertFalse(repositoryManager.hasFile(content));
+    }
+
+    @Test
+    public void hasFile1_should_be_true() {
+
+        String filepath = RepositoriesPath.MANAGER_PATH_HAS_FILE_TEST.getPath();
+
+        assertTrue(repositoryManager.hasFile(filepath));
+
+    }
+
+    @Test
+    public void hasFile1_should_be_false() {
+
+        String fakePath = RepositoriesPath.MANAGER_PATH_HAS_FILE_TEST.getPath()+"1a";
+
+        assertFalse(repositoryManager.hasFile(fakePath));
+    }
+
+    @Test
+    public void createFile() {
+    }
+
+    @Test
+    public void removeFile() {
+    }
+
+    @Test
+    public void removeTextDirectory() {
+    }
+
+    @Test
+    public void removeRepository() {
+    }
+
+    private void removePath(String filepath) throws IOException {
+        Path path = Paths.get(filepath);
+        deleteIfExists(path);
+    }
+}
