@@ -29,7 +29,7 @@ public class RepositoryPath implements IRepositoryPath {
     }
 
     @Override
-    public String content(IText text) {
+    public String filepath(IText text) {
         return String.format("%s%s%s",
                         textDir(text),
                         buildFilename(text.getModificationDate()),
