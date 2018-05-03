@@ -8,19 +8,13 @@ import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.managers.filesManagers.RepositoryManager;
-import com.jarq.system.models.address.IDaoAddress;
-import com.jarq.system.models.address.SQLiteDaoAddress;
 import com.jarq.system.models.content.IContent;
 import com.jarq.system.models.content.IDaoContent;
 import com.jarq.system.models.content.SQLiteDaoContent;
-import com.jarq.system.models.repository.IDaoRepository;
-import com.jarq.system.models.repository.SQLiteDaoRepository;
 import com.jarq.system.models.text.IDaoText;
 import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.SQLiteDaoText;
-import com.jarq.system.models.user.IDaoUser;
 
-import com.jarq.system.models.user.SQLiteDaoUser;
 import com.jarq.terminal.controllers.IRepositoryController;
 import com.jarq.terminal.controllers.RepositoryController;
 import com.jarq.system.dao.IDaoFactory;
@@ -60,21 +54,9 @@ public class RootTerminal implements IRoot {
 
         // for tests:
 
-        IDateTimer dateTimer = DateTimer.getInstane();
-
-        IRepositoryPath repositoryPath = RepositoryPath
-                .getInstance(RepositoriesPath.FILES_REPOSITORY,
-                        FileExtension.MD);
-
-        IDaoFactory daoFactory = createDaoFactory();
-        IDaoAddress daoAddress = daoFactory.createDAO(SQLiteDaoAddress.class);
-        IDaoUser daoUser = daoFactory.createDAO(SQLiteDaoUser.class);
-        IDaoText daoText = daoFactory.createDAO(SQLiteDaoText.class);
-        IDaoRepository daoRepository = daoFactory.createDAO(SQLiteDaoRepository.class);
-
         try {
 
-            contentTestingAndManager();
+//            contentTestingAndManager();
 
 
 
@@ -135,7 +117,7 @@ public class RootTerminal implements IRoot {
     private void repositoryManagerTests() throws Exception {
 
         IDaoFactory daoFactory = createDaoFactory();
-        IDateTimer dateTimer = DateTimer.getInstane();
+        IDateTimer dateTimer = DateTimer.getInstance();
         IRepositoryPath repositoryPath = RepositoryPath
                 .getInstance(RepositoriesPath.FILES_REPOSITORY, FileExtension.MD);
 
@@ -174,12 +156,12 @@ public class RootTerminal implements IRoot {
     }
 
     private IDateTimer getDateTimer() {
-        return DateTimer.getInstane();
+        return DateTimer.getInstance();
     }
 
     private IDaoFactory createDaoFactory() {
         JDBCProcessManager processManager = SQLProcessManager.getInstance();
-        IDateTimer dateTimer = DateTimer.getInstane();
+        IDateTimer dateTimer = DateTimer.getInstance();
         IRepositoryPath repositoryPath = RepositoryPath
                 .getInstance(RepositoriesPath.FILES_REPOSITORY,
                         FileExtension.MD);
@@ -189,18 +171,33 @@ public class RootTerminal implements IRoot {
 
     private void contentTestingAndManager() throws Exception {
         IDaoText daoText = getDaoText();
-        IRepositoryPath repositoryPath = getRepositoryPath();
+//        IRepositoryPath repositoryPath = getRepositoryPath();
         IDateTimer dateTimer = getDateTimer();
 
-        IText text001 = daoText.createText("W pustyni i w puszczy11", 1, 2);
+        IText text001 = daoText.importText(13);
 
         text001.setModificationDate(dateTimer.getCurrentDateTime());
         IDaoContent daoContent = getDaoContent();
         System.out.println(daoContent.importContent(1));
-        IContent content001 = daoContent.createContent(text001);
-        System.out.println(content001);
 
-        
+//        for (int i=0; i<20; i++) {
+//
+//            IContent content001 = daoContent.createContent(text001);
+//            System.out.println(content001);
+//        }
+
+
+//        System.out.println(daoContent.removeContentsByTextId(13));
+//        System.out.println(daoContent.removeContent(11));
+//
+//        List<IContent> contents = daoContent.importContentsByTextId(13);
+//        for(IContent content : contents) {
+//            System.out.println(content);
+//        }
+
+
+
+
 
     }
 
