@@ -14,26 +14,26 @@ import static org.junit.Assert.*;
 
 public class RepoManagerTest extends AbstractTest {
 
-    private IRepoManager pathManager;
+    private IRepositoryManager pathManager;
 
     @Before
     public void setup() {
-//        pathManager = RepoManager.getInstance();
+//        pathManager = RepositoryManager.getInstance();
     }
 
     @Test
     public void getInstance() {
         assertNotNull(pathManager);
-        assertTrue(pathManager instanceof RepoManager);
+        assertTrue(pathManager instanceof RepositoryManager);
     }
 
     @Test
     public void inspect() {
         String notExistingPath = "/1/1/1/nothing.md";
-        String existingPath = RepositoriesPath.MANAGER_PATH_INSPECT_TEST.getPath();
+        String existingPath = RepositoriesPath.MANAGER_PATH_HAS_FILE_TEST.getPath();
 
-        assertFalse(pathManager.inspect(notExistingPath));
-        assertTrue(pathManager.inspect(existingPath));
+        assertFalse(pathManager.hasFile(notExistingPath));
+        assertTrue(pathManager.hasFile(existingPath));
     }
 
     @Test

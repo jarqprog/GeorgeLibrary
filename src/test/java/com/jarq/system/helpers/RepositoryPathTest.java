@@ -42,7 +42,7 @@ public class RepositoryPathTest extends AbstractTest {
                 "5" + sep + "2011_10_08_10_22_01" + fileExtension;
 
         String output = "";
-//        String output = repositoryPath.buildFullPath(userId, repositoryId, textId, modificationDate);
+//        String output = repositoryPath.content(userId, repositoryId, textId, modificationDate);
 
         assertEquals(expected, output);
     }
