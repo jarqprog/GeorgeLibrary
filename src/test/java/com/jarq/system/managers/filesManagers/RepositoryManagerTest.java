@@ -104,7 +104,7 @@ public class RepositoryManagerTest extends AbstractTest {
 
         String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_FILE_TEST.getPath();
 
-        preparePathForTest(pathToRemove);
+        prepareFilepathForTest(pathToRemove);
 
         when(content.getFilepath()).thenReturn(pathToRemove);
 
@@ -119,14 +119,16 @@ public class RepositoryManagerTest extends AbstractTest {
 
         String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_TEXT_DIRECTORY_TEST.getPath();
 
-        preparePathForTest(pathToRemove);
+        prepareDirectoryPathForTest(pathToRemove);
 
         IText text = mock(Text.class);
 
         when(repositoryPath.textDir(text)).thenReturn(pathToRemove);
 
         boolean isRemoved = repositoryManager.removeTextDirectory(text);
-        System.out.println(isRemoved);
+        boolean secondCheck = ! checkIfDirectoryExists(pathToRemove);
+
+        assertTrue(isRemoved && secondCheck);
     }
 
     @Test
@@ -134,14 +136,14 @@ public class RepositoryManagerTest extends AbstractTest {
 
         String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_REPOSITORY_TEST.getPath();
 
-        preparePathForTest(pathToRemove);
+        prepareFilepathForTest(pathToRemove);
 
         IRepository repository = mock(Repository.class);
 
         when(repositoryPath.repositoryDir(repository)).thenReturn(pathToRemove);
 
 //        repositoryManager.removeRepository(repository);
-        
+
     }
 
     @Test
@@ -149,9 +151,17 @@ public class RepositoryManagerTest extends AbstractTest {
 
     }
 
-    private void preparePathForTest(String path) throws Exception {
+    private void prepareFilepathForTest(String path) throws Exception {
         if(! checkIfFileExists(path) ) {
             if(! createFile(path) ) {
+                throw new Exception("Can't continue test, path wasn't created!");
+            }
+        }
+    }
+
+    private void prepareDirectoryPathForTest(String path) throws Exception {
+        if(! checkIfDirectoryExists(path) ) {
+            if(! createDirs(path) ) {
                 throw new Exception("Can't continue test, path wasn't created!");
             }
         }
@@ -168,10 +178,18 @@ public class RepositoryManagerTest extends AbstractTest {
         return path.createNewFile();
     }
 
+    private boolean createDirs(String dirsPath) {
+        File path = new File(dirsPath);
+        return path.mkdirs();
+    }
+
     private boolean checkIfFileExists(String filepath) {
         File f = new File(filepath);
         return f.exists() && !f.isDirectory();
     }
 
-
+    private boolean checkIfDirectoryExists(String dirsPath) {
+        File dir = new File(dirsPath);
+        return dir.exists() && dir.isDirectory();
+    }
 }
