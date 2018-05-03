@@ -3,7 +3,6 @@ package com.jarq.system.models.content;
 import com.jarq.system.dao.SqlDao;
 import com.jarq.system.enums.DbTable;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.models.text.IText;
@@ -11,6 +10,7 @@ import com.jarq.system.models.text.IText;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SQLiteDaoContent extends SqlDao implements IDaoContent {
@@ -73,9 +73,20 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
 
     @Override
     public List<IContent> importContentsByTextId(int textId) throws DaoFailure {
+        String query = String.format("SELECT * FROM %s WHERE text_id=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, textId);
+            List<String[]> dataCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
+            List<IContent> contents = new ArrayList<>();
 
+            for(String[] data : dataCollection) {
+                contents.add(extractContent(data));
+            }
+            return contents;
 
-        return null;
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     @Override
