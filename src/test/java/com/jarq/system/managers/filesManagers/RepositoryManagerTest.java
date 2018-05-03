@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 
 import static java.nio.file.Files.deleteIfExists;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.booleanThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -132,22 +133,57 @@ public class RepositoryManagerTest extends AbstractTest {
     }
 
     @Test
+    public void removeTextDirectory_when_dir_contains_files() throws Exception {
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_FILE_TEST.getPath();
+
+        prepareFilepathForTest(pathToRemove);
+
+        IText text = mock(Text.class);
+
+        when(repositoryPath.textDir(text)).thenReturn(pathToRemove);
+
+        assertTrue(repositoryManager
+                .removeTextDirectory(text) && ! checkIfFileExists(pathToRemove));
+    }
+
+
+    @Test
     public void removeRepository() throws Exception {
 
         String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_REPOSITORY_TEST.getPath();
 
-        prepareFilepathForTest(pathToRemove);
+        prepareDirectoryPathForTest(pathToRemove);
+
+        prepareFilepathForTest(pathToRemove+"1.txt");
 
         IRepository repository = mock(Repository.class);
 
         when(repositoryPath.repositoryDir(repository)).thenReturn(pathToRemove);
 
-//        repositoryManager.removeRepository(repository);
+        boolean result = repositoryManager.removeRepository(repository);
+        boolean secondCheck = ! checkIfDirectoryExists(pathToRemove);
 
+        assertTrue(result && secondCheck);
     }
 
     @Test
-    public void removeUserRepositories() {
+    public void removeUserRepositories() throws Exception {
+
+//        String pathToRemove = RepositoriesPath.Manag.getPath();
+//
+//        prepareDirectoryPathForTest(pathToRemove);
+//
+//        prepareFilepathForTest(pathToRemove+"1.txt");
+//
+//        IRepository repository = mock(Repository.class);
+//
+//        when(repositoryPath.repositoryDir(repository)).thenReturn(pathToRemove);
+//
+//        boolean result = repositoryManager.removeRepository(repository);
+//        boolean secondCheck = ! checkIfDirectoryExists(pathToRemove);
+//
+//        assertTrue(result && secondCheck);
 
     }
 

@@ -17,7 +17,10 @@ public enum RepositoriesPath {
     MANAGER_PATH_REMOVE_TEXT_DIRECTORY_TEST("src/main/resources/testRepositories/border/" +
             "repositoryManager/removeTextDirectory/1/1/1/"),
     MANAGER_PATH_REMOVE_REPOSITORY_TEST("src/main/resources/testRepositories/border/" +
-            "repositoryManager/removeRepository/1/1/");
+            "repositoryManager/removeRepository/1/1/"),
+    MANAGER_PATH_REMOVE_USER_REPOSITORIES_TEST("src/main/resources/testRepositories/border/" +
+            "repositoryManager/removeUserRepositories/1/"),
+    MANAGER_PATH_REMOVE_SECURITY_ALERT_TEST("src/main/resources/testRepositories/border/");
 
     private String path;
 

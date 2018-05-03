@@ -99,9 +99,18 @@ public class RepositoryManager implements IRepositoryManager {
 
     private void checkRemovalSecurity(String pathToRemove) throws IOException {
 
-        // stop removing if 'border' subdirectory is in danger
+        // stop removing if 'border' subdirectory is in danger (or dirs behind 'border')
         String[] pathAsArray = pathToRemove.split(File.separator);
-        if( pathAsArray[pathAsArray.length-1].equals("border") ) {
+        boolean con1, con2, con3, con4, con5, con6;
+        String currentDirectory = pathAsArray[pathAsArray.length-1];
+        con1 = currentDirectory.equals("border");
+        con2 = currentDirectory.equals("repositories");
+        con3 = currentDirectory.equals("testRepositories");
+        con4 = currentDirectory.equals("resources");
+        con5 = currentDirectory.equals("main");
+        con6 = currentDirectory.equals("src");
+
+        if( con1 || con2 || con3 || con4 || con5 || con6 ) {
             throw new IOException("Stop! Can not delete it further, repository in danger!");
         }
     }
