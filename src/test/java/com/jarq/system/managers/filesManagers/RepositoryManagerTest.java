@@ -6,6 +6,8 @@ import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.models.content.Content;
 import com.jarq.system.models.content.IContent;
+import com.jarq.system.models.repository.IRepository;
+import com.jarq.system.models.repository.Repository;
 import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.Text;
 import org.junit.Before;
@@ -124,10 +126,27 @@ public class RepositoryManagerTest extends AbstractTest {
         when(repositoryPath.textDir(text)).thenReturn(pathToRemove);
 
         boolean isRemoved = repositoryManager.removeTextDirectory(text);
+        System.out.println(isRemoved);
     }
 
     @Test
-    public void removeRepository() {
+    public void removeRepository() throws Exception {
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_REPOSITORY_TEST.getPath();
+
+        preparePathForTest(pathToRemove);
+
+        IRepository repository = mock(Repository.class);
+
+        when(repositoryPath.repositoryDir(repository)).thenReturn(pathToRemove);
+
+//        repositoryManager.removeRepository(repository);
+        
+    }
+
+    @Test
+    public void removeUserRepositories() {
+
     }
 
     private void preparePathForTest(String path) throws Exception {
