@@ -96,10 +96,22 @@ public class RepositoryManagerTest extends AbstractTest {
     }
 
     @Test
-    public void removeFile() throws IOException {
+    public void removeFile() throws Exception {
+
         String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_FILE_TEST.getPath();
 
-        System.out.println(createFile(pathToRemove));
+        if(! checkIfFileExists(pathToRemove) ) {
+            if(! createFile(pathToRemove) ) {
+                throw new Exception("Can't continue test, test file wasn't created!");
+            }
+        }
+
+        when(content.getFilepath()).thenReturn(pathToRemove);
+
+        boolean isRemoved = repositoryManager.removeFile(content);
+        boolean secondCheck = ! checkIfFileExists(pathToRemove);
+
+        assertTrue(isRemoved && secondCheck);
     }
 
     @Test
