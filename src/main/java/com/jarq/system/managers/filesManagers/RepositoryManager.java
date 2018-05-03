@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 
 import static java.nio.file.Files.deleteIfExists;
 
@@ -55,10 +56,7 @@ public class RepositoryManager implements IRepositoryManager {
 
         String path = repositoryPath.textDir(text);
 
-        ///
-
-
-        return false;
+        return deleteDirectory(path);
     }
 
     @Override
@@ -84,21 +82,13 @@ public class RepositoryManager implements IRepositoryManager {
                 Files.isReadable(path);
     }
 
-    private boolean deleteDirectory(File dir) {
-//        if (dir.isDirectory()) {
-//            File[] children = dir.listFiles();
-//            for (int i = 0; i < children.length; i++) {
-//                boolean success = deleteDirectory(children[i]);
-//                if (!success) {
-//                    return false;
-//                }
-//
-//            }
-//        }
-//        System.out.println("removing filepath or directory : " + dir.getName());
-//        return dir.delete();
+    private boolean deleteDirectory(String pathToBeDeleted) throws IOException {
+        Path path = Paths.get(pathToBeDeleted);
+        return Files.walk(path)
+            .sorted(Comparator.reverseOrder())
+            .map(Path::toFile).allMatch(File::delete);
 
-        return false;
+//        return true;
 
     }
 

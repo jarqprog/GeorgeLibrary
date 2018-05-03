@@ -6,6 +6,8 @@ import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.models.content.Content;
 import com.jarq.system.models.content.IContent;
+import com.jarq.system.models.text.IText;
+import com.jarq.system.models.text.Text;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -100,11 +102,7 @@ public class RepositoryManagerTest extends AbstractTest {
 
         String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_FILE_TEST.getPath();
 
-        if(! checkIfFileExists(pathToRemove) ) {
-            if(! createFile(pathToRemove) ) {
-                throw new Exception("Can't continue test, test file wasn't created!");
-            }
-        }
+        preparePathForTest(pathToRemove);
 
         when(content.getFilepath()).thenReturn(pathToRemove);
 
@@ -115,11 +113,29 @@ public class RepositoryManagerTest extends AbstractTest {
     }
 
     @Test
-    public void removeTextDirectory() {
+    public void removeTextDirectory() throws Exception {
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_TEXT_DIRECTORY_TEST.getPath();
+
+        preparePathForTest(pathToRemove);
+
+        IText text = mock(Text.class);
+
+        when(repositoryPath.textDir(text)).thenReturn(pathToRemove);
+
+        boolean isRemoved = repositoryManager.removeTextDirectory(text);
     }
 
     @Test
     public void removeRepository() {
+    }
+
+    private void preparePathForTest(String path) throws Exception {
+        if(! checkIfFileExists(path) ) {
+            if(! createFile(path) ) {
+                throw new Exception("Can't continue test, path wasn't created!");
+            }
+        }
     }
 
     private void removePath(String filepath) throws IOException {
