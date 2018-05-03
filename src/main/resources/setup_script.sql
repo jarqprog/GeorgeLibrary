@@ -1,9 +1,12 @@
+BEGIN TRANSACTION;
 DROP TABLE IF EXISTS `contents`;
 CREATE TABLE IF NOT EXISTS `contents` (
+	`id`	INTEGER NOT NULL UNIQUE,
 	`filepath`	TEXT NOT NULL UNIQUE,
+	`creation_date`	TEXT NOT NULL,
 	`text_id`	INTEGER NOT NULL,
-	PRIMARY KEY(`filepath`),
-	FOREIGN KEY(`text_id`) REFERENCES `texts`(`id`)
+	FOREIGN KEY(`text_id`) REFERENCES `texts`(`id`),
+	PRIMARY KEY(`id`)
 );
 DROP TABLE IF EXISTS `texts`;
 CREATE TABLE IF NOT EXISTS `texts` (
@@ -13,8 +16,8 @@ CREATE TABLE IF NOT EXISTS `texts` (
 	`last_modification_date`	TEXT NOT NULL,
 	`repository_id`	INTEGER NOT NULL,
 	`user_id`	INTEGER NOT NULL,
-	PRIMARY KEY(`id`),
-	FOREIGN KEY(`repository_id`) REFERENCES `repositories`(`id`)
+	FOREIGN KEY(`repository_id`) REFERENCES `repositories`(`id`),
+	PRIMARY KEY(`id`)
 );
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (1,'Rozdzial1','2018-05-01 10:01','2018-05-01 10:30',1,1);
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (2,'Rozdzial2','2018-05-01 10:01','2018-05-01 10:30',1,1);
@@ -31,8 +34,8 @@ CREATE TABLE IF NOT EXISTS `repositories` (
 	`creation_date`	TEXT NOT NULL,
 	`last_modification_date`	TEXT,
 	`user_id`	INTEGER NOT NULL,
-	FOREIGN KEY(`user_id`) REFERENCES `users`(`id`),
-	PRIMARY KEY(`id`)
+	PRIMARY KEY(`id`),
+	FOREIGN KEY(`user_id`) REFERENCES `users`(`id`)
 );
 INSERT INTO `repositories` (id,name,creation_date,last_modification_date,user_id) VALUES (1,'Notki','2018-05-01 00:28:44','2018-05-01 00:28:44',1);
 INSERT INTO `repositories` (id,name,creation_date,last_modification_date,user_id) VALUES (2,'Nowa nazwa','2018-05-01 00:07:02','2018-05-01 00:07:02',2);
@@ -58,9 +61,10 @@ CREATE TABLE IF NOT EXISTS `addresses` (
 	`house_no`	TEXT NOT NULL,
 	`apartment_no`	TEXT DEFAULT '-',
 	`user_id`	INTEGER NOT NULL,
-	PRIMARY KEY(`id`),
-	FOREIGN KEY(`user_id`) REFERENCES `users`(`id`)
+	FOREIGN KEY(`user_id`) REFERENCES `users`(`id`),
+	PRIMARY KEY(`id`)
 );
 INSERT INTO `addresses` (id,postal_code,city,street,house_no,apartment_no,user_id) VALUES (1,'30-830','Kraków','Nad Potokiem','109','207',1);
 INSERT INTO `addresses` (id,postal_code,city,street,house_no,apartment_no,user_id) VALUES (2,'30-100','Kraków','Rynek Główny','2','-',2);
 INSERT INTO `addresses` (id,postal_code,city,street,house_no,apartment_no,user_id) VALUES (3,'42-125','Biała','Górska','120','-',3);
+COMMIT;
