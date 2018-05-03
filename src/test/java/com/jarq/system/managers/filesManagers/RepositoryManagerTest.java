@@ -170,20 +170,18 @@ public class RepositoryManagerTest extends AbstractTest {
     @Test
     public void removeUserRepositories() throws Exception {
 
-//        String pathToRemove = RepositoriesPath.Manag.getPath();
-//
-//        prepareDirectoryPathForTest(pathToRemove);
-//
-//        prepareFilepathForTest(pathToRemove+"1.txt");
-//
-//        IRepository repository = mock(Repository.class);
-//
-//        when(repositoryPath.repositoryDir(repository)).thenReturn(pathToRemove);
-//
-//        boolean result = repositoryManager.removeRepository(repository);
-//        boolean secondCheck = ! checkIfDirectoryExists(pathToRemove);
-//
-//        assertTrue(result && secondCheck);
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_USER_REPOSITORIES_TEST.getPath();
+
+        prepareDirectoryPathForTest(pathToRemove);
+
+        IRepository repository = mock(Repository.class);
+
+        when(repositoryPath.repositoryDir(repository)).thenReturn(pathToRemove);
+
+        boolean result = repositoryManager.removeRepository(repository);
+        boolean secondCheck = ! checkIfDirectoryExists(pathToRemove);
+
+        assertTrue(result && secondCheck);
 
     }
 

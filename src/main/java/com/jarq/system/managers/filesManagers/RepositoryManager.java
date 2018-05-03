@@ -54,25 +54,21 @@ public class RepositoryManager implements IRepositoryManager {
 
     @Override
     public boolean removeTextDirectory(IText text) throws IOException {
-
         String path = repositoryPath.textDir(text);
-
-        return deleteDirectory(path);
+        return deletePath(path);
     }
 
     @Override
     public boolean removeRepository(IRepository repository) throws IOException {
-
         String path = repositoryPath.repositoryDir(repository);
-        return deleteDirectory(path);
+        return deletePath(path);
     }
 
     @Override
     public boolean removeUserRepositories(IUser user) throws IOException {
-        return false;
+        String path = repositoryPath.userDir(user);
+        return deletePath(path);
     }
-
-
 
     private boolean create(String fullFilepath) throws IOException {
         if (! hasFile(fullFilepath) ) {
@@ -83,13 +79,13 @@ public class RepositoryManager implements IRepositoryManager {
         return false;
     }
 
-
     private boolean checkIfPathExists(Path path) {
         return  Files.isRegularFile(path) &
                 Files.isReadable(path);
     }
 
-    private boolean deleteDirectory(String pathToRemove) throws IOException {
+    private boolean deletePath(String pathToRemove) throws IOException {
+        // be careful!
         checkRemovalSecurity(pathToRemove);  // throws exception if repo is in danger
         Path path = Paths.get(pathToRemove);
         return Files.walk(path)
