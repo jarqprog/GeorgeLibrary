@@ -186,6 +186,23 @@ public class RepositoryManagerTest extends AbstractTest {
         assertTrue(result && secondCheck);
     }
 
+    @Test(expected = IOException.class)
+    public void removePath_security_check() throws Exception {
+
+        // in case of invalid path - removing shouldn't goes behind 'border'
+
+        String pathToRemove = RepositoriesPath.MANAGER_PATH_REMOVE_SECURITY_ALERT_TEST.getPath();
+
+        prepareDirectoryPathForTest(pathToRemove);
+
+        IUser user = mock(User.class);
+
+        when(repositoryPath.userDir(user)).thenReturn(pathToRemove);
+
+        repositoryManager.removeUserRepositories(user);  // can be called on any method, I use user
+
+    }
+
     private void prepareFilepathForTest(String path) throws Exception {
         if(! checkIfFileExists(path) ) {
             if(! createFile(path) ) {
