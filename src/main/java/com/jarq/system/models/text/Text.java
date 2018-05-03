@@ -1,70 +1,72 @@
 package com.jarq.system.models.text;
 
 import com.jarq.system.models.Model;
+import com.jarq.system.models.content.IContent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Text extends Model implements IText {
 
     private String title;
-    private String creationDate;
+    private final String creationDate;
     private String modificationDate = "-";
-    private String content = "-";
-    private int repositoryId;
+    private List<IContent> contents = new ArrayList<>();
+    private final int repositoryId;
+    private final int userId;
 
-    Text(int id, String title, String creationDate, int repositoryId) {
+
+    Text(int id, String title, String creationDate, int repositoryId, int userId) {
         setId(id);
         this.title = title;
         this.creationDate = creationDate;
         this.repositoryId = repositoryId;
+        this.userId = userId;
     }
 
+    @Override
     public int getRepositoryId() {
         return repositoryId;
     }
 
-    public void setRepositoryId(int repositoryId) {
-        this.repositoryId = repositoryId;
-    }
-
+    @Override
     public String getTitle() {
         return title;
     }
 
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
 
+    @Override
     public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
-    }
-
+    @Override
     public String getModificationDate() {
         return modificationDate;
     }
 
+    @Override
     public void setModificationDate(String modificationDate) {
         this.modificationDate = modificationDate;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    @Override
+    public List<IContent> getContents() {
+        return contents;
     }
 
     @Override
-    public String toString() {
-        return "Text{" +
-                "title='" + title + '\'' +
-                ", creationDate='" + creationDate + '\'' +
-                ", modificationDate='" + modificationDate + '\'' +
-                ", content='" + content + '\'' +
-                ", repositoryId=" + repositoryId +
-                "} " + super.toString();
+    public void setContents(List<IContent> contents) {
+        this.contents = contents;
     }
+
+    @Override
+    public int getUserId() {
+        return userId;
+    }
+
 }

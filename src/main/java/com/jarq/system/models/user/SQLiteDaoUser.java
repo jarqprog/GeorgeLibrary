@@ -1,12 +1,11 @@
 package com.jarq.system.models.user;
 
 import com.jarq.system.dao.SqlDao;
-import com.jarq.system.enums.DbTables;
+import com.jarq.system.enums.DbTable;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
-import com.jarq.system.models.repository.IDaoRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,15 +16,12 @@ import java.util.List;
 public class SQLiteDaoUser extends SqlDao implements IDaoUser {
 
     private final IDaoAddress daoAddress;
-    private final IDaoRepository daoRepository;
     private final String defaultTable;
 
     public SQLiteDaoUser(Connection connection, JDBCProcessManager processManager,
-                         IDaoAddress daoAddress, IDaoRepository daoRepository,
-                         DbTables defaultTable) {
+                         IDaoAddress daoAddress, DbTable defaultTable) {
         super(connection, processManager);
         this.daoAddress = daoAddress;
-        this.daoRepository = daoRepository;
         this.defaultTable = defaultTable.getTable();
     }
 
@@ -125,15 +121,9 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
     public boolean removeUser(int userId) throws DaoFailure {
         String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
 
-//        int addressId = importUser(userId).getAddress().getId();
-
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
             preparedStatement.setInt(1, userId);
-//            boolean isUserRemoved = getProcessManager().executeStatement(preparedStatement);
-//            boolean isAddressRemoved = daoAddress.removeAddress(addressId);
-//            boolean areRepositoriesRemoved = daoRepository.removeRepositoriesByOwnerId(userId);
 
-//            return isUserRemoved && isAddressRemoved && areRepositoriesRemoved;
             return getProcessManager().executeStatement(preparedStatement);
 
         } catch (SQLException ex) {

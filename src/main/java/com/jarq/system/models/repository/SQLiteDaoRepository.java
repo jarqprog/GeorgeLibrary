@@ -1,11 +1,10 @@
 package com.jarq.system.models.repository;
 
 import com.jarq.system.dao.SqlDao;
-import com.jarq.system.enums.DbTables;
+import com.jarq.system.enums.DbTable;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.helpers.IDateTimer;
+import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
-import com.jarq.system.models.text.IDaoText;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,15 +14,12 @@ import java.util.List;
 
 public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
 
-    private final IDaoText daoText;
     private final String defaultTable;
     private final IDateTimer dateTimer;
 
     public SQLiteDaoRepository(Connection connection, JDBCProcessManager processManager,
-                               IDaoText daoText, DbTables defaultTable,
-                               IDateTimer dateTimer) {
+                               DbTable defaultTable, IDateTimer dateTimer) {
         super(connection, processManager);
-        this.daoText = daoText;
         this.defaultTable = defaultTable.getTable();
         this.dateTimer = dateTimer;
     }
@@ -129,9 +125,7 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
 
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
             preparedStatement.setInt(1, repositoryId);
-//            boolean isRepositoryRemoved = getProcessManager().executeStatement(preparedStatement);
-//            boolean areTextsRemoved = daoText.removeTextsByRepositoryId(repositoryId);
-//            return isRepositoryRemoved && areTextsRemoved;
+
             return getProcessManager().executeStatement(preparedStatement);
 
         } catch (SQLException ex) {
