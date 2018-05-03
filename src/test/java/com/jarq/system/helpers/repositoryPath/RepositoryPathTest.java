@@ -3,10 +3,13 @@ package com.jarq.system.helpers.repositoryPath;
 import com.jarq.AbstractTest;
 import com.jarq.system.enums.FileExtension;
 import com.jarq.system.enums.RepositoriesPath;
+import com.jarq.system.models.repository.IRepository;
+import com.jarq.system.models.repository.Repository;
 import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.Text;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.io.File;
 
@@ -20,7 +23,6 @@ public class RepositoryPathTest extends AbstractTest {
     private final String pathBegin = RepositoriesPath.TEST_FILES_REPOSITORY.getPath();
     private final String fileExtension = FileExtension.MD.getExtension();
     private final String separator = File.separator;
-    private final String transformedDate = "2018_10_10_12_00_00";
 
     @Before
     public void setUp() {
@@ -36,6 +38,9 @@ public class RepositoryPathTest extends AbstractTest {
 
     @Test
     public void filepath() {
+
+        String transformedDate = "2018_10_10_12_00_00";
+
         IText text = mock(Text.class);
         when(text.getUserId()).thenReturn(1);
         when(text.getRepositoryId()).thenReturn(1);
@@ -57,10 +62,39 @@ public class RepositoryPathTest extends AbstractTest {
 
     @Test
     public void textDir() {
+        IText text = mock(Text.class);
+        when(text.getUserId()).thenReturn(1);
+        when(text.getRepositoryId()).thenReturn(1);
+        when(text.getId()).thenReturn(3);
+
+        String expected = String.format("%s1%s1%s3%s",
+                pathBegin,
+                separator,
+                separator,
+                separator);
+
+        String filepath = repositoryPath.textDir(text);
+        assertEquals(expected, filepath);
     }
 
     @Test
     public void repositoryDir() {
+
+//        IRepository repository = mock(Repository.class);
+//        when(repository.getUserId()).thenReturn(1);
+//        when(repository.getId()).thenReturn(1);
+//        when(text.getId()).thenReturn(3);
+//        when(text.getModificationDate()).thenReturn(transformedDate);
+//
+//
+//        repositoryPath,
+//                repository.getUserId(),
+//                separator,
+//                repository.getId(),
+//                separator);
+
+
+
     }
 
     @Test
