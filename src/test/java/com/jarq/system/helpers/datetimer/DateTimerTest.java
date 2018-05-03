@@ -1,6 +1,7 @@
-package com.jarq.system.helpers;
+package com.jarq.system.helpers.datetimer;
 
 import com.jarq.AbstractTest;
+
 import org.junit.Before;
 import org.junit.Test;
 

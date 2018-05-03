@@ -1,8 +1,8 @@
 package com.jarq.system.dao;
 
 import com.jarq.AbstractTest;
-import com.jarq.system.helpers.DateTimer;
-import com.jarq.system.helpers.IDateTimer;
+import com.jarq.system.helpers.datetimer.DateTimer;
+import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.managers.databaseManagers.DatabaseManager;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.managers.databaseManagers.SQLProcessManager;
