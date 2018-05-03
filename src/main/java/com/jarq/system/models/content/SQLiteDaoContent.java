@@ -16,15 +16,12 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
 
     private final String defaultTable;
     private final IDateTimer dateTimer;
-    private final IRepositoryPath repositoryPath;
 
     public SQLiteDaoContent(Connection connection, JDBCProcessManager processManager,
-                            DbTable defaultTable, IDateTimer dateTimer,
-                            IRepositoryPath repositoryPath) {
+                            DbTable defaultTable, IDateTimer dateTimer) {
         super(connection, processManager);
         this.defaultTable = defaultTable.getTable();
         this.dateTimer = dateTimer;
-        this.repositoryPath = repositoryPath;
     }
 
     @Override

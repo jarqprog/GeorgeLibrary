@@ -5,6 +5,7 @@ import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.managers.databaseManagers.DatabaseManager;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.models.address.SQLiteDaoAddress;
+import com.jarq.system.models.content.SQLiteDaoContent;
 import com.jarq.system.models.repository.SQLiteDaoRepository;
 import com.jarq.system.models.text.SQLiteDaoText;
 import com.jarq.system.models.user.SQLiteDaoUser;
@@ -58,6 +59,10 @@ public class SqlDaoFactory implements IDaoFactory {
             case("SQLiteDaoRepository"):
                 dao = new SQLiteDaoRepository(connection, processManager,
                         DbTable.REPOSITORIES, dateTimer);
+                break;
+            case("SQLiteDaoContent"):
+                dao = new SQLiteDaoContent(connection, processManager,
+                        DbTable.CONTENTS, dateTimer);
                 break;
         }
         return daoType.cast(dao);
