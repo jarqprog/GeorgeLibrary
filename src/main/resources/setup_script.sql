@@ -1,4 +1,10 @@
-BEGIN TRANSACTION;
+DROP TABLE IF EXISTS `contents`;
+CREATE TABLE IF NOT EXISTS `contents` (
+	`filepath`	TEXT NOT NULL UNIQUE,
+	`text_id`	INTEGER NOT NULL,
+	PRIMARY KEY(`filepath`),
+	FOREIGN KEY(`text_id`) REFERENCES `texts`(`id`)
+);
 DROP TABLE IF EXISTS `texts`;
 CREATE TABLE IF NOT EXISTS `texts` (
 	`id`	INTEGER NOT NULL UNIQUE,
@@ -6,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `texts` (
 	`creation_date`	TEXT NOT NULL,
 	`last_modification_date`	TEXT NOT NULL,
 	`repository_id`	INTEGER NOT NULL,
-	`user_id`	INTEGER,
+	`user_id`	INTEGER NOT NULL,
 	PRIMARY KEY(`id`),
 	FOREIGN KEY(`repository_id`) REFERENCES `repositories`(`id`)
 );
@@ -52,10 +58,9 @@ CREATE TABLE IF NOT EXISTS `addresses` (
 	`house_no`	TEXT NOT NULL,
 	`apartment_no`	TEXT DEFAULT '-',
 	`user_id`	INTEGER NOT NULL,
-	FOREIGN KEY(`user_id`) REFERENCES `users`(`id`),
-	PRIMARY KEY(`id`)
+	PRIMARY KEY(`id`),
+	FOREIGN KEY(`user_id`) REFERENCES `users`(`id`)
 );
 INSERT INTO `addresses` (id,postal_code,city,street,house_no,apartment_no,user_id) VALUES (1,'30-830','Kraków','Nad Potokiem','109','207',1);
 INSERT INTO `addresses` (id,postal_code,city,street,house_no,apartment_no,user_id) VALUES (2,'30-100','Kraków','Rynek Główny','2','-',2);
 INSERT INTO `addresses` (id,postal_code,city,street,house_no,apartment_no,user_id) VALUES (3,'42-125','Biała','Górska','120','-',3);
-COMMIT;
