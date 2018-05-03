@@ -2,6 +2,7 @@ package com.jarq.system.dao;
 
 import com.jarq.system.enums.DbTable;
 import com.jarq.system.helpers.datetimer.IDateTimer;
+import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.managers.databaseManagers.DatabaseManager;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.models.address.SQLiteDaoAddress;
@@ -18,22 +19,26 @@ public class SqlDaoFactory implements IDaoFactory {
     private final JDBCProcessManager processManager;
     private Connection connection;
     private final IDateTimer dateTimer;
+    private final IRepositoryPath repositoryPath;
 
     public static IDaoFactory getInstance(DatabaseManager dbManager,
                                           JDBCProcessManager processManager,
-                                          IDateTimer dateTimer) {
+                                          IDateTimer dateTimer,
+                                          IRepositoryPath repositoryPath) {
 
-        return new SqlDaoFactory(dbManager, processManager, dateTimer);
+        return new SqlDaoFactory(dbManager, processManager, dateTimer, repositoryPath);
     }
 
     private SqlDaoFactory(DatabaseManager dbManager,
                           JDBCProcessManager processManager,
-                          IDateTimer dateTimer) {
+                          IDateTimer dateTimer,
+                          IRepositoryPath repositoryPath) {
 
         this.dbManager = dbManager;
         this.processManager = processManager;
         connection = dbManager.getConnection();
         this.dateTimer = dateTimer;
+        this.repositoryPath = repositoryPath;
     }
 
     public <T extends Dao> T createDAO(Class<T> daoType) {
@@ -61,8 +66,8 @@ public class SqlDaoFactory implements IDaoFactory {
                         DbTable.REPOSITORIES, dateTimer);
                 break;
             case("SQLiteDaoContent"):
-                dao = new SQLiteDaoContent(connection, processManager,
-                        DbTable.CONTENTS, dateTimer);
+                dao = new SQLiteDaoContent(connection, processManager, DbTable.CONTENTS,
+                        repositoryPath);
                 break;
         }
         return daoType.cast(dao);

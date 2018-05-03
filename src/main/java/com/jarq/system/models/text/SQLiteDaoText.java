@@ -38,7 +38,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
 
 
         String query = String.format("INSERT INTO %s " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?)", defaultTable);
+                "VALUES(?, ?, ?, ?, ?, ?)", defaultTable);
 
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, id);

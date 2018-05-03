@@ -2,6 +2,7 @@ package com.jarq.system.models.content;
 
 import com.jarq.system.dao.Dao;
 import com.jarq.system.exceptions.DaoFailure;
+import com.jarq.system.models.text.IText;
 
 import java.util.List;
 
@@ -9,8 +10,7 @@ public interface IDaoContent extends Dao {
 
     IContent createNullContent();
 
-    IContent createContent(int textId, String filepath)
-            throws DaoFailure;
+    IContent createContent(IText text) throws DaoFailure;
 
     IContent importContent(int contentId) throws DaoFailure;
 
