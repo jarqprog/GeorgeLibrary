@@ -9,6 +9,7 @@ import com.jarq.system.models.content.IContent;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -78,7 +79,20 @@ public class RepositoryManagerTest extends AbstractTest {
     }
 
     @Test
-    public void createFile() {
+    public void createFile() throws Exception {
+
+        String filepath = RepositoriesPath.MANAGER_PATH_CREATION_TEST.getPath();
+        removePath(filepath);
+
+        when(content.getFilepath()).thenReturn(filepath);
+
+        if(checkIfFileExists(filepath)) {
+            throw new Exception("Can't continue test, test file wasn't removed!");
+        }
+
+        assertTrue(repositoryManager.createFile(content));
+        assertTrue(checkIfFileExists(filepath));
+
     }
 
     @Test
@@ -96,5 +110,10 @@ public class RepositoryManagerTest extends AbstractTest {
     private void removePath(String filepath) throws IOException {
         Path path = Paths.get(filepath);
         deleteIfExists(path);
+    }
+
+    private boolean checkIfFileExists(String filepath) {
+        File f = new File(filepath);
+        return f.exists() && !f.isDirectory();
     }
 }
