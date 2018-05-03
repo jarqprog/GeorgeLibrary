@@ -69,7 +69,8 @@ public class RepositoryManager implements IRepositoryManager {
     private boolean create(String fullFilepath) throws IOException {
         if (! hasFile(fullFilepath) ) {
             File path = new File(fullFilepath);
-            return path.getParentFile().mkdirs() && path.createNewFile();
+            path.getParentFile().mkdirs();
+            return path.createNewFile();
         }
         return false;
     }
