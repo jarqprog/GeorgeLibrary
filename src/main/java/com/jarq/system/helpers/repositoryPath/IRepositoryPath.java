@@ -1,6 +1,8 @@
 package com.jarq.system.helpers.repositoryPath;
 
+import com.jarq.system.models.repository.IRepository;
 import com.jarq.system.models.text.IText;
+import com.jarq.system.models.user.IUser;
 
 public interface IRepositoryPath {
 
@@ -17,15 +19,15 @@ public interface IRepositoryPath {
     // if given text with: userId:1, repositoryId:2, textId:1, modificationDate:2018-05-01 10:21:59
     // methods return:
 
-    // "src/main/resources/repositories/1/2/1/20180501102159.repo" (path to file)
-    String buildFullPath(IText text);
+    // "src/main/resources/repositories/1/2/1/20180501102159.repo" (path to file with content)
+    String content(IText text);
 
-    // "src/main/resources/repositories/1/2/1/" (path to text files without file)
-    String buildTextDirectory(IText text);
+    // "src/main/resources/repositories/1/2/1/" (path to directory with contents files)
+    String textDir(IText text);
 
-    // "src/main/resources/repositories/1/2/" (path to repository)
-    String buildRepoDirectory(IText text);
+    // "src/main/resources/repositories/1/2/" (path to repository with texts)
+    String repositoryDir(IRepository repository);
 
-    // eg. return "src/main/resources/repositories/1/" (path to repository)
-    String buildUserDirectory(IText text);
+    // eg. return "src/main/resources/repositories/1/" (path to all user's repositories)
+    String userDir(IUser user);
 }

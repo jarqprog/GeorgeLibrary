@@ -2,11 +2,17 @@ package com.jarq.system.helpers.repositoryPath;
 
 import com.jarq.system.enums.FileExtension;
 import com.jarq.system.enums.RepositoriesPath;
+import com.jarq.system.models.repository.IRepository;
 import com.jarq.system.models.text.IText;
+import com.jarq.system.models.user.IUser;
 
 import java.io.File;
 
 public class RepositoryPath implements IRepositoryPath {
+
+    /**
+     * parses data to proper filepath/directory path
+     */
 
     private final String repositoryPath;
     private final String separator = File.separator;
@@ -23,34 +29,42 @@ public class RepositoryPath implements IRepositoryPath {
     }
 
     @Override
-    public String buildFullPath(IText text) {
-//        return String.format("%s%s%s%s%s%s%s%s%s",
-//                        repositoryPath,
-//                        userId,
-//                        separator,
-//                        repositoryId,
-//                        separator,
-//                        textId,
-//                        separator,
-//                        buildFilename(textModificationDate),
-//                        fileExtension);
+    public String content(IText text) {
+        return String.format("%s%s%s",
+                        textDir(text),
+                        buildFilename(text.getModificationDate()),
+                        fileExtension);
 
-        return "";
     }
 
     @Override
-    public String buildTextDirectory(IText text) {
-        return null;
+    public String textDir(IText text) {
+        return String.format("%s%s%s%s%s%s%s",
+                repositoryPath,
+                text.getUserId(),
+                separator,
+                text.getRepositoryId(),
+                separator,
+                text.getId(),
+                separator);
     }
 
     @Override
-    public String buildRepoDirectory(IText text) {
-        return null;
+    public String repositoryDir(IRepository repository) {
+        return String.format("%s%s%s%s%s",
+                repositoryPath,
+                repository.getUserId(),
+                separator,
+                repository.getId(),
+                separator);
     }
 
     @Override
-    public String buildUserDirectory(IText text) {
-        return null;
+    public String userDir(IUser user) {
+        return String.format("%s%s%s",
+                repositoryPath,
+                user.getId(),
+                separator);
     }
 
     private String buildFilename(String textModificationDate) {
