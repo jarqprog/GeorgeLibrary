@@ -35,7 +35,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         int id = getLowestFreeIdFromGivenTable(defaultTable);
         String creationDate = dateTimer.getCurrentDateTime();
         IText text = new Text(id, title, creationDate, repositoryId, userId);
-
+        text.setModificationDate(creationDate);
 
         String query = String.format("INSERT INTO %s " +
                 "VALUES(?, ?, ?, ?, ?, ?)", defaultTable);
@@ -69,22 +69,6 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         }
     }
 
-
-    @Override
-    public IText importTextWithContent(int textId) throws DaoFailure {
-        String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
-        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
-            preparedStatement.setInt(1, textId);
-
-            // implementation filepath managers
-
-            return extractTextFromStatement(preparedStatement);
-
-        } catch(SQLException | DaoFailure ex){
-            throw new DaoFailure(ex.getMessage());
-        }
-    }
-
     @Override
     public List<IText> importTextsByRepositoryId(int repositoryId) throws DaoFailure {
         String query = String.format("SELECT * FROM %s WHERE repository_id=?", defaultTable);
@@ -105,15 +89,6 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
 
     @Override
     public boolean updateText(IText text) throws DaoFailure {
-        return update(text);
-    }
-
-    @Override
-    public boolean updateTextWithContent(IText text) throws DaoFailure {
-
-
-        // it will be implementation with files managers
-
         return update(text);
     }
 
