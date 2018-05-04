@@ -9,6 +9,10 @@ import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.managers.filesManagers.*;
 
+import com.jarq.system.policy.EmailPolicy;
+import com.jarq.system.policy.IEmailPolicy;
+import com.jarq.system.policy.IPasswordPolicy;
+import com.jarq.system.policy.PasswordPolicy;
 import com.jarq.system.service.repository.IRepoService;
 import com.jarq.system.service.repository.RepoService;
 import com.jarq.system.service.text.ITextService;
@@ -33,10 +37,13 @@ public class ServiceFactoryTest extends AbstractTest {
         IContentWriter<String> contentWriter = mock(RepoWriter.class);
         IRepositoryPath repositoryPath = mock(RepositoryPath.class);
         IDateTimer dateTimer = mock(DateTimer.class);
+        IEmailPolicy emailPolicy = mock(EmailPolicy.class);
+        IPasswordPolicy passwordPolicy = mock(PasswordPolicy.class);
 
         serviceFactory = ServiceFactory.getInstance(daoFactory,
                 repositoryManager, contentReader, contentWriter,
-                repositoryPath, dateTimer);
+                repositoryPath, dateTimer,
+                emailPolicy, passwordPolicy);
     }
 
     @Test
