@@ -166,7 +166,7 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
         if(repositoryData.length > 0) {
             return extractRepositoryFromTable(repositoryData);
         } else {
-            return createNullRepository();
+            throw new DaoFailure("There's no such repository in database!");
         }
     }
 

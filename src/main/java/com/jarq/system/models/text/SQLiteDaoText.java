@@ -134,7 +134,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         if(textData.length > 0) {
             return extractTextFromTable(textData);
         } else {
-            return createNullText();
+            throw new DaoFailure("There's no such text in database!");
         }
     }
 

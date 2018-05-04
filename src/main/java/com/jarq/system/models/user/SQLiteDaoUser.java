@@ -142,7 +142,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         if(userData.length > 0) {
             return extractUserFromTable(userData);
         } else {
-            return createNullUser();
+            throw new DaoFailure("There's no such user in database!");
         }
     }
 

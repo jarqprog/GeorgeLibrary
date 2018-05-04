@@ -186,7 +186,7 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         if(addressData.length > 0) {
             return extractAddressFromTable(addressData);
         } else {
-            return createNullAddress();
+            throw new DaoFailure("There's no such address in database!");
         }
     }
 
