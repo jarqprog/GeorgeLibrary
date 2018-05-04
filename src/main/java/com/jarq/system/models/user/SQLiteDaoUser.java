@@ -166,7 +166,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
             String email = userData[EMAIL_INDEX];
             String password = userData[PASSWORD_INDEX];
 
-            IAddress address = daoAddress.importAddressByUserId(id);
+            IAddress address = daoAddress.createNullAddress();
 
             return new User(id, name, surname, email, password, address);
 

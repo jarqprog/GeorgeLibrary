@@ -31,6 +31,8 @@ public interface IDaoAddress extends Dao {
 
     boolean removeAddressByUserId(int userId) throws DaoFailure;
 
+    boolean removeAddressByUser(IUser user) throws DaoFailure;
+
     boolean removeAddress(IAddress address) throws DaoFailure;
 
     boolean removeAddress(int addressId) throws DaoFailure;

@@ -175,6 +175,10 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         }
     }
 
+    @Override
+    public boolean removeAddressByUser(IUser user) throws DaoFailure {
+        return removeAddressByUserId(user.getId());
+    }
 
 
     private IAddress extractAddressFromStatement(PreparedStatement preparedStatement) throws DaoFailure {
