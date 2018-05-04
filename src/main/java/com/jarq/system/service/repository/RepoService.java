@@ -88,6 +88,27 @@ public class RepoService extends Service implements IRepoService {
         }
     }
 
+    @Override
+    public String[] removeUserRepositories(int userId) {
+        String[] output = new String[0];
+        try {
+            List<IRepository> repositories = daoRepository.importRepositoriesByUserId(userId);
+            if ( repositories.size() == 0 ) {
+                return output; // todo
+            }
+
+            if ( ! daoRepository.removeRepositoriesByUserId(userId) ) {
+                // log
+                return output;
+            }
+            return repositories.stream().map(IRepository::toString).toArray(String[]::new);
+
+        } catch (DaoFailure daoFailure) {
+            daoFailure.printStackTrace();
+            // log
+            return output;
+        }
+    }
 
 
     private String updateRepository(IRepository repository) throws DaoFailure {
