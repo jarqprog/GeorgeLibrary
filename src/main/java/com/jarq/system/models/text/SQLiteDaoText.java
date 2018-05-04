@@ -154,7 +154,6 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     }
 
     private IText extractTextFromTable(String[] textData) throws DaoFailure {
-        //  without filepath to avoid overloading system
 
         int ID_INDEX = 0;
         int TITLE_INDEX = 1;
