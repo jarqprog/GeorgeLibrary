@@ -5,6 +5,6 @@ public class PasswordPolicy implements IPasswordPolicy {
 
     @Override
     public boolean validate(String password) {
-        return false;
+        return true;
     }
 }
