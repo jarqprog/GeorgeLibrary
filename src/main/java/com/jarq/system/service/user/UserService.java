@@ -39,7 +39,7 @@ public class UserService extends Service implements IUserService {
             return user.toString(); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
+//            daoFailure.printStackTrace();
             // log
             return serviceFailure;
         }

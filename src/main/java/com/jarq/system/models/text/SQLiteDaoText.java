@@ -128,7 +128,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     }
 
     private IText extractText(PreparedStatement preparedStatement)
-            throws DaoFailure {
+            throws DaoFailure, SQLException {
 
         String[] textData = getProcessManager().getObjectData(preparedStatement);
         if(textData.length > 0) {
@@ -139,7 +139,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     }
 
     private List<IText> extractTexts(PreparedStatement preparedStatement)
-            throws DaoFailure {
+            throws DaoFailure, SQLException {
         try {
             List<String[]> dataCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
             List<IText> texts = new ArrayList<>();
