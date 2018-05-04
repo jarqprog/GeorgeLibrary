@@ -69,9 +69,9 @@ INSERT INTO `repositories` (id,name,creation_date,last_modification_date,user_id
 INSERT INTO `repositories` (id,name,creation_date,last_modification_date,user_id) VALUES (2,'Nowa nazwa','2018-05-01 00:07:02','2018-05-01 00:07:02',2);
 INSERT INTO `repositories` (id,name,creation_date,last_modification_date,user_id) VALUES (3,'Coś tamki','2018-05-01 00:28:44','2018-05-01 00:28:44',3);
 
-INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (1,'Rozdzial1','2018-05-01 10:01','2018-05-01 10:30',1,1);
-INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (2,'Rozdzial2','2018-05-01 10:01','2018-05-01 10:30',1,1);
-INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (3,'Rozdzial3','2018-05-01 10:01','2018-05-01 10:30',1,1);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (1,'Rozdzial1','2018-05-01 10:01','2018-05-01 10:30',1,2);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (2,'Rozdzial2','2018-05-01 10:01','2018-05-01 10:30',1,2);
+INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (3,'Rozdzial3','2018-05-01 10:01','2018-05-01 10:30',1,2);
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (4,'rob1','2018-05-01 10:01','2018-05-01 10:30',2,2);
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (5,'rob2','2018-02-01 10:01','2018-05-01 10:30',2,2);
 INSERT INTO `texts` (id,title,creation_date,last_modification_date,repository_id,user_id) VALUES (6,'rob1','2018-02-01 10:01','2018-05-01 10:30',3,3);
