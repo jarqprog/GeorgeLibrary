@@ -7,7 +7,6 @@ import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.managers.filesManagers.*;
-import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.address.SQLiteDaoAddress;
 import com.jarq.system.models.content.IContent;
@@ -28,6 +27,8 @@ import com.jarq.system.service.IServiceFactory;
 import com.jarq.system.service.ServiceFactory;
 import com.jarq.system.service.address.AddressService;
 import com.jarq.system.service.address.IAddressService;
+import com.jarq.system.service.repository.IRepoService;
+import com.jarq.system.service.repository.RepoService;
 import com.jarq.system.service.user.IUserService;
 import com.jarq.system.service.user.UserService;
 import com.jarq.terminal.controllers.IRepositoryController;
@@ -40,13 +41,9 @@ import com.jarq.terminal.views.IRepositoryView;
 import com.jarq.terminal.views.RepositoryView;
 import com.jarq.terminal.views.RootView;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -83,7 +80,7 @@ public class RootTerminal implements IRoot {
 
 //            testDaoContent();
 
-            serviseFactoryTest();
+            serviceFactoryTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -173,13 +170,22 @@ public class RootTerminal implements IRoot {
         }
     }
 
-    private void serviseFactoryTest() {
+    private void serviceFactoryTest() {
         IServiceFactory serviceFactory = createServiceFactory();
         IUserService userService = serviceFactory.createSQLiteService(UserService.class);
         IAddressService addressService = serviceFactory.createSQLiteService(AddressService.class);
-        System.out.println(userService.createUser("John", "Little", "john@gmailum.pl"));
-        System.out.println(addressService.createAddress(3, "12-125",
-                "Kraków", "Mały Rynek", "21", "2"));
+        IRepoService repoService = serviceFactory.createSQLiteService(RepoService.class);
+
+//        for(int i=0;i<10;i++) {
+//            repoService.createRepository(1, "nowe"+i);
+//        }
+
+//        System.out.println(Arrays.toString(repoService.removeUserRepositories(1)));
+
+
+//        System.out.println(userService.createUser("John", "Little", "john@gmailum.pl"));
+//        System.out.println(addressService.createAddress(3, "12-125",
+//                "Kraków", "Mały Rynek", "21", "2"));
 
 
     }
