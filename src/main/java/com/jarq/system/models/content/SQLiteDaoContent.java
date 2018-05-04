@@ -89,7 +89,7 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
 
     @Override
     public List<IContent> importContentsByText(IText text) throws DaoFailure {
-        return null;
+        return importContentsByTextId(text.getId());
     }
 
     @Override
@@ -114,7 +114,7 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
         if(contentData.length > 0) {
             return extractContentFromTable(contentData);
         } else {
-            return createNullContent();
+            throw new DaoFailure("There's no such content in database!");
         }
     }
 

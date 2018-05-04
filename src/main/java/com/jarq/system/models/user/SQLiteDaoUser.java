@@ -4,8 +4,6 @@ import com.jarq.system.dao.SqlDao;
 import com.jarq.system.enums.DbTable;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
-import com.jarq.system.models.address.IAddress;
-import com.jarq.system.models.address.IDaoAddress;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,27 +13,24 @@ import java.util.List;
 
 public class SQLiteDaoUser extends SqlDao implements IDaoUser {
 
-    private final IDaoAddress daoAddress;
     private final String defaultTable;
 
     public SQLiteDaoUser(Connection connection, JDBCProcessManager processManager,
-                         IDaoAddress daoAddress, DbTable defaultTable) {
+                         DbTable defaultTable) {
         super(connection, processManager);
-        this.daoAddress = daoAddress;
         this.defaultTable = defaultTable.getTable();
     }
 
     @Override
     public IUser createNullUser() {
-        return new NullUser(daoAddress);
+        return new NullUser();
     }
 
     @Override
     public IUser createUser(String name, String surname, String email) throws DaoFailure {
         int id = getLowestFreeIdFromGivenTable(defaultTable);
         final String temporaryPassword = "123";
-        IAddress initialAddress = daoAddress.createNullAddress();
-        IUser user = new User(id, name, surname, email, temporaryPassword, initialAddress);
+        IUser user = new User(id, name, surname, email, temporaryPassword);
 
         String query = String.format("INSERT INTO %s " +
                 "VALUES(?, ?, ?, ?, ?)", defaultTable);
@@ -147,7 +142,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         if(userData.length > 0) {
             return extractUserFromTable(userData);
         } else {
-            return createNullUser();
+            throw new DaoFailure("There's no such user in database!");
         }
     }
 
@@ -166,9 +161,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
             String email = userData[EMAIL_INDEX];
             String password = userData[PASSWORD_INDEX];
 
-            IAddress address = daoAddress.createNullAddress();
-
-            return new User(id, name, surname, email, password, address);
+            return new User(id, name, surname, email, password);
 
         } catch (Exception ex) {
             throw new DaoFailure(ex.getMessage());
