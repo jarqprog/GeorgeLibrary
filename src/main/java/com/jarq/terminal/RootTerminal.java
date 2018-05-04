@@ -14,6 +14,9 @@ import com.jarq.system.models.address.SQLiteDaoAddress;
 import com.jarq.system.models.content.IContent;
 import com.jarq.system.models.content.IDaoContent;
 import com.jarq.system.models.content.SQLiteDaoContent;
+import com.jarq.system.models.repository.IDaoRepository;
+import com.jarq.system.models.repository.IRepository;
+import com.jarq.system.models.repository.SQLiteDaoRepository;
 import com.jarq.system.models.text.IDaoText;
 import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.SQLiteDaoText;
@@ -36,6 +39,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class RootTerminal implements IRoot {
@@ -64,10 +68,11 @@ public class RootTerminal implements IRoot {
         // for tests:
 
         try {
+//            testDaoRepository();
 //            testUserAddress();
+//            testDaoText();
+            testDaoContent();
 
-//            contentTestingAndManager();
-//            System.out.println(getDaoUser().removeUser(2));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,7 +145,7 @@ public class RootTerminal implements IRoot {
         System.out.println(repositoryManager.hasFile(path02));
 
         IText text = daoFactory.createDAO(SQLiteDaoText.class)
-                .createText("Ojej",1, 1 );
+                .createText(getDaoRepository().importRepository(1), "Ojej");
 
         IContent content = getDaoContent().createContent(text);
 
@@ -166,6 +171,11 @@ public class RootTerminal implements IRoot {
     private IDaoAddress getDaoAddress() {
         return createDaoFactory().createDAO(SQLiteDaoAddress.class);
     }
+
+    private IDaoRepository getDaoRepository() {
+        return createDaoFactory().createDAO(SQLiteDaoRepository.class);
+    }
+
 
     private IRepositoryPath getRepositoryPath() {
 
@@ -218,14 +228,72 @@ public class RootTerminal implements IRoot {
     private void testUserAddress() throws Exception {
         IDaoUser daoUser = getDaoUser();
         IDaoAddress daoAddress = getDaoAddress();
-        IUser janka = daoUser.createUser("Janka", "Nowak",
-                "janka@gmail.com");
+//        IUser user = daoUser.createUser("Jan", "Nowak", "notak@gmail.com");
+//        System.out.println(daoAddress.importAddressByUser(user));
 
-        IAddress jankiAddres = daoAddress.createAddress(janka, "31-123",
-                "Kraków", "Wielicka", "12");
+        System.out.println(daoUser.importUser(100));
+        System.out.println(daoUser.importUser(103));
+        System.out.println(daoUser.importUser(102));
+        System.out.println(daoUser.importUser(101));
 
-        System.out.println(janka);
-        janka = getDaoUser().importUserWithAddress(janka.getId());
-        System.out.println(janka);
+    }
+
+    private void testDaoRepository() throws Exception {
+        IDaoRepository daoRepository = getDaoRepository();
+        IDaoUser daoUser = getDaoUser();
+        System.out.println(daoRepository.importRepository(1001));
+        System.out.println(daoRepository.importRepository(1003));
+        System.out.println(daoRepository.importRepository(1004));
+        System.out.println(daoRepository.importRepositoriesByUser(daoUser.createNullUser()));
+    }
+
+    private void testDaoText() throws Exception {
+        IDaoText daoText = getDaoText();
+
+        System.out.println(daoText.removeTextsByRepositoryId(1000));
+        System.out.println(daoText.importTextsByUser(getDaoUser().importUser(3)));
+        System.out.println(daoText.removeTextsByRepositoryId(3));
+        System.out.println(daoText.removeTextsByRepository(getDaoRepository().importRepository(3)));
+        System.out.println(daoText.importTextsByUser(getDaoUser().importUser(3)));
+    }
+
+    private void testDaoContent() throws Exception {
+        IDaoRepository daoRepository = getDaoRepository();
+        IDaoUser daoUser = getDaoUser();
+        IDaoContent daoContent = getDaoContent();
+        IDaoText daoText = getDaoText();
+
+
+        int random = getRandomNumber(100);
+        String name = getRandomName();
+        String surname = getRandomSurname();
+        IUser randomUser = daoUser.createUser(name, surname, name + random + surname +"@yahoo.com");
+        IRepository repository01 = daoRepository.createRepository(randomUser, name + random);
+        IRepository repository02 = daoRepository.createRepository(randomUser, name + random);
+
+        for (int i=0; i<100; i++) {
+            random = getRandomNumber(1000);
+            IText text01 = daoText.createText(repository01, name+" note" + random);
+            IText text02 = daoText.createText(repository02, "new02" + random);
+            IContent content001 = daoContent.createContent(text01);
+            IContent content002 = daoContent.createContent(text02);
+        }
+    }
+
+
+
+
+    private int getRandomNumber(int bound) {
+        return new Random().nextInt(bound);
+    }
+
+    private String getRandomName() {
+        String[] names = {"Mark", "Peter", "Tom", "Carl"};
+        return names[getRandomNumber(names.length-1)];
+    }
+
+    private String getRandomSurname() {
+        String[] surnames = {"Novak", "Smith", "Koval", "Black"};
+        return surnames[getRandomNumber(surnames.length-1)];
     }
 }
