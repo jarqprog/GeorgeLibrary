@@ -16,8 +16,6 @@ public interface IDaoUser extends Dao {
 
     IUser importUserByMail(String email) throws DaoFailure;
 
-    IUser importUserWithAddress(int userId) throws DaoFailure;
-
     List<IUser> importAllUsers() throws DaoFailure;
 
     boolean updateUser(IUser user) throws DaoFailure;

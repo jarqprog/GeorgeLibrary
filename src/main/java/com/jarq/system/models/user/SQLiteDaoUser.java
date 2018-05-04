@@ -83,13 +83,6 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
     }
 
     @Override
-    public IUser importUserWithAddress(int userId) throws DaoFailure {
-        IUser user = importUser(userId);
-        user.setAddress(daoAddress.importAddressByUserId(userId));
-        return user;
-    }
-
-    @Override
     public List<IUser> importAllUsers() throws DaoFailure {
         List<IUser> users = new ArrayList<>();
         String query = String.format("SELECT * FROM %s", defaultTable);
