@@ -1,9 +1,11 @@
-package com.jarq.system.models.text;
+package com.jarq.system.service.text;
 
 import com.jarq.system.managers.filesManagers.IContentReader;
 import com.jarq.system.managers.filesManagers.IContentWriter;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.models.content.IDaoContent;
+import com.jarq.system.models.text.IDaoText;
+import com.jarq.system.models.text.IText;
 
 public class TextService implements ITextService {
 

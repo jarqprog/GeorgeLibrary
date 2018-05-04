@@ -3,12 +3,18 @@ package com.jarq.system.service;
 import com.jarq.AbstractTest;
 import com.jarq.system.dao.IDaoFactory;
 import com.jarq.system.dao.SqlDaoFactory;
+import com.jarq.system.helpers.datetimer.DateTimer;
+import com.jarq.system.helpers.datetimer.IDateTimer;
+import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
+import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.managers.filesManagers.*;
 
-import com.jarq.system.models.text.ITextService;
-import com.jarq.system.models.text.TextService;
-import com.jarq.system.models.user.IUserService;
-import com.jarq.system.models.user.UserService;
+import com.jarq.system.service.repository.IRepoService;
+import com.jarq.system.service.repository.RepoService;
+import com.jarq.system.service.text.ITextService;
+import com.jarq.system.service.text.TextService;
+import com.jarq.system.service.user.IUserService;
+import com.jarq.system.service.user.UserService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,9 +31,12 @@ public class ServiceFactoryTest extends AbstractTest {
         IRepositoryManager repositoryManager = mock(RepositoryManager.class);
         IContentReader<String> contentReader = mock(RepoReader.class);
         IContentWriter<String> contentWriter = mock(RepoWriter.class);
+        IRepositoryPath repositoryPath = mock(RepositoryPath.class);
+        IDateTimer dateTimer = mock(DateTimer.class);
 
         serviceFactory = ServiceFactory.getInstance(daoFactory,
-                repositoryManager, contentReader, contentWriter);
+                repositoryManager, contentReader, contentWriter,
+                repositoryPath, dateTimer);
     }
 
     @Test
@@ -45,11 +54,16 @@ public class ServiceFactoryTest extends AbstractTest {
         ITextService textService = serviceFactory
                 .createSQLiteService(TextService.class);
 
+        IRepoService repoService = serviceFactory
+                .createSQLiteService(RepoService.class);
+
         assertNotNull(userService);
         assertNotNull(textService);
+        assertNotNull(repoService);
 
         // returned proper class
         assertEquals("UserService", userService.getClass().getSimpleName());
         assertEquals("TextService", textService.getClass().getSimpleName());
+        assertEquals("RepoService", repoService.getClass().getSimpleName());
     }
 }

@@ -1,15 +1,19 @@
 package com.jarq.system.service;
 
 import com.jarq.system.dao.IDaoFactory;
+import com.jarq.system.helpers.datetimer.IDateTimer;
+import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.managers.filesManagers.IContentReader;
 import com.jarq.system.managers.filesManagers.IContentWriter;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
+import com.jarq.system.models.address.SQLiteDaoAddress;
 import com.jarq.system.models.content.SQLiteDaoContent;
 import com.jarq.system.models.repository.SQLiteDaoRepository;
 import com.jarq.system.models.text.SQLiteDaoText;
-import com.jarq.system.models.text.TextService;
+import com.jarq.system.service.repository.RepoService;
+import com.jarq.system.service.text.TextService;
 import com.jarq.system.models.user.SQLiteDaoUser;
-import com.jarq.system.models.user.UserService;
+import com.jarq.system.service.user.UserService;
 
 public class ServiceFactory implements IServiceFactory {
 
@@ -17,26 +21,34 @@ public class ServiceFactory implements IServiceFactory {
     private final IRepositoryManager repositoryManager;
     private final IContentReader<String> contentReader;
     private final IContentWriter<String> contentWriter;
+    private final IRepositoryPath repositoryPath;
+    private final IDateTimer dateTimer;
 
-    private ServiceFactory(IDaoFactory daoFactory,
-                           IRepositoryManager repositoryManager,
-                           IContentReader<String> contentReader,
-                           IContentWriter<String> contentWriter) {
-        this.daoFactory = daoFactory;
-        this.repositoryManager = repositoryManager;
-        this.contentReader = contentReader;
-        this.contentWriter = contentWriter;
-    }
 
     public static IServiceFactory getInstance(IDaoFactory daoFactory,
                                               IRepositoryManager repositoryManager,
                                               IContentReader<String> contentReader,
-                                              IContentWriter<String> contentWriter) {
-        return new ServiceFactory(daoFactory, repositoryManager, contentReader, contentWriter);
+                                              IContentWriter<String> contentWriter,
+                                              IRepositoryPath repositoryPath,
+                                              IDateTimer dateTimer) {
+        return new ServiceFactory(daoFactory, repositoryManager,
+                contentReader, contentWriter,
+                repositoryPath, dateTimer);
     }
 
-
-
+    private ServiceFactory(IDaoFactory daoFactory,
+                           IRepositoryManager repositoryManager,
+                           IContentReader<String> contentReader,
+                           IContentWriter<String> contentWriter,
+                           IRepositoryPath repositoryPath,
+                           IDateTimer dateTimer) {
+        this.daoFactory = daoFactory;
+        this.repositoryManager = repositoryManager;
+        this.contentReader = contentReader;
+        this.contentWriter = contentWriter;
+        this.repositoryPath = repositoryPath;
+        this.dateTimer = dateTimer;
+    }
 
     @Override
     public <T extends IService> T createSQLiteService(Class<T> serviceType) {
@@ -57,7 +69,15 @@ public class ServiceFactory implements IServiceFactory {
                 service = UserService.getInstance(
                                 daoFactory.createDAO(SQLiteDaoUser.class),
                                 daoFactory.createDAO(SQLiteDaoRepository.class),
+                                daoFactory.createDAO(SQLiteDaoAddress.class),
                                 createSQLiteService(TextService.class));
+                break;
+            case("RepoService"):
+                service = RepoService.getInstance(
+                                daoFactory.createDAO(SQLiteDaoRepository.class),
+                                repositoryManager,
+                                repositoryPath,
+                                dateTimer);
                 break;
         }
         return serviceType.cast(service);
