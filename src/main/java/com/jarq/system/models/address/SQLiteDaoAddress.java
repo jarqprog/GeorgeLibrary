@@ -183,7 +183,11 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
 
     private IAddress extractAddressFromStatement(PreparedStatement preparedStatement) throws DaoFailure {
         String[] addressData = getProcessManager().getObjectData(preparedStatement);
-        return extractAddressFromTable(addressData);
+        if(addressData.length > 0) {
+            return extractAddressFromTable(addressData);
+        } else {
+            return createNullAddress();
+        }
     }
 
     private IAddress extractAddressFromTable(String[] addressData) throws DaoFailure {
