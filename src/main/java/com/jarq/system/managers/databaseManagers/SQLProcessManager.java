@@ -12,7 +12,7 @@ public class SQLProcessManager implements JDBCProcessManager {
 
     private SQLProcessManager() {}
 
-    public String[] getObjectData(PreparedStatement preparedStatement) {
+    public String[] getObjectData(PreparedStatement preparedStatement) throws SQLException {
         // every array keeps data from a single record
         String[] objectData = new String[0];
         try ( ResultSet resultSet = preparedStatement.executeQuery() ) {
@@ -30,7 +30,7 @@ public class SQLProcessManager implements JDBCProcessManager {
                 }
             }
         } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            throw new SQLException(e);
         } finally {
             closeResources(preparedStatement);
         }
@@ -38,7 +38,7 @@ public class SQLProcessManager implements JDBCProcessManager {
         return objectData;
     }
 
-    public List<String[]> getObjectsDataCollection(PreparedStatement preparedStatement) {
+    public List<String[]> getObjectsDataCollection(PreparedStatement preparedStatement) throws SQLException {
         // every nested array in list keeps data from a single record
         List<String[]> objectsDataCollection = new ArrayList<>();
 
@@ -59,20 +59,19 @@ public class SQLProcessManager implements JDBCProcessManager {
                 }
             }
         } catch(Exception e){
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            throw new SQLException(e);
         } finally {
             closeResources(preparedStatement);
         }
         return objectsDataCollection;
     }
 
-    public boolean executeBatch(PreparedStatement preparedStatement, Connection connection) {
+    public boolean executeBatch(PreparedStatement preparedStatement, Connection connection) throws SQLException {
         try {
             connection.setAutoCommit(false);
             preparedStatement.executeBatch();
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new SQLException(e);
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -84,13 +83,12 @@ public class SQLProcessManager implements JDBCProcessManager {
         return true;
     }
 
-    public boolean executeStatement(PreparedStatement preparedStatement) {
+    public boolean executeStatement(PreparedStatement preparedStatement) throws SQLException {
         try {
             return preparedStatement.executeUpdate() != 0;
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new SQLException(e);
         } finally {
             closeResources(preparedStatement);
         }

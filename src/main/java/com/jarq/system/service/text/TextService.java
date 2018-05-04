@@ -6,8 +6,9 @@ import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.models.content.IDaoContent;
 import com.jarq.system.models.text.IDaoText;
 import com.jarq.system.models.text.IText;
+import com.jarq.system.service.Service;
 
-public class TextService implements ITextService {
+public class TextService extends Service implements ITextService {
 
     private final IRepositoryManager repositoryManager;
     private final IContentReader<String> contentReader;

@@ -137,7 +137,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         }
     }
 
-    private IUser extractUser(PreparedStatement preparedStatement) throws DaoFailure {
+    private IUser extractUser(PreparedStatement preparedStatement) throws DaoFailure, SQLException {
         String[] userData = getProcessManager().getObjectData(preparedStatement);
         if(userData.length > 0) {
             return extractUserFromTable(userData);

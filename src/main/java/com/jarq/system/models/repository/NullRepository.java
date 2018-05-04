@@ -1,22 +1,10 @@
 package com.jarq.system.models.repository;
 
-import com.jarq.system.models.text.IText;
 import com.jarq.system.models.NullModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NullRepository extends NullModel implements IRepository {
     
     NullRepository() {}
-
-    @Override
-    public void setTexts(List<IText> texts) {}
-
-    @Override
-    public List<IText> getTexts() {
-        return new ArrayList<>();
-    }
 
     @Override
     public String getName() {

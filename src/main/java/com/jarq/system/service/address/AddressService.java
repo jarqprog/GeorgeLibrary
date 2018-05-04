@@ -6,10 +6,9 @@ import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.user.IDaoUser;
 import com.jarq.system.models.user.IUser;
 import com.jarq.system.policy.IAddressPolicy;
+import com.jarq.system.service.Service;
 
-import java.util.Arrays;
-
-public class AddressService implements IAddressService {
+public class AddressService extends Service implements IAddressService {
 
     private final IDaoAddress daoAddress;
     private final IDaoUser daoUser;
@@ -35,8 +34,6 @@ public class AddressService implements IAddressService {
             if(! addressPolicy.validatePostalCode(postalCode) ) {
                 return serviceFailure + "postal code isn't valid!";
             }
-
-            System.out.println(Arrays.toString(Thread.currentThread().getStackTrace()));
 
             IUser user = daoUser.importUser(userId);
             daoAddress.removeAddressByUserId(userId);

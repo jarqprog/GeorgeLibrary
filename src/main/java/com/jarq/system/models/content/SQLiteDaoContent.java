@@ -109,7 +109,7 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
         }
     }
 
-    private IContent extractContent(PreparedStatement preparedStatement) throws DaoFailure {
+    private IContent extractContent(PreparedStatement preparedStatement) throws DaoFailure, SQLException {
         String[] contentData = getProcessManager().getObjectData(preparedStatement);
         if(contentData.length > 0) {
             return extractContentFromTable(contentData);

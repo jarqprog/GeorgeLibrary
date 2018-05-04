@@ -145,7 +145,7 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
             preparedStatement.setInt(1, userId);
             List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
-            List<Integer> idCollection = gatherIdFromNestedList(nestedCollection);
+            int[] idCollection = gatherIdFromNestedList(nestedCollection);
             for(int repositoryId : idCollection) {
                 removeRepository(repositoryId);
             }
@@ -161,7 +161,7 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
         return removeRepositoriesByUserId(user.getId());
     }
 
-    private IRepository extractRepository(PreparedStatement preparedStatement) throws DaoFailure {
+    private IRepository extractRepository(PreparedStatement preparedStatement) throws DaoFailure, SQLException {
         String[] repositoryData = getProcessManager().getObjectData(preparedStatement);
         if(repositoryData.length > 0) {
             return extractRepositoryFromTable(repositoryData);

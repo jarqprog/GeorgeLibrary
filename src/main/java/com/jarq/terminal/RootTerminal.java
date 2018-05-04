@@ -6,9 +6,7 @@ import com.jarq.system.helpers.datetimer.DateTimer;
 import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
-import com.jarq.system.managers.filesManagers.IRepositoryManager;
-import com.jarq.system.managers.filesManagers.RepositoryManager;
-import com.jarq.system.models.address.IAddress;
+import com.jarq.system.managers.filesManagers.*;
 import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.address.SQLiteDaoAddress;
 import com.jarq.system.models.content.IContent;
@@ -24,6 +22,15 @@ import com.jarq.system.models.text.SQLiteDaoText;
 import com.jarq.system.models.user.IDaoUser;
 import com.jarq.system.models.user.IUser;
 import com.jarq.system.models.user.SQLiteDaoUser;
+import com.jarq.system.policy.*;
+import com.jarq.system.service.IServiceFactory;
+import com.jarq.system.service.ServiceFactory;
+import com.jarq.system.service.address.AddressService;
+import com.jarq.system.service.address.IAddressService;
+import com.jarq.system.service.repository.IRepoService;
+import com.jarq.system.service.repository.RepoService;
+import com.jarq.system.service.user.IUserService;
+import com.jarq.system.service.user.UserService;
 import com.jarq.terminal.controllers.IRepositoryController;
 import com.jarq.terminal.controllers.RepositoryController;
 import com.jarq.system.dao.IDaoFactory;
@@ -34,11 +41,9 @@ import com.jarq.terminal.views.IRepositoryView;
 import com.jarq.terminal.views.RepositoryView;
 import com.jarq.terminal.views.RootView;
 
-import java.io.File;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -72,8 +77,10 @@ public class RootTerminal implements IRoot {
 //            testUserAddress();
 //            testDaoText();
 //            removeTest();
-
+            repositoryManagerTests();
 //            testDaoContent();
+
+//            serviceFactoryTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,6 +95,40 @@ public class RootTerminal implements IRoot {
         IRepositoryView view = new RepositoryView();
 
         return RepositoryController.getInstance(view, createDaoFactory() );
+    }
+
+    private IDaoFactory createDaoFactory() {
+        JDBCProcessManager processManager = SQLProcessManager.getInstance();
+        IDateTimer dateTimer = DateTimer.getInstance();
+        IRepositoryPath repositoryPath = RepositoryPath
+                .getInstance(RepositoriesPath.FILES_REPOSITORY,
+                        FileExtension.MD);
+        return SqlDaoFactory
+                .getInstance(databaseManager, processManager, dateTimer, repositoryPath);
+    }
+
+    private IServiceFactory createServiceFactory() {
+
+        IDaoFactory daoFactory = createDaoFactory();
+        IRepositoryPath repositoryPath = RepositoryPath
+                .getInstance(RepositoriesPath.FILES_REPOSITORY,
+                        FileExtension.MD);
+        IRepositoryManager repositoryManager = RepositoryManager
+                .getInstance(repositoryPath);
+        IContentReader<String> contentReader = RepoReader
+                .getInstance(StandardCharsets.UTF_8);
+        IContentWriter<String> contentWriter = RepoWriter
+                .getInstance(StandardCharsets.UTF_8);
+
+        IDateTimer dateTimer = getDateTimer();
+        IEmailPolicy emailPolicy = new EmailPolicy();
+        IPasswordPolicy passwordPolicy = new PasswordPolicy();
+        IAddressPolicy addressPolicy = new AddressPolicy();
+
+        return ServiceFactory.getInstance(daoFactory,
+                repositoryManager, contentReader, contentWriter,
+                repositoryPath, dateTimer, emailPolicy,
+                passwordPolicy, addressPolicy);
     }
 
     private DatabaseManager createSQLiteManager() {
@@ -129,6 +170,26 @@ public class RootTerminal implements IRoot {
         }
     }
 
+    private void serviceFactoryTest() {
+        IServiceFactory serviceFactory = createServiceFactory();
+        IUserService userService = serviceFactory.createSQLiteService(UserService.class);
+        IAddressService addressService = serviceFactory.createSQLiteService(AddressService.class);
+        IRepoService repoService = serviceFactory.createSQLiteService(RepoService.class);
+
+//        for(int i=0;i<10;i++) {
+//            repoService.createRepository(1, "nowe"+i);
+//        }
+
+//        System.out.println(Arrays.toString(repoService.removeUserRepositories(1)));
+
+
+//        System.out.println(userService.createUser("John", "Little", "john@gmailum.pl"));
+//        System.out.println(addressService.createAddress(3, "12-125",
+//                "Kraków", "Mały Rynek", "21", "2"));
+
+
+    }
+
     private void repositoryManagerTests() throws Exception {
 
         IDaoFactory daoFactory = createDaoFactory();
@@ -136,23 +197,13 @@ public class RootTerminal implements IRoot {
         IRepositoryPath repositoryPath = RepositoryPath
                 .getInstance(RepositoriesPath.FILES_REPOSITORY, FileExtension.MD);
 
+        IDaoUser daoUser = daoFactory.createDAO(SQLiteDaoUser.class);
+
         IRepositoryManager repositoryManager = RepositoryManager.getInstance(repositoryPath);
+        String path = repositoryPath.userDir(daoUser.importUser(1));
 
-        String path01 = RepositoriesPath.FILES_REPOSITORY
-                .getPath()+dateTimer.getCurrentDateTime() + "jel.txt";
-        String path02 = path01 + "001/1.txt";
-        String creationDate01 = dateTimer.getCurrentDateTime();
-        System.out.println(repositoryManager.hasFile(path01));
-        System.out.println(repositoryManager.hasFile(path02));
-
-        IText text = daoFactory.createDAO(SQLiteDaoText.class)
-                .createText(getDaoRepository().importRepository(1), "Ojej");
-
-        IContent content = getDaoContent().createContent(text);
-
-        System.out.println(repositoryManager.createFile(content));
-        System.out.println(repositoryManager.hasFile(path02));
-        System.out.println(repositoryManager.hasFile(path01));
+        System.out.println(path);
+        System.out.println(repositoryManager.hasFile(path));
 
     }
 
@@ -186,16 +237,6 @@ public class RootTerminal implements IRoot {
 
     private IDateTimer getDateTimer() {
         return DateTimer.getInstance();
-    }
-
-    private IDaoFactory createDaoFactory() {
-        JDBCProcessManager processManager = SQLProcessManager.getInstance();
-        IDateTimer dateTimer = DateTimer.getInstance();
-        IRepositoryPath repositoryPath = RepositoryPath
-                .getInstance(RepositoriesPath.FILES_REPOSITORY,
-                        FileExtension.MD);
-        return SqlDaoFactory
-                .getInstance(databaseManager, processManager, dateTimer, repositoryPath);
     }
 
     private void contentTestingAndManager() throws Exception {
