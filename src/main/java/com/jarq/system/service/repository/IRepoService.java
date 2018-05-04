@@ -6,7 +6,9 @@ public interface IRepoService extends IService {
 
     String createRepository(int userId, String repositoryName);
 
+    String changeRepositoryName(int repositoryId, String repositoryName);
+
     String[] getUserRepositories(int userId);
 
-    boolean removeRepository(int repositoryId);
+    String removeRepository(int repositoryId);
 }

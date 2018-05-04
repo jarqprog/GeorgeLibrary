@@ -91,9 +91,7 @@ public class ServiceFactory implements IServiceFactory {
             case("RepoService"):
                 service = RepoService.getInstance(
                                 daoFactory.createDAO(SQLiteDaoRepository.class),
-                                repositoryManager,
-                                repositoryPath,
-                                dateTimer);
+                                daoFactory.createDAO(SQLiteDaoUser.class));
                 break;
             case("AddressService"):
                 service = AddressService.getInstance(
