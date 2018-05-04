@@ -3,7 +3,6 @@ package com.jarq.system.service.address;
 import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
-import com.jarq.system.models.address.NullAddress;
 import com.jarq.system.models.user.IDaoUser;
 import com.jarq.system.models.user.IUser;
 import com.jarq.system.policy.IAddressPolicy;

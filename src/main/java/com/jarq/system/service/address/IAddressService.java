@@ -1,6 +1,8 @@
 package com.jarq.system.service.address;
 
-public interface IAddressService {
+import com.jarq.system.service.IService;
+
+public interface IAddressService extends IService {
 
     String createAddress(int userId, String postalCode, String city,
                          String street, String houseNo, String apartmentNo);

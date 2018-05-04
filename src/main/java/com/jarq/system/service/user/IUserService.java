@@ -5,7 +5,7 @@ import com.jarq.system.service.IService;
 
 public interface IUserService extends IService {
 
-    String createUser(String name, String surname, String email);
+    String createUser(String name, String surname, String email) throws SecurityException;
 
     String changeUserName(int userId, String name);
 
@@ -14,5 +14,7 @@ public interface IUserService extends IService {
     String changeUserEmail(int userId, String email) throws ServiceException;
 
     String changeUserPassword(int userId, String password) throws ServiceException;
+
+    String removeUser(int userId);
 
 }
