@@ -62,13 +62,11 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
         
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, contentId);
-            String[] contentData = getProcessManager().getObjectData(preparedStatement);
-            return extractContent(contentData);
+            return extractContent(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
         }
-        
     }
 
     @Override
@@ -80,13 +78,18 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
             List<IContent> contents = new ArrayList<>();
 
             for(String[] data : dataCollection) {
-                contents.add(extractContent(data));
+                contents.add(extractContentFromTable(data));
             }
             return contents;
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
         }
+    }
+
+    @Override
+    public List<IContent> importContentsByText(IText text) throws DaoFailure {
+        return null;
     }
 
     @Override
@@ -98,9 +101,6 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
     public boolean removeContent(int contentId) throws DaoFailure {
         String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
 
-
-        // implement removing files!!!!
-
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, contentId);
             return getProcessManager().executeStatement(preparedStatement);
@@ -109,25 +109,16 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
         }
     }
 
-    @Override
-    public boolean removeContentsByTextId(int textId) throws DaoFailure {
-
-        String query = String.format("SELECT id FROM %s WHERE text_id=? ", defaultTable);
-        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
-            preparedStatement.setInt(1, textId);
-            List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
-            List<Integer> idsCollection = gatherIdFromNestedList(nestedCollection);
-            boolean isDone = false;
-            for(int id : idsCollection) {
-                isDone = removeContent(id);
-            }
-            return isDone;
-        } catch (Exception ex) {
-            throw new DaoFailure(ex.getMessage());
+    private IContent extractContent(PreparedStatement preparedStatement) throws DaoFailure {
+        String[] contentData = getProcessManager().getObjectData(preparedStatement);
+        if(contentData.length > 0) {
+            return extractContentFromTable(contentData);
+        } else {
+            return createNullContent();
         }
     }
 
-    private IContent extractContent(String[] contentData) throws DaoFailure {
+    private IContent extractContentFromTable(String[] contentData) throws DaoFailure {
 
         int ID_INDEX = 0;
         int FILE_PATH_INDEX = 1;

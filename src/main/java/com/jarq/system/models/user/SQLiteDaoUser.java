@@ -61,8 +61,19 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, userId);
-            String[] userData = getProcessManager().getObjectData(preparedStatement);
-            return extractUser(userData);
+            return extractUser(preparedStatement);
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public IUser importUserByMail(String email) throws DaoFailure {
+        String query = String.format("SELECT * FROM %s WHERE email=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setString(1, email);
+            return extractUser(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
@@ -77,7 +88,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
 
             List<String[]> usersData = getProcessManager().getObjectsDataCollection(preparedStatement);
             for(String[] data : usersData) {
-                users.add(extractUser(data));
+                users.add(extractUserFromTable(data));
             }
             return users;
 
@@ -131,12 +142,16 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         }
     }
 
-    @Override
-    public IUser importUserWithRepositories(int userId) throws DaoFailure {  // todo
-        return createNullUser();
+    private IUser extractUser(PreparedStatement preparedStatement) throws DaoFailure {
+        String[] userData = getProcessManager().getObjectData(preparedStatement);
+        if(userData.length > 0) {
+            return extractUserFromTable(userData);
+        } else {
+            return createNullUser();
+        }
     }
 
-    private IUser extractUser(String[] userData) throws DaoFailure {
+    private IUser extractUserFromTable(String[] userData) throws DaoFailure {
 
         int ID_INDEX = 0;
         int NAME_INDEX = 1;
@@ -151,7 +166,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
             String email = userData[EMAIL_INDEX];
             String password = userData[PASSWORD_INDEX];
 
-            IAddress address = daoAddress.importAddressByUserId(id);
+            IAddress address = daoAddress.createNullAddress();
 
             return new User(id, name, surname, email, password, address);
 
