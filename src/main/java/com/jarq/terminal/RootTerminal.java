@@ -15,6 +15,8 @@ import com.jarq.system.models.text.IDaoText;
 import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.SQLiteDaoText;
 
+import com.jarq.system.models.user.IDaoUser;
+import com.jarq.system.models.user.SQLiteDaoUser;
 import com.jarq.terminal.controllers.IRepositoryController;
 import com.jarq.terminal.controllers.RepositoryController;
 import com.jarq.system.dao.IDaoFactory;
@@ -29,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class RootTerminal implements IRoot {
@@ -59,9 +62,7 @@ public class RootTerminal implements IRoot {
         try {
 
 //            contentTestingAndManager();
-
-
-
+//            System.out.println(getDaoUser().removeUser(2));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,6 +145,11 @@ public class RootTerminal implements IRoot {
 
     }
 
+    private IDaoUser getDaoUser() {
+        return createDaoFactory().createDAO(SQLiteDaoUser.class);
+    }
+
+
     private IDaoContent getDaoContent() {
         return createDaoFactory().createDAO(SQLiteDaoContent.class);
     }
@@ -199,5 +205,4 @@ public class RootTerminal implements IRoot {
 //        }
 
     }
-
 }
