@@ -14,6 +14,8 @@ public interface IDaoUser extends Dao {
 
     IUser importUser(int userId) throws DaoFailure;
 
+    IUser importUserWithAddress(int userId) throws DaoFailure;
+
     List<IUser> importAllUsers() throws DaoFailure;
 
     boolean updateUser(IUser user) throws DaoFailure;
@@ -21,6 +23,4 @@ public interface IDaoUser extends Dao {
     boolean removeUser(IUser user) throws DaoFailure;
 
     boolean removeUser(int userId) throws DaoFailure;
-
-    IUser importUserWithRepositories(int userId) throws DaoFailure;
 }

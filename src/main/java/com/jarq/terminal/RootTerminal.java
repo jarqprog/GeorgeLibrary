@@ -8,6 +8,9 @@ import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.managers.filesManagers.RepositoryManager;
+import com.jarq.system.models.address.IAddress;
+import com.jarq.system.models.address.IDaoAddress;
+import com.jarq.system.models.address.SQLiteDaoAddress;
 import com.jarq.system.models.content.IContent;
 import com.jarq.system.models.content.IDaoContent;
 import com.jarq.system.models.content.SQLiteDaoContent;
@@ -16,6 +19,7 @@ import com.jarq.system.models.text.IText;
 import com.jarq.system.models.text.SQLiteDaoText;
 
 import com.jarq.system.models.user.IDaoUser;
+import com.jarq.system.models.user.IUser;
 import com.jarq.system.models.user.SQLiteDaoUser;
 import com.jarq.terminal.controllers.IRepositoryController;
 import com.jarq.terminal.controllers.RepositoryController;
@@ -60,6 +64,7 @@ public class RootTerminal implements IRoot {
         // for tests:
 
         try {
+//            testUserAddress();
 
 //            contentTestingAndManager();
 //            System.out.println(getDaoUser().removeUser(2));
@@ -158,6 +163,10 @@ public class RootTerminal implements IRoot {
         return createDaoFactory().createDAO(SQLiteDaoText.class);
     }
 
+    private IDaoAddress getDaoAddress() {
+        return createDaoFactory().createDAO(SQLiteDaoAddress.class);
+    }
+
     private IRepositoryPath getRepositoryPath() {
 
         return RepositoryPath.getInstance(RepositoriesPath.FILES_REPOSITORY,
@@ -204,5 +213,19 @@ public class RootTerminal implements IRoot {
 //            System.out.println(content);
 //        }
 
+    }
+
+    private void testUserAddress() throws Exception {
+        IDaoUser daoUser = getDaoUser();
+        IDaoAddress daoAddress = getDaoAddress();
+        IUser janka = daoUser.createUser("Janka", "Nowak",
+                "janka@gmail.com");
+
+        IAddress jankiAddres = daoAddress.createAddress(janka, "31-123",
+                "Kraków", "Wielicka", "12");
+
+        System.out.println(janka);
+        janka = getDaoUser().importUserWithAddress(janka.getId());
+        System.out.println(janka);
     }
 }
