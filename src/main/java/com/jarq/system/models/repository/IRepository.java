@@ -7,10 +7,6 @@ import java.util.List;
 
 public interface IRepository extends Identifiable {
 
-    void setTexts(List<IText> texts);
-
-    List<IText> getTexts();
-
     String getName();
 
     void setName(String name);

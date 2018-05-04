@@ -4,6 +4,7 @@ import com.jarq.system.dao.SqlDao;
 import com.jarq.system.enums.DbTable;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
 import com.jarq.system.exceptions.DaoFailure;
+import com.jarq.system.models.user.IUser;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,17 +28,21 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
     }
 
     @Override
-    public IAddress createAddress(String postalCode, String city, String street, String houseNo, int userId)
+    public IAddress createAddress(IUser user, String postalCode, String city,
+                                  String street, String houseNo)
             throws DaoFailure {
-        String emptyApartmentNo = "";
-        return createAddress(postalCode, city, street, houseNo, emptyApartmentNo, userId);
+
+        String emptyApartmentNo = "-";
+        return createAddress(user, postalCode, city, street, houseNo, emptyApartmentNo);
     }
 
     @Override
-    public IAddress createAddress(String postalCode, String city, String street, String houseNo, String apartmentNo, int userId)
+    public IAddress createAddress(IUser user, String postalCode, String city,
+                                  String street, String houseNo, String apartmentNo)
             throws DaoFailure {
 
         int id = getLowestFreeIdFromGivenTable(defaultTable);
+        int userId = user.getId();
         IAddress address = new Address(id, postalCode, city, street, houseNo, userId);
         address.setApartmentNo(apartmentNo);
 
@@ -86,6 +91,11 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
         }
+    }
+
+    @Override
+    public IAddress importAddressByUser(IUser user) throws DaoFailure {
+        return importAddressByUserId(user.getId());
     }
 
     @Override
@@ -165,11 +175,19 @@ public class SQLiteDaoAddress extends SqlDao implements IDaoAddress {
         }
     }
 
+    @Override
+    public boolean removeAddressByUser(IUser user) throws DaoFailure {
+        return removeAddressByUserId(user.getId());
+    }
 
 
-    private IAddress extractAddressFromStatement(PreparedStatement preparedStatement) throws DaoFailure {
+    private IAddress extractAddressFromStatement(PreparedStatement preparedStatement) throws DaoFailure, SQLException {
         String[] addressData = getProcessManager().getObjectData(preparedStatement);
-        return extractAddressFromTable(addressData);
+        if(addressData.length > 0) {
+            return extractAddressFromTable(addressData);
+        } else {
+            throw new DaoFailure("There's no such address in database!");
+        }
     }
 
     private IAddress extractAddressFromTable(String[] addressData) throws DaoFailure {

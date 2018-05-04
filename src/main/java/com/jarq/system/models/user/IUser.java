@@ -10,7 +10,4 @@ public interface IUser extends IPerson, Identifiable {
     void setPassword(String password);
 
     String getPassword();
-
-    List<IRepository> getRepositories();
-
 }

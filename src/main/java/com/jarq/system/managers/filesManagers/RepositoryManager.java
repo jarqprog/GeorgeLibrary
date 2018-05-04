@@ -40,9 +40,29 @@ public class RepositoryManager implements IRepositoryManager {
     }
 
     @Override
+    public boolean hasDir(String filepath) {
+        return checkIfDirExists(filepath);
+    }
+
+    @Override
     public boolean createFile(IContent content) throws IOException {
         String path = content.getFilepath();
-        return create(path);
+        return createFile(path);
+    }
+
+    @Override
+    public boolean createDir(IUser user) {
+        return createDir(repositoryPath.userDir(user));
+    }
+
+    @Override
+    public boolean createDir(IRepository repository) {
+        return createDir(repositoryPath.repositoryDir(repository));
+    }
+
+    @Override
+    public boolean createDir(IText text) {
+        return createDir(repositoryPath.textDir(text));
     }
 
     @Override
@@ -70,7 +90,7 @@ public class RepositoryManager implements IRepositoryManager {
         return deletePath(path);
     }
 
-    private boolean create(String fullFilepath) throws IOException {
+    private boolean createFile(String fullFilepath) throws IOException {
         if (! hasFile(fullFilepath) ) {
             File path = new File(fullFilepath);
             path.getParentFile().mkdirs();
@@ -79,9 +99,22 @@ public class RepositoryManager implements IRepositoryManager {
         return false;
     }
 
+    private boolean createDir(String fullDirPath) {
+        if (! checkIfDirExists(fullDirPath) ) {
+            File path = new File(fullDirPath);
+            return path.mkdirs();
+        }
+        return false;
+    }
+
     private boolean checkIfPathExists(Path path) {
         return  Files.isRegularFile(path) &
                 Files.isReadable(path);
+    }
+
+    private boolean checkIfDirExists(String path) {
+        File dir = new File(path);
+        return dir.exists() && dir.isDirectory();
     }
 
     private boolean deletePath(String pathToRemove) throws IOException {

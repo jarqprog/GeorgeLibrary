@@ -15,7 +15,16 @@ public interface IRepositoryManager {
     // return true if path exists
     boolean hasFile(String filepath);
 
+    // return true if path exists
+    boolean hasDir(String filepath);
+
     boolean createFile(IContent content) throws IOException;
+
+    boolean createDir(IUser user);
+
+    boolean createDir(IRepository repository);
+
+    boolean createDir(IText text);
 
     boolean removeFile(IContent content) throws IOException;
 

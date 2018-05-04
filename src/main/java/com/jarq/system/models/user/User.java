@@ -13,17 +13,13 @@ public class User extends Model implements IUser {
     private String surname;
     private String email;
     private String password;
-    private IAddress address;
-    private List<IRepository> repositories = new ArrayList<>();
 
-
-    User(int id, String name, String surname, String email, String password, IAddress address) {
+    User(int id, String name, String surname, String email, String password) {
         setId(id);
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
-        this.address = address;
     }
 
     @Override
@@ -39,11 +35,6 @@ public class User extends Model implements IUser {
     @Override
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @Override
-    public void setAddress(IAddress address) {
-        this.address = address;
     }
 
     @Override
@@ -67,11 +58,6 @@ public class User extends Model implements IUser {
     }
 
     @Override
-    public IAddress getAddress() {
-        return address;
-    }
-
-    @Override
     public void setPassword(String password) {
         this.password = password;
     }
@@ -82,19 +68,12 @@ public class User extends Model implements IUser {
     }
 
     @Override
-    public List<IRepository> getRepositories() {
-        return repositories;
-    }
-
-    @Override
     public String toString() {
         return "User{" +
-                "id=" + getId() +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
-                ", address=" + address +
-                ", repositories=" + repositories +
-                '}';
+                ", password='" + password + '\'' +
+                "} " + super.toString();
     }
 }

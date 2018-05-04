@@ -22,7 +22,6 @@ import java.nio.file.Paths;
 
 import static java.nio.file.Files.deleteIfExists;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.booleanThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -86,6 +85,23 @@ public class RepositoryManagerTest extends AbstractTest {
     }
 
     @Test
+    public void hasDir_should_be_true() {
+
+        String dirPath = RepositoriesPath.MANAGER_PATH_HAS_DIR_TEST.getPath();
+
+        assertTrue(repositoryManager.hasDir(dirPath));
+
+    }
+
+    @Test
+    public void hasDir_should_be_false() {
+
+        String fakeDirPath = RepositoriesPath.MANAGER_PATH_HAS_DIR_TEST.getPath()+"123";
+
+        assertFalse(repositoryManager.hasDir(fakeDirPath));
+    }
+
+    @Test
     public void createFile() throws Exception {
 
         String filepath = RepositoriesPath.MANAGER_PATH_CREATION_TEST.getPath();
@@ -100,6 +116,60 @@ public class RepositoryManagerTest extends AbstractTest {
         assertTrue(repositoryManager.createFile(content));
         assertTrue(checkIfFileExists(filepath));
 
+    }
+
+    @Test
+    public void createUserDir() throws Exception {
+
+        String path = RepositoriesPath.MANAGER_USER_PATH_CREATION_TEST.getPath();
+        removePath(path);
+
+        IUser user = mock(User.class);
+
+        when(repositoryPath.userDir(user)).thenReturn(path);
+
+        if(checkIfDirectoryExists(path)) {
+            throw new Exception("Can't continue test, test dir wasn't removed!");
+        }
+
+        assertTrue(repositoryManager.createDir(user));
+        assertTrue(checkIfDirectoryExists(path));
+    }
+
+    @Test
+    public void createRepoDir() throws Exception {
+
+        String path = RepositoriesPath.MANAGER_REPOSITORY_PATH_CREATION_TEST.getPath();
+        removePath(path);
+
+        IRepository repository = mock(Repository.class);
+
+        when(repositoryPath.repositoryDir(repository)).thenReturn(path);
+
+        if(checkIfDirectoryExists(path)) {
+            throw new Exception("Can't continue test, test dir wasn't removed!");
+        }
+
+        assertTrue(repositoryManager.createDir(repository));
+        assertTrue(checkIfDirectoryExists(path));
+    }
+
+    @Test
+    public void createTextDir() throws Exception {
+
+        String path = RepositoriesPath.MANAGER_TEXT_PATH_CREATION_TEST.getPath();
+        removePath(path);
+
+        IText text = mock(Text.class);
+
+        when(repositoryPath.textDir(text)).thenReturn(path);
+
+        if(checkIfDirectoryExists(path)) {
+            throw new Exception("Can't continue test, test dir wasn't removed!");
+        }
+
+        assertTrue(repositoryManager.createDir(text));
+        assertTrue(checkIfDirectoryExists(path));
     }
 
     @Test

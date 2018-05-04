@@ -58,8 +58,7 @@ public class SqlDaoFactory implements IDaoFactory {
                 dao = new SQLiteDaoAddress(connection, processManager, DbTable.ADDRESSES);
                 break;
             case("SQLiteDaoUser"):
-                dao = new SQLiteDaoUser(connection, processManager,
-                        createDAO(SQLiteDaoAddress.class), DbTable.USERS);
+                dao = new SQLiteDaoUser(connection, processManager, DbTable.USERS);
                 break;
             case("SQLiteDaoRepository"):
                 dao = new SQLiteDaoRepository(connection, processManager,
