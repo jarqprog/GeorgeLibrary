@@ -9,10 +9,9 @@ import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
 import com.jarq.system.managers.filesManagers.*;
 
-import com.jarq.system.policy.EmailPolicy;
-import com.jarq.system.policy.IEmailPolicy;
-import com.jarq.system.policy.IPasswordPolicy;
-import com.jarq.system.policy.PasswordPolicy;
+import com.jarq.system.policy.*;
+import com.jarq.system.service.address.AddressService;
+import com.jarq.system.service.address.IAddressService;
 import com.jarq.system.service.repository.IRepoService;
 import com.jarq.system.service.repository.RepoService;
 import com.jarq.system.service.text.ITextService;
@@ -39,11 +38,12 @@ public class ServiceFactoryTest extends AbstractTest {
         IDateTimer dateTimer = mock(DateTimer.class);
         IEmailPolicy emailPolicy = mock(EmailPolicy.class);
         IPasswordPolicy passwordPolicy = mock(PasswordPolicy.class);
+        IAddressPolicy addressPolicy = mock(AddressPolicy.class);
 
         serviceFactory = ServiceFactory.getInstance(daoFactory,
                 repositoryManager, contentReader, contentWriter,
-                repositoryPath, dateTimer,
-                emailPolicy, passwordPolicy);
+                repositoryPath, dateTimer, emailPolicy,
+                passwordPolicy, addressPolicy);
     }
 
     @Test
@@ -64,13 +64,18 @@ public class ServiceFactoryTest extends AbstractTest {
         IRepoService repoService = serviceFactory
                 .createSQLiteService(RepoService.class);
 
+        IAddressService addressService = serviceFactory
+                .createSQLiteService(AddressService.class);
+
         assertNotNull(userService);
         assertNotNull(textService);
         assertNotNull(repoService);
+        assertNotNull(addressService);
 
         // returned proper class
         assertEquals("UserService", userService.getClass().getSimpleName());
         assertEquals("TextService", textService.getClass().getSimpleName());
         assertEquals("RepoService", repoService.getClass().getSimpleName());
+        assertEquals("AddressService", addressService.getClass().getSimpleName());
     }
 }
