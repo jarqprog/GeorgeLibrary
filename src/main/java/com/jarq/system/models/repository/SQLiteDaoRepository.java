@@ -62,8 +62,7 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
         String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, repositoryId);
-            String[] repositoryData = getProcessManager().getObjectData(preparedStatement);
-            return extractRepository(repositoryData);
+            return extractRepository(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
@@ -80,7 +79,7 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
             List<String[]> repositoriesData = getProcessManager()
                     .getObjectsDataCollection(preparedStatement);
             for(String[] data : repositoriesData) {
-                repositories.add(extractRepository(data));
+                repositories.add(extractRepositoryFromTable(data));
             }
             return repositories;
 
@@ -162,7 +161,16 @@ public class SQLiteDaoRepository extends SqlDao implements IDaoRepository {
         return removeRepositoriesByUserId(user.getId());
     }
 
-    private IRepository extractRepository(String[] repositoryData) throws DaoFailure {
+    private IRepository extractRepository(PreparedStatement preparedStatement) throws DaoFailure {
+        String[] repositoryData = getProcessManager().getObjectData(preparedStatement);
+        if(repositoryData.length > 0) {
+            return extractRepositoryFromTable(repositoryData);
+        } else {
+            return createNullRepository();
+        }
+    }
+
+    private IRepository extractRepositoryFromTable(String[] repositoryData) throws DaoFailure {
 
         int ID_INDEX = 0;
         int NAME_INDEX = 1;

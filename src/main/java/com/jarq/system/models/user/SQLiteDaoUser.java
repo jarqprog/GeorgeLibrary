@@ -61,7 +61,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, userId);
-            return extractUserFromStatement(preparedStatement);
+            return extractUser(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
@@ -73,7 +73,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         String query = String.format("SELECT * FROM %s WHERE email=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setString(1, email);
-            return extractUserFromStatement(preparedStatement);
+            return extractUser(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
@@ -142,7 +142,7 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
         }
     }
 
-    private IUser extractUserFromStatement(PreparedStatement preparedStatement) throws DaoFailure {
+    private IUser extractUser(PreparedStatement preparedStatement) throws DaoFailure {
         String[] userData = getProcessManager().getObjectData(preparedStatement);
         if(userData.length > 0) {
             return extractUserFromTable(userData);
