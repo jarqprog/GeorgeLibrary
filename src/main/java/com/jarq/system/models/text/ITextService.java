@@ -1,6 +1,8 @@
 package com.jarq.system.models.text;
 
-public interface ITextService {
+import com.jarq.system.service.IService;
+
+public interface ITextService extends IService {
 
     IText createText();
 }
