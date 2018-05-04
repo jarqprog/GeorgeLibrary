@@ -70,6 +70,19 @@ public class SQLiteDaoUser extends SqlDao implements IDaoUser {
     }
 
     @Override
+    public IUser importUserByMail(String email) throws DaoFailure {
+        String query = String.format("SELECT * FROM %s WHERE email=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setString(1, email);
+            String[] userData = getProcessManager().getObjectData(preparedStatement);
+            return extractUser(userData);
+
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
     public IUser importUserWithAddress(int userId) throws DaoFailure {
         IUser user = importUser(userId);
         user.setAddress(daoAddress.importAddressByUserId(userId));
