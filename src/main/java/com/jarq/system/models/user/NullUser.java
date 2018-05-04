@@ -1,20 +1,10 @@
 package com.jarq.system.models.user;
 
 import com.jarq.system.models.NullModel;
-import com.jarq.system.models.address.IAddress;
-import com.jarq.system.models.address.IDaoAddress;
-import com.jarq.system.models.repository.IRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NullUser extends NullModel implements IUser {
     
-    private final IDaoAddress daoAddress;
-    
-    NullUser(IDaoAddress daoAddress) {
-        this.daoAddress = daoAddress;
-    }
+    NullUser() {}
 
     @Override
     public void setPassword(String password) {}
@@ -25,29 +15,13 @@ public class NullUser extends NullModel implements IUser {
     }
 
     @Override
-    public List<IRepository> getRepositories() {
-        return new ArrayList<>();
-    }
+    public void setName(String firstName) {}
 
     @Override
-    public void setName(String firstName) {
-
-    }
+    public void setSurname(String lastName) {}
 
     @Override
-    public void setSurname(String lastName) {
-
-    }
-
-    @Override
-    public void setEmail(String email) {
-
-    }
-
-    @Override
-    public void setAddress(IAddress address) {
-
-    }
+    public void setEmail(String email) {}
 
     @Override
     public String getFullName() {
@@ -67,11 +41,6 @@ public class NullUser extends NullModel implements IUser {
     @Override
     public String getEmail() {
         return getNotAvailable();
-    }
-
-    @Override
-    public IAddress getAddress() {
-        return daoAddress.createNullAddress();
     }
 
     @Override

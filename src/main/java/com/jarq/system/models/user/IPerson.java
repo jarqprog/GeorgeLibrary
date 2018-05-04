@@ -11,8 +11,6 @@ public interface IPerson extends Identifiable {
 
     void setEmail(String email);
 
-    void setAddress(IAddress address);
-
     String getFullName();
 
     String getName();
@@ -20,6 +18,4 @@ public interface IPerson extends Identifiable {
     String getSurname();
 
     String getEmail();
-
-    IAddress getAddress();
 }
