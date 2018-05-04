@@ -4,8 +4,9 @@ import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.models.repository.IDaoRepository;
+import com.jarq.system.service.Service;
 
-public class RepoService implements IRepoService {
+public class RepoService extends Service implements IRepoService {
 
     private final IDaoRepository daoRepository;
     private final IRepositoryManager repositoryManager;

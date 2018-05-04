@@ -6,8 +6,9 @@ import com.jarq.system.policy.IEmailPolicy;
 import com.jarq.system.policy.IPasswordPolicy;
 import com.jarq.system.models.user.IDaoUser;
 import com.jarq.system.models.user.IUser;
+import com.jarq.system.service.Service;
 
-public class UserService implements IUserService {
+public class UserService extends Service implements IUserService {
 
     private final IDaoUser daoUser;
     private final IEmailPolicy emailPolicy;
