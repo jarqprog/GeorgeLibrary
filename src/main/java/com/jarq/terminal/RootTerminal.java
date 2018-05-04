@@ -77,10 +77,10 @@ public class RootTerminal implements IRoot {
 //            testUserAddress();
 //            testDaoText();
 //            removeTest();
-
+            repositoryManagerTests();
 //            testDaoContent();
 
-            serviceFactoryTest();
+//            serviceFactoryTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -197,23 +197,13 @@ public class RootTerminal implements IRoot {
         IRepositoryPath repositoryPath = RepositoryPath
                 .getInstance(RepositoriesPath.FILES_REPOSITORY, FileExtension.MD);
 
+        IDaoUser daoUser = daoFactory.createDAO(SQLiteDaoUser.class);
+
         IRepositoryManager repositoryManager = RepositoryManager.getInstance(repositoryPath);
+        String path = repositoryPath.userDir(daoUser.importUser(1));
 
-        String path01 = RepositoriesPath.FILES_REPOSITORY
-                .getPath()+dateTimer.getCurrentDateTime() + "jel.txt";
-        String path02 = path01 + "001/1.txt";
-        String creationDate01 = dateTimer.getCurrentDateTime();
-        System.out.println(repositoryManager.hasFile(path01));
-        System.out.println(repositoryManager.hasFile(path02));
-
-        IText text = daoFactory.createDAO(SQLiteDaoText.class)
-                .createText(getDaoRepository().importRepository(1), "Ojej");
-
-        IContent content = getDaoContent().createContent(text);
-
-        System.out.println(repositoryManager.createFile(content));
-        System.out.println(repositoryManager.hasFile(path02));
-        System.out.println(repositoryManager.hasFile(path01));
+        System.out.println(path);
+        System.out.println(repositoryManager.hasFile(path));
 
     }
 

@@ -1,6 +1,7 @@
 package com.jarq.system.service.repository;
 
 import com.jarq.system.exceptions.DaoFailure;
+import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.models.repository.IDaoRepository;
 import com.jarq.system.models.repository.IRepository;
 import com.jarq.system.models.user.IDaoUser;
@@ -13,19 +14,23 @@ public class RepoService extends Service implements IRepoService {
 
     private final IDaoRepository daoRepository;
     private final IDaoUser daoUser;
+    private final IRepositoryManager repositoryManager;
     private final String serviceFailure = "something goes wrong with repository operation..";
 
     public static IRepoService getInstance(IDaoRepository daoRepository,
-                                           IDaoUser daoUser) {
+                                           IDaoUser daoUser,
+                                           IRepositoryManager repositoryManager) {
 
-        return new RepoService( daoRepository, daoUser);
+        return new RepoService(daoRepository, daoUser, repositoryManager);
     }
 
 
     private RepoService(IDaoRepository daoRepository,
-                        IDaoUser daoUser) {
+                        IDaoUser daoUser,
+                        IRepositoryManager repositoryManager) {
         this.daoRepository = daoRepository;
         this.daoUser = daoUser;
+        this.repositoryManager = repositoryManager;
     }
 
     @Override

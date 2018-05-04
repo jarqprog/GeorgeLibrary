@@ -2,11 +2,14 @@ package com.jarq.system.service.user;
 
 import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.exceptions.ServiceException;
+import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.policy.IEmailPolicy;
 import com.jarq.system.policy.IPasswordPolicy;
 import com.jarq.system.models.user.IDaoUser;
 import com.jarq.system.models.user.IUser;
 import com.jarq.system.service.Service;
+
+import java.io.IOException;
 
 public class UserService extends Service implements IUserService {
 
@@ -14,20 +17,23 @@ public class UserService extends Service implements IUserService {
     private final IEmailPolicy emailPolicy;
     private final IPasswordPolicy passwordPolicy;
     private final String serviceFailure = "something goes wrong";
+    private final IRepositoryManager repositoryManager;
     // log
 
 
 
     public static IUserService getInstance(IDaoUser daoUser, IEmailPolicy emailPolicy,
-                                           IPasswordPolicy passwordPolicy) {
-        return new UserService(daoUser, emailPolicy, passwordPolicy);
+                                           IPasswordPolicy passwordPolicy,
+                                           IRepositoryManager repositoryManager) {
+        return new UserService(daoUser, emailPolicy, passwordPolicy, repositoryManager);
     }
 
     private UserService(IDaoUser daoUser, IEmailPolicy emailPolicy,
-                        IPasswordPolicy passwordPolicy) {
+                        IPasswordPolicy passwordPolicy, IRepositoryManager repositoryManager) {
         this.daoUser = daoUser;
         this.emailPolicy = emailPolicy;
         this.passwordPolicy = passwordPolicy;
+        this.repositoryManager = repositoryManager;
     }
 
     @Override
@@ -38,8 +44,8 @@ public class UserService extends Service implements IUserService {
 
             return user.toString(); // todo
 
-        } catch (DaoFailure daoFailure) {
-//            daoFailure.printStackTrace();
+        } catch (DaoFailure ex) {
+            ex.printStackTrace();
             // log
             return serviceFailure;
         }
@@ -112,14 +118,17 @@ public class UserService extends Service implements IUserService {
     public String removeUser(int userId) {
         try {
             IUser user = daoUser.importUser(userId);
-            if ( daoUser.removeUser(user) ) {
+
+//            if( repositoryManager.)
+            boolean isRemovedUserDir = repositoryManager.removeUserRepositories(user);
+            if ( daoUser.removeUser(user) && isRemovedUserDir) {
                 return user.toString(); // todo
             }
             // log
             return serviceFailure;
 
-        } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
+        } catch (DaoFailure | IOException ex) {
+            ex.printStackTrace();
             // log
             return serviceFailure;
         }
