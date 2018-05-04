@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class SqlDao implements Dao {
 
@@ -30,14 +29,17 @@ public abstract class SqlDao implements Dao {
         return processManager;
     }
 
-    protected List<Integer> gatherIdFromNestedList(List<String[]> nestedList)
+    protected int[] gatherIdFromNestedList(List<String[]> nestedList)
             throws DaoFailure {
         int ID_INDEX = 0;
+        int[] ids = new int[nestedList.size()];
+        int counter = 0;
         try {
-
-            return nestedList.stream()
-                    .map(s -> Integer.parseInt(s[ID_INDEX]))
-                    .collect(Collectors.toList());
+            for(String[] table : nestedList) {
+                ids[counter] = Integer.parseInt(table[ID_INDEX]);
+                counter++;
+            }
+            return ids;
         } catch (Exception ex) {
             throw new DaoFailure(ex.getMessage());
         }
