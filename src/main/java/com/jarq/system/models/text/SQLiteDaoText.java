@@ -5,6 +5,8 @@ import com.jarq.system.enums.DbTable;
 import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.managers.databaseManagers.JDBCProcessManager;
+import com.jarq.system.models.repository.IRepository;
+import com.jarq.system.models.user.IUser;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,9 +32,11 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     }
 
     @Override
-    public IText createText(String title, int repositoryId, int userId) throws DaoFailure {
+    public IText createText(IRepository repository, String title) throws DaoFailure {
 
         int id = getLowestFreeIdFromGivenTable(defaultTable);
+        int repositoryId = repository.getId();
+        int userId = repository.getUserId();
         String creationDate = dateTimer.getCurrentDateTime();
         IText text = new Text(id, title, creationDate, repositoryId, userId);
         text.setModificationDate(creationDate);
@@ -62,7 +66,7 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         String query = String.format("SELECT * FROM %s WHERE id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, textId);
-            return extractTextFromStatement(preparedStatement);
+            return extractText(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
@@ -74,13 +78,26 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         String query = String.format("SELECT * FROM %s WHERE repository_id=?", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, repositoryId);
-            List<String[]> dataCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
-            List<IText> texts = new ArrayList<>();
+            return extractTexts(preparedStatement);
 
-            for(String[] data : dataCollection) {
-                texts.add(extractTextFromTable(data));
-            }
-            return texts;
+        } catch(SQLException | DaoFailure ex){
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<IText> importTextsByRepository(IRepository repository) throws DaoFailure {
+        return importTextsByRepositoryId(repository.getId());
+    }
+
+    @Override
+    public List<IText> importTextsByUser(IUser user) throws DaoFailure {
+
+        int userId = user.getId();
+        String query = String.format("SELECT * FROM %s WHERE user_id=?", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, userId);
+            return extractTexts(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
@@ -101,39 +118,69 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
     public boolean removeText(int textId) throws DaoFailure {
 
         String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
-
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, textId);
             return getProcessManager().executeStatement(preparedStatement);
+
         } catch (SQLException ex) {
             throw new DaoFailure(ex.getMessage());
         }
-
     }
 
     @Override
     public boolean removeTextsByRepositoryId(int repositoryId) throws DaoFailure {
-
         String query = String.format("SELECT id FROM %s WHERE repository_id=? ", defaultTable);
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, repositoryId);
-            List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
-            List<Integer> idsCollection = gatherIdFromNestedList(nestedCollection);
-            boolean isDone = false;
-            for(int id : idsCollection) {
-                isDone = removeText(id);
-            }
-            return isDone;
+            return removeTextsFromStatement(preparedStatement);
+
         } catch (Exception ex) {
             throw new DaoFailure(ex.getMessage());
         }
     }
 
-    private IText extractTextFromStatement(PreparedStatement preparedStatement)
+    @Override
+    public boolean removeTextsByRepository(IRepository repository) throws DaoFailure {
+        return removeTextsByRepositoryId(repository.getId());
+    }
+
+    @Override
+    public boolean removeTextsByUser(IUser user) throws DaoFailure {
+        int userId = user.getId();
+        String query = String.format("SELECT id FROM %s WHERE user_id=? ", defaultTable);
+        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
+            preparedStatement.setInt(1, userId);
+            return removeTextsFromStatement(preparedStatement);
+
+        } catch (Exception ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    private IText extractText(PreparedStatement preparedStatement)
             throws DaoFailure {
 
         String[] textData = getProcessManager().getObjectData(preparedStatement);
-        return extractTextFromTable(textData);
+        if(textData.length > 0) {
+            return extractTextFromTable(textData);
+        } else {
+            return createNullText();
+        }
+    }
+
+    private List<IText> extractTexts(PreparedStatement preparedStatement)
+            throws DaoFailure {
+        try {
+            List<String[]> dataCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
+            List<IText> texts = new ArrayList<>();
+
+            for(String[] data : dataCollection) {
+                texts.add(extractTextFromTable(data));
+            }
+            return texts;
+        } catch (DaoFailure ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
     }
 
     private IText extractTextFromTable(String[] textData) throws DaoFailure {
@@ -182,6 +229,21 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
             return getProcessManager().executeStatement(preparedStatement);
 
         } catch(SQLException ex) {
+            throw new DaoFailure(ex.getMessage());
+        }
+    }
+
+    private boolean removeTextsFromStatement(PreparedStatement preparedStatement) throws DaoFailure {
+        try {
+            List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
+            List<Integer> idsTextsToRemove = gatherIdFromNestedList(nestedCollection);
+
+            boolean isDone = false;
+            for(int id : idsTextsToRemove) {
+                isDone = removeText(id);
+            }
+            return isDone;
+        } catch (Exception ex) {
             throw new DaoFailure(ex.getMessage());
         }
     }
