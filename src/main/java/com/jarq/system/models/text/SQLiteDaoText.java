@@ -127,36 +127,6 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
         }
     }
 
-    @Override
-    public boolean removeTextsByRepositoryId(int repositoryId) throws DaoFailure {
-        String query = String.format("SELECT id FROM %s WHERE repository_id=? ", defaultTable);
-        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
-            preparedStatement.setInt(1, repositoryId);
-            return removeTextsFromStatement(preparedStatement);
-
-        } catch (Exception ex) {
-            throw new DaoFailure(ex.getMessage());
-        }
-    }
-
-    @Override
-    public boolean removeTextsByRepository(IRepository repository) throws DaoFailure {
-        return removeTextsByRepositoryId(repository.getId());
-    }
-
-    @Override
-    public boolean removeTextsByUser(IUser user) throws DaoFailure {
-        int userId = user.getId();
-        String query = String.format("SELECT id FROM %s WHERE user_id=? ", defaultTable);
-        try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
-            preparedStatement.setInt(1, userId);
-            return removeTextsFromStatement(preparedStatement);
-
-        } catch (Exception ex) {
-            throw new DaoFailure(ex.getMessage());
-        }
-    }
-
     private IText extractText(PreparedStatement preparedStatement)
             throws DaoFailure {
 
@@ -229,21 +199,6 @@ public class SQLiteDaoText extends SqlDao implements IDaoText {
             return getProcessManager().executeStatement(preparedStatement);
 
         } catch(SQLException ex) {
-            throw new DaoFailure(ex.getMessage());
-        }
-    }
-
-    private boolean removeTextsFromStatement(PreparedStatement preparedStatement) throws DaoFailure {
-        try {
-            List<String[]> nestedCollection = getProcessManager().getObjectsDataCollection(preparedStatement);
-            List<Integer> idsTextsToRemove = gatherIdFromNestedList(nestedCollection);
-
-            boolean isDone = false;
-            for(int id : idsTextsToRemove) {
-                isDone = removeText(id);
-            }
-            return isDone;
-        } catch (Exception ex) {
             throw new DaoFailure(ex.getMessage());
         }
     }

@@ -27,5 +27,4 @@ public interface IDaoRepository extends Dao {
     boolean removeRepositoriesByUserId(int userId) throws DaoFailure;
 
     boolean removeRepositoriesByUser(IUser user) throws DaoFailure;
-
 }

@@ -27,10 +27,4 @@ public interface IDaoText extends Dao {
     boolean removeText(IText text) throws DaoFailure;
 
     boolean removeText(int textId) throws DaoFailure;
-
-    boolean removeTextsByRepositoryId(int repositoryId) throws DaoFailure;
-
-    boolean removeTextsByRepository(IRepository repository) throws DaoFailure;
-
-    boolean removeTextsByUser(IUser user) throws DaoFailure;
 }
