@@ -62,13 +62,11 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
         
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, contentId);
-            String[] contentData = getProcessManager().getObjectData(preparedStatement);
-            return extractContent(contentData);
+            return extractContent(preparedStatement);
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
         }
-        
     }
 
     @Override
@@ -80,13 +78,18 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
             List<IContent> contents = new ArrayList<>();
 
             for(String[] data : dataCollection) {
-                contents.add(extractContent(data));
+                contents.add(extractContentFromTable(data));
             }
             return contents;
 
         } catch(SQLException | DaoFailure ex){
             throw new DaoFailure(ex.getMessage());
         }
+    }
+
+    @Override
+    public List<IContent> importContentsByText(IText text) throws DaoFailure {
+        return null;
     }
 
     @Override
@@ -97,9 +100,6 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
     @Override
     public boolean removeContent(int contentId) throws DaoFailure {
         String query = String.format("DELETE FROM %s WHERE id=?", defaultTable);
-
-
-        // implement removing files!!!!
 
         try ( PreparedStatement preparedStatement = getConnection().prepareStatement(query) ) {
             preparedStatement.setInt(1, contentId);
@@ -127,7 +127,21 @@ public class SQLiteDaoContent extends SqlDao implements IDaoContent {
         }
     }
 
-    private IContent extractContent(String[] contentData) throws DaoFailure {
+    @Override
+    public boolean removeContentsByText(IText text) throws DaoFailure {
+        return removeContentsByTextId(text.getId());
+    }
+
+    private IContent extractContent(PreparedStatement preparedStatement) throws DaoFailure {
+        String[] contentData = getProcessManager().getObjectData(preparedStatement);
+        if(contentData.length > 0) {
+            return extractContentFromTable(contentData);
+        } else {
+            return createNullContent();
+        }
+    }
+
+    private IContent extractContentFromTable(String[] contentData) throws DaoFailure {
 
         int ID_INDEX = 0;
         int FILE_PATH_INDEX = 1;
