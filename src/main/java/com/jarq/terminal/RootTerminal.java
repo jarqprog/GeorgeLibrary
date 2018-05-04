@@ -71,8 +71,9 @@ public class RootTerminal implements IRoot {
 //            testDaoRepository();
 //            testUserAddress();
 //            testDaoText();
-            testDaoContent();
+//            removeTest();
 
+//            testDaoContent();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -250,35 +251,26 @@ public class RootTerminal implements IRoot {
     private void testDaoText() throws Exception {
         IDaoText daoText = getDaoText();
 
-        System.out.println(daoText.removeTextsByRepositoryId(1000));
         System.out.println(daoText.importTextsByUser(getDaoUser().importUser(3)));
-        System.out.println(daoText.removeTextsByRepositoryId(3));
-        System.out.println(daoText.removeTextsByRepository(getDaoRepository().importRepository(3)));
+
         System.out.println(daoText.importTextsByUser(getDaoUser().importUser(3)));
     }
 
     private void testDaoContent() throws Exception {
-        IDaoRepository daoRepository = getDaoRepository();
-        IDaoUser daoUser = getDaoUser();
-        IDaoContent daoContent = getDaoContent();
-        IDaoText daoText = getDaoText();
-
-
-        int random = getRandomNumber(100);
-        String name = getRandomName();
-        String surname = getRandomSurname();
-        IUser randomUser = daoUser.createUser(name, surname, name + random + surname +"@yahoo.com");
-        IRepository repository01 = daoRepository.createRepository(randomUser, name + random);
-        IRepository repository02 = daoRepository.createRepository(randomUser, name + random);
-
-        for (int i=0; i<100; i++) {
-            random = getRandomNumber(1000);
-            IText text01 = daoText.createText(repository01, name+" note" + random);
-            IText text02 = daoText.createText(repository02, "new02" + random);
-            IContent content001 = daoContent.createContent(text01);
-            IContent content002 = daoContent.createContent(text02);
-        }
+        populateDbWithTextsAndContents();
     }
+
+    private void removeTest() throws Exception {
+
+//        System.out.println(getDaoRepository().removeRepositoriesByUser(getDaoUser().importUserByMail("Tom16Koval@yahoo.com")));
+//        System.out.println(getDaoRepository().removeRepository(373));
+//        System.out.println(getDaoRepository().);
+//        for(int i=170; i<200;i++) {
+//            getDaoUser().removeUser(i);
+//        }
+    }
+
+
 
 
 
@@ -296,4 +288,29 @@ public class RootTerminal implements IRoot {
         String[] surnames = {"Novak", "Smith", "Koval", "Black"};
         return surnames[getRandomNumber(surnames.length-1)];
     }
+
+
+
+    private void populateDbWithTextsAndContents() throws Exception {
+        IDaoRepository daoRepository = getDaoRepository();
+        IDaoUser daoUser = getDaoUser();
+        IDaoContent daoContent = getDaoContent();
+        IDaoText daoText = getDaoText();
+
+
+        int random = getRandomNumber(100);
+        String name = getRandomName();
+        String surname = getRandomSurname();
+        IUser randomUser = daoUser.createUser(name, surname, name + random + surname +"@yahoo.com");
+        IRepository repository01 = daoRepository.createRepository(randomUser, name + random);
+
+
+        for (int i=0; i<100; i++) {
+            random = getRandomNumber(1000);
+            IText text01 = daoText.createText(repository01, name+" note" + random);
+            IContent content001 = daoContent.createContent(text01);
+        }
+
+    }
+
 }
