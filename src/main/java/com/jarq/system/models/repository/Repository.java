@@ -51,4 +51,13 @@ public class Repository extends Model implements IRepository {
         return userId;
     }
 
+    @Override
+    public String toString() {
+        return "Repository{" +
+                "name='" + name + '\'' +
+                ", creationDate='" + creationDate + '\'' +
+                ", lastModificationDate='" + lastModificationDate + '\'' +
+                ", userId=" + userId +
+                "} " + super.toString();
+    }
 }
