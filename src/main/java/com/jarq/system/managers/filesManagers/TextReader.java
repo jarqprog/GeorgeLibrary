@@ -31,4 +31,10 @@ public class TextReader extends TextFileOperator implements IContentReader<Strin
         }
         return stringBuilder.toString();
     }
+
+    @Override
+    public byte[] readContentAsBytes(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        return Files.readAllBytes(path);
+    }
 }

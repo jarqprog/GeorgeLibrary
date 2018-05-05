@@ -44,6 +44,18 @@ public class TextWriterTest extends AbstractTest {
 
     }
 
+    @Test
+    public void writeContent_as_bytes() throws IOException {
+
+        String testFilepath = RepositoriesPath.WRITER_TEST_FILE.getPath();
+
+        writer.writeContent(testFilepath, getTestText().getBytes(StandardCharsets.UTF_8));
+
+        String output = readTestFile(testFilepath);
+
+        assertEquals(getTestText(), output);
+    }
+
     private String readTestFile(String testFilepath) throws IOException {
         Path path = Paths.get(testFilepath);
         StringBuilder stringBuilder = new StringBuilder();

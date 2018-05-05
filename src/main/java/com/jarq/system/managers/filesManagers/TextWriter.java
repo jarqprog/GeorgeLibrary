@@ -1,6 +1,7 @@
 package com.jarq.system.managers.filesManagers;
 
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -24,5 +25,13 @@ public class TextWriter extends TextFileOperator implements IContentWriter<Strin
                 writer.write(content);
         }
         return true;
+    }
+
+    @Override
+    public boolean writeContent(String filePath, byte[] content) throws IOException {
+        try (FileOutputStream stream = new FileOutputStream(filePath) ) {
+            stream.write(content);
+            return true;
+        }
     }
 }

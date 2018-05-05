@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -31,6 +32,16 @@ public class TextReaderTest extends AbstractTest {
 
         String expected = getTestText();
         String output = contentReader.readContent(testFile);
+
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void readContent_as_bytes() throws IOException {
+
+        String filepath = RepositoriesPath.READER_TEST_FILE.getPath();
+        String expected = getTestText();
+        String output = new String(contentReader.readContentAsBytes(filepath));
 
         assertEquals(expected, output);
     }
