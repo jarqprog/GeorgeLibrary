@@ -14,7 +14,7 @@ public class AddressService extends Service implements IAddressService {
     private final IDaoAddress daoAddress;
     private final IDaoUser daoUser;
     private final IAddressPolicy addressPolicy;
-    private final String serviceFailure = "Something goes wrong with address operation";
+    private final String serviceFailure = "Something goes wrong with address operation.";
 
     public static IAddressService getInstance(ILog log, IDaoAddress daoAddress,
                                               IDaoUser daoUser,
@@ -35,12 +35,13 @@ public class AddressService extends Service implements IAddressService {
     public String createAddress(int userId, String postalCode, String city, String street, String houseNo, String apartmentNo) {
         try {
             if(! addressPolicy.validatePostalCode(postalCode) ) {
-                return serviceFailure + "postal code isn't valid!";
+                return serviceFailure + "Postal code isn't valid! Operation stopped.";
             }
 
             IUser user = daoUser.importUser(userId);
             daoAddress.removeAddressByUserId(userId);
             IAddress address;
+
             if(apartmentNo.length() == 0) {
                 address = daoAddress.createAddress(user, postalCode, city, street, houseNo);
 
@@ -50,8 +51,7 @@ public class AddressService extends Service implements IAddressService {
             return address.toString(); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -59,7 +59,7 @@ public class AddressService extends Service implements IAddressService {
     @Override
     public String changePostalCode(int userId, String postalCode) {
         if(! addressPolicy.validatePostalCode(postalCode) ) {
-            return serviceFailure + "postal code isn't valid!";
+            return serviceFailure + "Postal code isn't valid! Operation stopped.";
         }
         try {
             IAddress address = daoAddress.importAddressByUserId(userId);
@@ -67,8 +67,7 @@ public class AddressService extends Service implements IAddressService {
             return updateAddress(address); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -81,8 +80,7 @@ public class AddressService extends Service implements IAddressService {
             return updateAddress(address); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -95,8 +93,7 @@ public class AddressService extends Service implements IAddressService {
             return updateAddress(address); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -109,8 +106,7 @@ public class AddressService extends Service implements IAddressService {
             return updateAddress(address); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -123,8 +119,7 @@ public class AddressService extends Service implements IAddressService {
             return updateAddress(address); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -136,12 +131,13 @@ public class AddressService extends Service implements IAddressService {
             if ( daoAddress.removeAddress(address) ) {
                 return address.toString(); // todo
             }
-            // log
-            return serviceFailure;
+            String message = String.format("%s Problem occurred while deleting address for user id: %s",
+                    serviceFailure, userId);
+            report(message);
+            return message;
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -150,8 +146,10 @@ public class AddressService extends Service implements IAddressService {
         if ( daoAddress.updateAddress(address) ) {
             return address.toString();
         }
-        // log
-        return serviceFailure;
+        String message = String.format("%s Problem occurred while updating address for user id: %s",
+                serviceFailure, address.getUserId());
+        report(message);
+        return message;
     }
 
 }

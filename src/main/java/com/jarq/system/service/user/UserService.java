@@ -112,12 +112,17 @@ public class UserService extends Service implements IUserService {
     public String removeUser(int userId) {
         try {
             IUser user = daoUser.importUser(userId);
-            boolean isRemovedUserDir = repositoryManager.removeUserRepositories(user);
-            if ( daoUser.removeUser(user) && isRemovedUserDir) {
+
+            boolean dbCleared = daoUser.removeUser(user);
+            boolean repoCleared = repositoryManager.removeUserRepositories(user);
+
+            if ( dbCleared && repoCleared ) {
                 return user.toString(); // todo
             }
-            report(serviceFailure);
-            return serviceFailure;
+
+            String message = String.format("%s Problem occurred while removing user (id:%s).", serviceFailure, userId);
+            report(message);
+            return message;
 
         } catch (DaoFailure | IOException ex) {
             reportException(ex);
