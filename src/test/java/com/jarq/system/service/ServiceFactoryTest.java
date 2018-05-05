@@ -32,8 +32,8 @@ public class ServiceFactoryTest extends AbstractTest {
     public void setUp() {
         IDaoFactory daoFactory = mock(SqlDaoFactory.class);
         IRepositoryManager repositoryManager = mock(RepositoryManager.class);
-        IContentReader<String> contentReader = mock(RepoReader.class);
-        IContentWriter<String> contentWriter = mock(RepoWriter.class);
+        IContentReader<String> contentReader = mock(TextReader.class);
+        IContentWriter<String> contentWriter = mock(TextWriter.class);
         IRepositoryPath repositoryPath = mock(RepositoryPath.class);
         IDateTimer dateTimer = mock(DateTimer.class);
         IEmailPolicy emailPolicy = mock(EmailPolicy.class);
