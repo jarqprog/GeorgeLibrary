@@ -3,6 +3,7 @@ package com.jarq.system.service;
 import com.jarq.system.dao.IDaoFactory;
 import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
+import com.jarq.system.log.ILog;
 import com.jarq.system.managers.filesManagers.IContentReader;
 import com.jarq.system.managers.filesManagers.IContentWriter;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
@@ -30,6 +31,7 @@ public class ServiceFactory implements IServiceFactory {
     private final IEmailPolicy emailPolicy;
     private final IPasswordPolicy passwordPolicy;
     private final IAddressPolicy addressPolicy;
+    private final ILog log;
 
 
 
@@ -41,10 +43,11 @@ public class ServiceFactory implements IServiceFactory {
                                               IDateTimer dateTimer,
                                               IEmailPolicy emailPolicy,
                                               IPasswordPolicy passwordPolicy,
-                                              IAddressPolicy addressPolicy) {
+                                              IAddressPolicy addressPolicy,
+                                              ILog log) {
         return new ServiceFactory(daoFactory, repositoryManager,
                 contentReader, contentWriter, repositoryPath, dateTimer,
-                emailPolicy, passwordPolicy, addressPolicy);
+                emailPolicy, passwordPolicy, addressPolicy, log);
     }
 
     private ServiceFactory(IDaoFactory daoFactory,
@@ -55,7 +58,8 @@ public class ServiceFactory implements IServiceFactory {
                            IDateTimer dateTimer,
                            IEmailPolicy emailPolicy,
                            IPasswordPolicy passwordPolicy,
-                           IAddressPolicy addressPolicy) {
+                           IAddressPolicy addressPolicy,
+                           ILog log) {
         this.daoFactory = daoFactory;
         this.repositoryManager = repositoryManager;
         this.contentReader = contentReader;
@@ -65,6 +69,7 @@ public class ServiceFactory implements IServiceFactory {
         this.emailPolicy = emailPolicy;
         this.passwordPolicy = passwordPolicy;
         this.addressPolicy = addressPolicy;
+        this.log = log;
     }
 
     @Override
@@ -76,28 +81,28 @@ public class ServiceFactory implements IServiceFactory {
         switch(serviceName) {
             case("TextService"):
                 service = TextService.getInstance(
-                                repositoryManager,
-                                contentReader,
-                                contentWriter,
-                                daoFactory.createDAO(SQLiteDaoText.class),
-                                daoFactory.createDAO(SQLiteDaoContent.class));
+                            log, repositoryManager,
+                            contentReader,
+                            contentWriter,
+                            daoFactory.createDAO(SQLiteDaoText.class),
+                            daoFactory.createDAO(SQLiteDaoContent.class));
                 break;
             case("UserService"):
                 service = UserService.getInstance(
-                                daoFactory.createDAO(SQLiteDaoUser.class),
-                                emailPolicy,
-                                passwordPolicy,
-                                repositoryManager);
+                            log, daoFactory.createDAO(SQLiteDaoUser.class),
+                            emailPolicy,
+                            passwordPolicy,
+                            repositoryManager);
                 break;
             case("RepoService"):
                 service = RepoService.getInstance(
-                                daoFactory.createDAO(SQLiteDaoRepository.class),
-                                daoFactory.createDAO(SQLiteDaoUser.class),
-                                repositoryManager);
+                            log, daoFactory.createDAO(SQLiteDaoRepository.class),
+                            daoFactory.createDAO(SQLiteDaoUser.class),
+                            repositoryManager);
                 break;
             case("AddressService"):
                 service = AddressService.getInstance(
-                            daoFactory.createDAO(SQLiteDaoAddress.class),
+                            log, daoFactory.createDAO(SQLiteDaoAddress.class),
                             daoFactory.createDAO(SQLiteDaoUser.class),
                             addressPolicy);
                 break;

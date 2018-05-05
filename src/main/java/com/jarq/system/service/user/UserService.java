@@ -2,6 +2,7 @@ package com.jarq.system.service.user;
 
 import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.exceptions.ServiceException;
+import com.jarq.system.log.ILog;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.policy.IEmailPolicy;
 import com.jarq.system.policy.IPasswordPolicy;
@@ -18,18 +19,16 @@ public class UserService extends Service implements IUserService {
     private final IPasswordPolicy passwordPolicy;
     private final String serviceFailure = "something goes wrong with user data operation";
     private final IRepositoryManager repositoryManager;
-    // log
 
-
-
-    public static IUserService getInstance(IDaoUser daoUser, IEmailPolicy emailPolicy,
+    public static IUserService getInstance(ILog log, IDaoUser daoUser, IEmailPolicy emailPolicy,
                                            IPasswordPolicy passwordPolicy,
                                            IRepositoryManager repositoryManager) {
-        return new UserService(daoUser, emailPolicy, passwordPolicy, repositoryManager);
+        return new UserService(log, daoUser, emailPolicy, passwordPolicy, repositoryManager);
     }
 
-    private UserService(IDaoUser daoUser, IEmailPolicy emailPolicy,
+    private UserService(ILog log, IDaoUser daoUser, IEmailPolicy emailPolicy,
                         IPasswordPolicy passwordPolicy, IRepositoryManager repositoryManager) {
+        super(log);
         this.daoUser = daoUser;
         this.emailPolicy = emailPolicy;
         this.passwordPolicy = passwordPolicy;
@@ -45,8 +44,7 @@ public class UserService extends Service implements IUserService {
             return user.toString(); // todo
 
         } catch (DaoFailure | IOException ex) {
-            ex.printStackTrace();
-            // log
+            reportException(ex);
             return serviceFailure;
         }
     }
@@ -60,8 +58,7 @@ public class UserService extends Service implements IUserService {
             return updateUser(user); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -74,8 +71,7 @@ public class UserService extends Service implements IUserService {
             return updateUser(user); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -91,8 +87,7 @@ public class UserService extends Service implements IUserService {
             return updateUser(user); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -108,8 +103,7 @@ public class UserService extends Service implements IUserService {
             return updateUser(user); // todo
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -122,22 +116,20 @@ public class UserService extends Service implements IUserService {
             if ( daoUser.removeUser(user) && isRemovedUserDir) {
                 return user.toString(); // todo
             }
-            // log
+            report(serviceFailure);
             return serviceFailure;
 
         } catch (DaoFailure | IOException ex) {
-            ex.printStackTrace();
-            // log
+            reportException(ex);
             return serviceFailure;
         }
     }
-
 
     private String updateUser(IUser user) throws DaoFailure {
         if ( daoUser.updateUser(user) ) {
             return user.toString();
         }
-        // log
+        report(serviceFailure);
         return serviceFailure;
     }
 

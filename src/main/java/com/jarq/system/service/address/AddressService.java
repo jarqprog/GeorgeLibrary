@@ -1,6 +1,7 @@
 package com.jarq.system.service.address;
 
 import com.jarq.system.exceptions.DaoFailure;
+import com.jarq.system.log.ILog;
 import com.jarq.system.models.address.IAddress;
 import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.user.IDaoUser;
@@ -15,13 +16,15 @@ public class AddressService extends Service implements IAddressService {
     private final IAddressPolicy addressPolicy;
     private final String serviceFailure = "Something goes wrong with address operation";
 
-    public static IAddressService getInstance(IDaoAddress daoAddress,
+    public static IAddressService getInstance(ILog log, IDaoAddress daoAddress,
                                               IDaoUser daoUser,
                                               IAddressPolicy addressPolicy) {
-        return new AddressService(daoAddress, daoUser, addressPolicy);
+        return new AddressService(log, daoAddress, daoUser, addressPolicy);
     }
 
-    private AddressService(IDaoAddress daoAddress, IDaoUser daoUser, IAddressPolicy addressPolicy) {
+    private AddressService(ILog log, IDaoAddress daoAddress,
+                           IDaoUser daoUser, IAddressPolicy addressPolicy) {
+        super(log);
         this.daoAddress = daoAddress;
         this.daoUser = daoUser;
         this.addressPolicy = addressPolicy;
