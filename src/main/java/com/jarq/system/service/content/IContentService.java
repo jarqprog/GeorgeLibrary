@@ -4,15 +4,23 @@ import com.jarq.system.service.IService;
 
 public interface IContentService extends IService {
 
-    String createContent(int userId, String content);
+    String createContent(int textId, String data);
 
-    String changeRepositoryName(int repositoryId, String repositoryName);
+    String createContent(int textId, byte[] data);
 
-    String[] getUserRepositories(int userId);
+    String importContent(int contentId);
 
-    String removeRepository(int repositoryId);
+    String importContentsData(int contentId);
 
-    String[] removeUserRepositories(int userId);
+    byte[] importContentsBytesData(int contentId);
 
+    boolean changeContentsData(int contentId, String data);
 
+    boolean changeContentsData(int contentId, byte[] data);
+
+    String[] importContentsByText(int textId);
+
+    String removeContent(int contentId);
+
+    String[] removeTextContents(int textId);
 }
