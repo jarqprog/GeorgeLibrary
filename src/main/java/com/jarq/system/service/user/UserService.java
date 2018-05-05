@@ -17,7 +17,7 @@ public class UserService extends Service implements IUserService {
     private final IDaoUser daoUser;
     private final IEmailPolicy emailPolicy;
     private final IPasswordPolicy passwordPolicy;
-    private final String serviceFailure = "something goes wrong with user data operation";
+    private final String serviceFailure = "something goes wrong with user data operation.";
     private final IRepositoryManager repositoryManager;
 
     public static IUserService getInstance(ILog log, IDaoUser daoUser, IEmailPolicy emailPolicy,
@@ -44,6 +44,18 @@ public class UserService extends Service implements IUserService {
             return user.toString(); // todo
 
         } catch (DaoFailure | IOException ex) {
+            reportException(ex);
+            return serviceFailure;
+        }
+    }
+
+    @Override
+    public String importUser(int userId) {
+        try {
+            IUser user = daoUser.importUser(userId);
+            return user.toString(); // todo
+
+        } catch (DaoFailure ex) {
             reportException(ex);
             return serviceFailure;
         }
