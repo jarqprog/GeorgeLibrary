@@ -7,6 +7,10 @@ public interface IAddressService extends IService {
     String createAddress(int userId, String postalCode, String city,
                          String street, String houseNo, String apartmentNo);
 
+    String importAddress(int addressId);
+
+    String importUserAddress(int userId);
+
     String changePostalCode(int userId, String postalCode);
 
     String changeCity(int userId, String city);

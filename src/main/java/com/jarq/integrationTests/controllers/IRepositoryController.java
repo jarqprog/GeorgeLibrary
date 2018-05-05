@@ -1,4 +1,4 @@
-package com.jarq.terminal.controllers;
+package com.jarq.integrationTests.controllers;
 
 public interface IRepositoryController {
 

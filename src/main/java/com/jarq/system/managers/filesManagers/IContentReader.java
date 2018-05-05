@@ -5,4 +5,5 @@ import java.io.IOException;
 public interface IContentReader<T> {
 
     T readContent(String filePath) throws IOException;
+    byte[] readContentAsBytes(String filePath) throws IOException;
 }

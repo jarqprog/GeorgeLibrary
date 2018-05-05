@@ -1,9 +1,6 @@
 package com.jarq.system.models.text;
 
 import com.jarq.system.models.Identifiable;
-import com.jarq.system.models.content.IContent;
-
-import java.util.List;
 
 public interface IText extends Identifiable {
 
@@ -20,10 +17,6 @@ public interface IText extends Identifiable {
     String getModificationDate();
 
     void setModificationDate(String modificationDate);
-
-    List<IContent> getContents();
-
-    void setContents(List<IContent> contents);
 
     int getUserId();
 }

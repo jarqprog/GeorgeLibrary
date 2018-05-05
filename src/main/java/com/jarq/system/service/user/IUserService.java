@@ -7,6 +7,8 @@ public interface IUserService extends IService {
 
     String createUser(String name, String surname, String email) throws SecurityException;
 
+    String importUser(int userId);
+
     String changeUserName(int userId, String name);
 
     String changeUserSurname(int userId, String surname);
