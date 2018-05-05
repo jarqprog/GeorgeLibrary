@@ -86,8 +86,9 @@ public class IntegrationTerminalTests implements IRoot {
 
 //            serviceFactoryTest();
 
-//            userServiceTest();
-            repoServiceTest();
+            userServiceTest();
+//            repoServiceTest();
+//            addressServiceTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -378,7 +379,17 @@ public class IntegrationTerminalTests implements IRoot {
     private void userServiceTest() throws Exception {
         // create user
 
-        populateDbWithUsers();
+//        populateDbWithUsers();
+
+        IUserService userService = createServiceFactory().createSQLiteService(UserService.class);
+
+
+        int i = 11;
+        while(i < 100) {
+            userService.removeUser(i);
+            i++;
+        }
+
     }
 
     private void repoServiceTest() throws Exception {
@@ -386,16 +397,20 @@ public class IntegrationTerminalTests implements IRoot {
 //        IUserService userService = createServiceFactory().createSQLiteService(UserService.class);
 //        userService.createUser("Michal", "Banan", "123@12.pl");
 //        populateDbWithRepos();
-        IRepoService repoService = createServiceFactory().createSQLiteService(RepoService.class);
-        repoService.removeRepository(01);
-        repoService.removeRepository(-1);
-        repoService.removeRepository(100);
-        repoService.removeRepository(20);
-        repoService.removeRepository(33);
-        repoService.removeRepository(34);
-        repoService.removeRepository(35);
-        repoService.removeRepository(36);
+//        IRepoService repoService = createServiceFactory().createSQLiteService(RepoService.class);
+//        repoService.removeRepository(46);
+//        repoService.removeUserRepositories(74);
 
+    }
+
+    private void addressServiceTest() throws Exception {
+        // create user
+
+        IAddressService addressService = createServiceFactory().createSQLiteService(AddressService.class);
+
+//        System.out.println(addressService.changeApartmentNo(75, "21111"));
+//        System.out.println(addressService.changeStreet(75, "Podgorze"));
+//        System.out.println(addressService.removeAddress(75));
     }
 
 
