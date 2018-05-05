@@ -57,6 +57,30 @@ public class AddressService extends Service implements IAddressService {
     }
 
     @Override
+    public String importAddress(int addressId) {
+        try {
+            IAddress address = daoAddress.importAddress(addressId);
+            return address.toString(); // todo
+
+        } catch (DaoFailure ex) {
+            reportException(ex);
+            return serviceFailure;
+        }
+    }
+
+    @Override
+    public String importUserAddress(int userId) {
+        try {
+            IAddress address = daoAddress.importAddressByUserId(userId);
+            return address.toString(); // todo
+
+        } catch (DaoFailure ex) {
+            reportException(ex);
+            return serviceFailure;
+        }
+    }
+
+    @Override
     public String changePostalCode(int userId, String postalCode) {
         if(! addressPolicy.validatePostalCode(postalCode) ) {
             return serviceFailure + "Postal code isn't valid! Operation stopped.";
