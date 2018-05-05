@@ -16,6 +16,7 @@ import com.jarq.system.models.text.IText;
 import com.jarq.system.service.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ContentService extends Service implements IContentService {
 
@@ -119,20 +120,41 @@ public class ContentService extends Service implements IContentService {
 
     @Override
     public String[] importContentsByText(int textId) {
-        return new String[0];
+        try {
+            List<IContent> contents = daoContent.importContentsByTextId(textId);
+            return contents.stream()
+                    .map(IContent::toString)
+                    .toArray(String[]::new);
+
+        } catch (DaoFailure daoFailure) {
+            reportException(daoFailure);
+            return new String[0];
+        }
     }
 
     @Override
     public String removeContent(int contentId) {
-        return null;
+        try {
+            IContent content = daoContent.importContent(contentId);
+            IText text = daoText.importText(content.getTextId());
+            String modificationDate = dateTimer.getCurrentDateTime();
+
+            if ( daoContent.removeContent(content) && repositoryManager.removeFile(content) ) {
+                text.setModificationDate(modificationDate);
+                updateParentObjects(text);
+                return content.toString();
+            }
+
+            String message = String.format("%s Problem occurred while removing text data (id:%s)",
+                    serviceFailure, text.getId());
+            report(message);
+            return message;
+
+        } catch (DaoFailure | IOException ex) {
+            reportException(ex);
+            return serviceFailure;
+        }
     }
-
-    @Override
-    public String[] removeTextContents(int textId) {
-        return new String[0];
-    }
-
-
 
     private String create(int textId, String textData, byte[] bytesData) {
         try {

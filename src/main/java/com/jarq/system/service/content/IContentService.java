@@ -21,6 +21,4 @@ public interface IContentService extends IService {
     String[] importContentsByText(int textId);
 
     String removeContent(int contentId);
-
-    String[] removeTextContents(int textId);
 }

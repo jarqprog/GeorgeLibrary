@@ -113,7 +113,7 @@ public class TextService extends Service implements ITextService {
             IText text = daoText.importText(textId);
             text.setTitle(title);
             text.setModificationDate(dateTimer.getCurrentDateTime());
-            return updateText(text); // todo
+            return updateTextAndRepository(text); // todo
 
         } catch (DaoFailure daoFailure) {
             reportException(daoFailure);
@@ -125,9 +125,7 @@ public class TextService extends Service implements ITextService {
     public String removeText(int textId) {
         try {
             IText text = daoText.importText(textId);
-            IRepository repository = daoRepository.importRepository(text.getRepositoryId());
-            repository.setLastModificationDate(dateTimer.getCurrentDateTime());
-            daoRepository.updateRepository(repository);
+            updateRepositoryModificationDate(text);
 
             boolean dbCleared = daoText.removeText(text);
             boolean repoCleared = repositoryManager.removeTextDirectory(text);
@@ -146,10 +144,8 @@ public class TextService extends Service implements ITextService {
         }
     }
 
-    private String updateText(IText text) throws DaoFailure {
-        IRepository repository = daoRepository.importRepository(text.getRepositoryId());
-        repository.setLastModificationDate(dateTimer.getCurrentDateTime());
-        daoRepository.updateRepository(repository);
+    private String updateTextAndRepository(IText text) throws DaoFailure {
+        updateRepositoryModificationDate(text);
         if ( daoText.updateText(text) ) {
             return text.toString();
         }
@@ -158,5 +154,11 @@ public class TextService extends Service implements ITextService {
                 serviceFailure, text.getId());
         report(message);
         return message;
+    }
+
+    private void updateRepositoryModificationDate(IText text) throws DaoFailure {
+        IRepository repository = daoRepository.importRepository(text.getRepositoryId());
+        repository.setLastModificationDate(dateTimer.getCurrentDateTime());
+        daoRepository.updateRepository(repository);
     }
 }

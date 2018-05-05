@@ -88,10 +88,10 @@ public class IntegrationTerminalTests implements IRoot {
 
 //            serviceFactoryTest();
 
-//            userServiceTest();
+            userServiceTest();
 //            repoServiceTest();
 //            addressServiceTest();
-            contentServiceTest();
+//            contentServiceTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -284,6 +284,35 @@ public class IntegrationTerminalTests implements IRoot {
 
     }
 
+    private String createHugeString() {
+        int i =100;
+        StringBuilder sb = new StringBuilder();
+        while(i<100000) {
+            sb.append(i);
+            if(i % 10 == 0) {
+                sb.append("Ho!");
+                sb.append("\n");
+            }
+            i++;
+        }
+        return sb.toString();
+    }
+
+    private byte[] createHugeBytesArray() {
+        int i =100000;
+        StringBuilder sb = new StringBuilder();
+        while(i>100) {
+            sb.append(i);
+            if(i % 10 == 0) {
+                sb.append("Ho!");
+                sb.append("\n");
+            }
+
+            i--;
+        }
+        return sb.toString().getBytes();
+    }
+
     /**
      *
      *  TESTS
@@ -387,8 +416,8 @@ public class IntegrationTerminalTests implements IRoot {
         IUserService userService = createServiceFactory().createSQLiteService(UserService.class);
 
 
-        int i = 11;
-        while(i < 100) {
+        int i = 2;
+        while(i < 12) {
             userService.removeUser(i);
             i++;
         }
@@ -397,12 +426,10 @@ public class IntegrationTerminalTests implements IRoot {
 
     private void repoServiceTest() throws Exception {
         // create user
-//        IUserService userService = createServiceFactory().createSQLiteService(UserService.class);
-//        userService.createUser("Michal", "Banan", "123@12.pl");
-//        populateDbWithRepos();
-//        IRepoService repoService = createServiceFactory().createSQLiteService(RepoService.class);
-//        repoService.removeRepository(46);
-//        repoService.removeUserRepositories(74);
+        IRepoService repoService = createServiceFactory().createSQLiteService(RepoService.class);
+        repoService.removeRepository(2);
+
+
 
     }
 
@@ -420,23 +447,7 @@ public class IntegrationTerminalTests implements IRoot {
     private void contentServiceTest() throws Exception {
 
         IContentService contentService = createServiceFactory().createSQLiteService(ContentService.class);
-        String textData = "I am writing a Java program which encrypts a given text " +
-                "using RSA, and saves the encrypted bytes(byte[] array) in a .txt file." +
-                "There is a separate decryption program which reads these bytes. Now I want to read " +
-                "" +
-                "" +
-                "" +
-                "the same bytes into a byte[] in to the decryption program." +
-                "" +
-                "" +
-                "" +
-                "                   How can this be done using Java?";
 
-
-        byte[] bytesData = textData.getBytes();
-
-        System.out.println(contentService.createContent(8, textData));
-        System.out.println(contentService.createContent(7, bytesData));
     }
 
 
