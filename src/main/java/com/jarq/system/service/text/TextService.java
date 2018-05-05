@@ -4,7 +4,6 @@ import com.jarq.system.exceptions.DaoFailure;
 import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.log.ILog;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
-import com.jarq.system.models.content.IDaoContent;
 import com.jarq.system.models.repository.IDaoRepository;
 import com.jarq.system.models.repository.IRepository;
 import com.jarq.system.models.text.IDaoText;
@@ -20,7 +19,6 @@ public class TextService extends Service implements ITextService {
 
     private final IRepositoryManager repositoryManager;
     private final IDaoText daoText;
-    private final IDaoContent daoContent;
     private final IDaoRepository daoRepository;
     private final IDaoUser daoUser;
     private final IDateTimer dateTimer;
@@ -30,25 +28,22 @@ public class TextService extends Service implements ITextService {
     public static ITextService getInstance( ILog log,
                                             IRepositoryManager repositoryManager,
                                             IDaoText daoText,
-                                            IDaoContent daoContent,
                                             IDaoRepository daoRepository,
                                             IDaoUser daoUser,
                                             IDateTimer dateTimer) {
         return new TextService(log, repositoryManager,
-                    daoText, daoContent, daoRepository, daoUser, dateTimer);
+                    daoText, daoRepository, daoUser, dateTimer);
     }
 
     private TextService(ILog log,
                         IRepositoryManager repositoryManager,
                         IDaoText daoText,
-                        IDaoContent daoContent,
                         IDaoRepository daoRepository,
                         IDaoUser daoUser,
                         IDateTimer dateTimer) {
         super(log);
         this.repositoryManager = repositoryManager;
         this.daoText = daoText;
-        this.daoContent = daoContent;
         this.daoRepository = daoRepository;
         this.daoUser = daoUser;
         this.dateTimer = dateTimer;
