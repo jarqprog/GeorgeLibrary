@@ -113,6 +113,7 @@ public class ServiceFactory implements IServiceFactory {
                 service = ContentService.getInstance(
                         log, daoFactory.createDAO(SQLiteDaoContent.class),
                         daoFactory.createDAO(SQLiteDaoText.class),
+                        daoFactory.createDAO(SQLiteDaoRepository.class),
                         repositoryManager, dateTimer,
                         contentReader, contentWriter,
                         repositoryPath);

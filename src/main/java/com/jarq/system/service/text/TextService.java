@@ -55,6 +55,8 @@ public class TextService extends Service implements ITextService {
         try {
             IRepository repository = daoRepository.importRepository(repositoryId);
             IText text = daoText.createText(repository, title);
+            repository.setLastModificationDate(dateTimer.getCurrentDateTime());  // update repository's modification date;
+            daoRepository.updateRepository(repository);
             repositoryManager.createDir(text);
             return text.toString(); // todo
 
@@ -123,6 +125,9 @@ public class TextService extends Service implements ITextService {
     public String removeText(int textId) {
         try {
             IText text = daoText.importText(textId);
+            IRepository repository = daoRepository.importRepository(text.getRepositoryId());
+            repository.setLastModificationDate(dateTimer.getCurrentDateTime());
+            daoRepository.updateRepository(repository);
 
             boolean dbCleared = daoText.removeText(text);
             boolean repoCleared = repositoryManager.removeTextDirectory(text);
@@ -142,6 +147,9 @@ public class TextService extends Service implements ITextService {
     }
 
     private String updateText(IText text) throws DaoFailure {
+        IRepository repository = daoRepository.importRepository(text.getRepositoryId());
+        repository.setLastModificationDate(dateTimer.getCurrentDateTime());
+        daoRepository.updateRepository(repository);
         if ( daoText.updateText(text) ) {
             return text.toString();
         }

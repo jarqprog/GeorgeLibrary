@@ -31,6 +31,8 @@ import com.jarq.system.service.IServiceFactory;
 import com.jarq.system.service.ServiceFactory;
 import com.jarq.system.service.address.AddressService;
 import com.jarq.system.service.address.IAddressService;
+import com.jarq.system.service.content.ContentService;
+import com.jarq.system.service.content.IContentService;
 import com.jarq.system.service.repository.IRepoService;
 import com.jarq.system.service.repository.RepoService;
 import com.jarq.system.service.user.IUserService;
@@ -89,6 +91,7 @@ public class IntegrationTerminalTests implements IRoot {
 //            userServiceTest();
 //            repoServiceTest();
 //            addressServiceTest();
+            contentServiceTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -411,6 +414,29 @@ public class IntegrationTerminalTests implements IRoot {
 //        System.out.println(addressService.changeApartmentNo(75, "21111"));
 //        System.out.println(addressService.changeStreet(75, "Podgorze"));
 //        System.out.println(addressService.removeAddress(75));
+    }
+
+
+    private void contentServiceTest() throws Exception {
+
+        IContentService contentService = createServiceFactory().createSQLiteService(ContentService.class);
+        String textData = "I am writing a Java program which encrypts a given text " +
+                "using RSA, and saves the encrypted bytes(byte[] array) in a .txt file." +
+                "There is a separate decryption program which reads these bytes. Now I want to read " +
+                "" +
+                "" +
+                "" +
+                "the same bytes into a byte[] in to the decryption program." +
+                "" +
+                "" +
+                "" +
+                "                   How can this be done using Java?";
+
+
+        byte[] bytesData = textData.getBytes();
+
+        System.out.println(contentService.createContent(8, textData));
+        System.out.println(contentService.createContent(7, bytesData));
     }
 
 
