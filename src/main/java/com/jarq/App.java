@@ -1,10 +1,10 @@
 package com.jarq;
 
-import com.jarq.terminal.RootTerminal;
+import com.jarq.integrationTests.IntegrationTerminalTests;
 
 public class App {
 
     public static void main(String[] args) {
-        RootTerminal.getInstance().runApp();
+        IntegrationTerminalTests.getInstance().runApp();
     }
 }

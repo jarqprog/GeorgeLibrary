@@ -7,23 +7,24 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class RepoReaderTest extends AbstractTest {
+public class TextReaderTest extends AbstractTest {
 
     private IContentReader<String> contentReader;
     private String testFile = RepositoriesPath.READER_TEST_FILE.getPath();
 
     @Before
     public void setUp() {
-        contentReader = RepoReader.getInstance(StandardCharsets.UTF_8);
+        contentReader = TextReader.getInstance(StandardCharsets.UTF_8);
     }
 
     @Test
     public void getInstance() {
         assertNotNull(contentReader);
-        assertTrue(contentReader instanceof RepoReader);
+        assertTrue(contentReader instanceof TextReader);
     }
 
     @Test
@@ -31,6 +32,16 @@ public class RepoReaderTest extends AbstractTest {
 
         String expected = getTestText();
         String output = contentReader.readContent(testFile);
+
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void readContent_as_bytes() throws IOException {
+
+        String filepath = RepositoriesPath.READER_TEST_FILE.getPath();
+        String expected = getTestText();
+        String output = new String(contentReader.readContentAsBytes(filepath));
 
         assertEquals(expected, output);
     }

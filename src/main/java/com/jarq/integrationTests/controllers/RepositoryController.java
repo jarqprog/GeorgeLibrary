@@ -1,8 +1,8 @@
-package com.jarq.terminal.controllers;
+package com.jarq.integrationTests.controllers;
 
 import com.jarq.system.dao.IDaoFactory;
 import com.jarq.system.models.repository.IRepository;
-import com.jarq.terminal.views.IRepositoryView;
+import com.jarq.integrationTests.views.IRepositoryView;
 
 public class RepositoryController implements IRepositoryController {
 

@@ -51,17 +51,17 @@ public class RepositoryManager implements IRepositoryManager {
     }
 
     @Override
-    public boolean createDir(IUser user) {
+    public boolean createDir(IUser user) throws IOException {
         return createDir(repositoryPath.userDir(user));
     }
 
     @Override
-    public boolean createDir(IRepository repository) {
+    public boolean createDir(IRepository repository) throws IOException {
         return createDir(repositoryPath.repositoryDir(repository));
     }
 
     @Override
-    public boolean createDir(IText text) {
+    public boolean createDir(IText text) throws IOException {
         return createDir(repositoryPath.textDir(text));
     }
 
@@ -99,12 +99,13 @@ public class RepositoryManager implements IRepositoryManager {
         return false;
     }
 
-    private boolean createDir(String fullDirPath) {
-        if (! checkIfDirExists(fullDirPath) ) {
-            File path = new File(fullDirPath);
-            return path.mkdirs();
+    private boolean createDir(String fullDirPath) throws IOException {
+        File path = new File(fullDirPath);
+        if (! checkIfDirExists(fullDirPath) && path.mkdirs()) {
+            return true;
+        } else {
+            throw new IOException("Directory wasn't created! (already exists or couldn't create it)");
         }
-        return false;
     }
 
     private boolean checkIfPathExists(Path path) {
@@ -122,8 +123,8 @@ public class RepositoryManager implements IRepositoryManager {
         checkRemovalSecurity(pathToRemove);  // throws exception if repo is in danger
         Path path = Paths.get(pathToRemove);
         return Files.walk(path)
-            .sorted(Comparator.reverseOrder())
-            .map(Path::toFile).allMatch(File::delete);
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile).allMatch(File::delete);
     }
 
     private void checkRemovalSecurity(String pathToRemove) throws IOException {

@@ -2,7 +2,8 @@ package com.jarq.system.enums;
 
 public enum DateTimerFormatter {
 
-    STANDARD("yyyy-MM-dd HH:mm:ss");
+    STANDARD("yyyy-MM-dd HH:mm:ss"),
+    LOGGER("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
     private String formatter;
 

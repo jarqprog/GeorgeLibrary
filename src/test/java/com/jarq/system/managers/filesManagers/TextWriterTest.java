@@ -14,13 +14,13 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
-public class RepoWriterTest extends AbstractTest {
+public class TextWriterTest extends AbstractTest {
 
     private IContentWriter<String> writer;
 
     @Before
     public void setUp() {
-        writer = RepoWriter.getInstance(StandardCharsets.UTF_8);
+        writer = TextWriter.getInstance(StandardCharsets.UTF_8);
 
     }
 
@@ -28,7 +28,7 @@ public class RepoWriterTest extends AbstractTest {
     public void getInstance() {
 
         assertNotNull(writer);
-        assertTrue(writer instanceof RepoWriter);
+        assertTrue(writer instanceof TextWriter);
     }
 
     @Test
@@ -42,6 +42,18 @@ public class RepoWriterTest extends AbstractTest {
 
         assertEquals(getTestText(), output);
 
+    }
+
+    @Test
+    public void writeContent_as_bytes() throws IOException {
+
+        String testFilepath = RepositoriesPath.WRITER_TEST_FILE.getPath();
+
+        writer.writeContent(testFilepath, getTestText().getBytes(StandardCharsets.UTF_8));
+
+        String output = readTestFile(testFilepath);
+
+        assertEquals(getTestText(), output);
     }
 
     private String readTestFile(String testFilepath) throws IOException {

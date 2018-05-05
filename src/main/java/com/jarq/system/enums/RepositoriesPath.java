@@ -17,9 +17,9 @@ public enum RepositoriesPath {
     MANAGER_USER_PATH_CREATION_TEST("src/main/resources/testRepositories/border/" +
             "repositoryManager/create/2/"),
     MANAGER_REPOSITORY_PATH_CREATION_TEST("src/main/resources/testRepositories/border/" +
-            "repositoryManager/create/2/2/"),
+            "repositoryManager/create/3/3/"),
     MANAGER_TEXT_PATH_CREATION_TEST("src/main/resources/testRepositories/border/" +
-            "repositoryManager/create/2/2/2/"),
+            "repositoryManager/create/4/4/4/"),
     MANAGER_PATH_REMOVE_FILE_TEST("src/main/resources/testRepositories/border/" +
             "repositoryManager/removeFile/1/1/1/2018_10_10_20_21_21.md"),
     MANAGER_PATH_REMOVE_TEXT_DIRECTORY_TEST("src/main/resources/testRepositories/border/" +
