@@ -118,8 +118,6 @@ public class UserService extends Service implements IUserService {
     public String removeUser(int userId) {
         try {
             IUser user = daoUser.importUser(userId);
-            repositoryManager.removeUserRepositories(user);
-//            if( repositoryManager.)
             boolean isRemovedUserDir = repositoryManager.removeUserRepositories(user);
             if ( daoUser.removeUser(user) && isRemovedUserDir) {
                 return user.toString(); // todo
