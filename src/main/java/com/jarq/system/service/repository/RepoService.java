@@ -58,6 +58,18 @@ public class RepoService extends Service implements IRepoService {
     }
 
     @Override
+    public String importRepository(int repositoryId) {
+        try {
+            IRepository repository = daoRepository.importRepository(repositoryId);
+            return repository.toString(); // todo
+
+        } catch (DaoFailure ex) {
+            reportException(ex);
+            return serviceFailure;
+        }
+    }
+
+    @Override
     public String changeRepositoryName(int repositoryId, String repositoryName) {
         try {
             IRepository repository = daoRepository.importRepository(repositoryId);
