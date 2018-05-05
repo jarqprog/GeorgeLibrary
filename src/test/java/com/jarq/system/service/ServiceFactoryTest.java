@@ -14,6 +14,8 @@ import com.jarq.system.managers.filesManagers.*;
 import com.jarq.system.policy.*;
 import com.jarq.system.service.address.AddressService;
 import com.jarq.system.service.address.IAddressService;
+import com.jarq.system.service.content.ContentService;
+import com.jarq.system.service.content.IContentService;
 import com.jarq.system.service.repository.IRepoService;
 import com.jarq.system.service.repository.RepoService;
 import com.jarq.system.service.text.ITextService;
@@ -70,15 +72,20 @@ public class ServiceFactoryTest extends AbstractTest {
         IAddressService addressService = serviceFactory
                 .createSQLiteService(AddressService.class);
 
+        IContentService contentService = serviceFactory
+                .createSQLiteService(ContentService.class);
+
         assertNotNull(userService);
         assertNotNull(textService);
         assertNotNull(repoService);
         assertNotNull(addressService);
+        assertNotNull(contentService);
 
         // returned proper class
         assertEquals("UserService", userService.getClass().getSimpleName());
         assertEquals("TextService", textService.getClass().getSimpleName());
         assertEquals("RepoService", repoService.getClass().getSimpleName());
         assertEquals("AddressService", addressService.getClass().getSimpleName());
+        assertEquals("ContentService", contentService.getClass().getSimpleName());
     }
 }

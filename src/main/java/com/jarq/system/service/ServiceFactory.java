@@ -8,13 +8,16 @@ import com.jarq.system.managers.filesManagers.IContentReader;
 import com.jarq.system.managers.filesManagers.IContentWriter;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.models.address.SQLiteDaoAddress;
+import com.jarq.system.models.content.IDaoContent;
 import com.jarq.system.models.content.SQLiteDaoContent;
 import com.jarq.system.models.repository.SQLiteDaoRepository;
+import com.jarq.system.models.text.IDaoText;
 import com.jarq.system.models.text.SQLiteDaoText;
 import com.jarq.system.policy.IAddressPolicy;
 import com.jarq.system.policy.IEmailPolicy;
 import com.jarq.system.policy.IPasswordPolicy;
 import com.jarq.system.service.address.AddressService;
+import com.jarq.system.service.content.ContentService;
 import com.jarq.system.service.repository.RepoService;
 import com.jarq.system.service.text.TextService;
 import com.jarq.system.models.user.SQLiteDaoUser;
@@ -106,6 +109,13 @@ public class ServiceFactory implements IServiceFactory {
                             daoFactory.createDAO(SQLiteDaoUser.class),
                             addressPolicy);
                 break;
+            case("ContentService"):
+                service = ContentService.getInstance(
+                        log, daoFactory.createDAO(SQLiteDaoContent.class),
+                        daoFactory.createDAO(SQLiteDaoText.class),
+                        repositoryManager, dateTimer,
+                        contentReader, contentWriter,
+                        repositoryPath);
         }
         return serviceType.cast(service);
     }
