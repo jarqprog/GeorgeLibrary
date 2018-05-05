@@ -1,4 +1,4 @@
-package com.jarq.terminal;
+package com.jarq.integrationTests;
 
 import com.jarq.IRoot;
 import com.jarq.system.enums.*;
@@ -35,15 +35,15 @@ import com.jarq.system.service.repository.IRepoService;
 import com.jarq.system.service.repository.RepoService;
 import com.jarq.system.service.user.IUserService;
 import com.jarq.system.service.user.UserService;
-import com.jarq.terminal.controllers.IRepositoryController;
-import com.jarq.terminal.controllers.RepositoryController;
+import com.jarq.integrationTests.controllers.IRepositoryController;
+import com.jarq.integrationTests.controllers.RepositoryController;
 import com.jarq.system.dao.IDaoFactory;
 import com.jarq.system.dao.SqlDaoFactory;
 import com.jarq.system.exceptions.DatabaseCreationFailure;
 import com.jarq.system.managers.databaseManagers.*;
-import com.jarq.terminal.views.IRepositoryView;
-import com.jarq.terminal.views.RepositoryView;
-import com.jarq.terminal.views.RootView;
+import com.jarq.integrationTests.views.IRepositoryView;
+import com.jarq.integrationTests.views.RepositoryView;
+import com.jarq.integrationTests.views.RootView;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -51,14 +51,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class RootTerminal implements IRoot {
+public class IntegrationTerminalTests implements IRoot {
 
     private final DatabaseConfig databaseConfig;
     private RootView view;
     private IRepositoryController libraryController;
     private DatabaseManager databaseManager;
 
-    private RootTerminal() {
+    private IntegrationTerminalTests() {
         view = new RootView();
         databaseConfig = SQLiteConfig.createSQLiteConfiguration(
                             DbUrl.SQLITE,
@@ -68,8 +68,8 @@ public class RootTerminal implements IRoot {
         libraryController = createLibraryController();
     }
 
-    public static RootTerminal getInstance() {
-        return new RootTerminal();
+    public static IntegrationTerminalTests getInstance() {
+        return new IntegrationTerminalTests();
     }
 
     public void runApp() {
@@ -87,6 +87,7 @@ public class RootTerminal implements IRoot {
 //            serviceFactoryTest();
 
 //            userServiceTest();
+            repoServiceTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,7 +132,7 @@ public class RootTerminal implements IRoot {
         IPasswordPolicy passwordPolicy = new PasswordPolicy();
         IAddressPolicy addressPolicy = new AddressPolicy();
         IDateTimer loggerDateTimer = DateTimer.getInstance(DateTimerFormatter.LOGGER);
-        ILogWriter<String> logWriter = LogWriter.getInstance(LogPath.LOGGER);
+        ILogWriter<String> logWriter = LogWriter.getInstance(LogPath.SYSTEM_LOG);
         ILog log = Logger.getInstance(loggerDateTimer, logWriter);
 
         return ServiceFactory.getInstance(daoFactory,
@@ -244,6 +245,23 @@ public class RootTerminal implements IRoot {
             random = getRandomNumber(1000);
             IText text01 = daoText.createText(repository01, name+" note" + random);
             IContent content001 = daoContent.createContent(text01);
+        }
+
+    }
+
+    private void populateDbWithRepos() throws Exception {
+        IDaoUser daoUser = getDaoUser();
+
+        IRepoService repoService = createServiceFactory().createSQLiteService(RepoService.class);
+
+
+        int random = getRandomNumber(100);
+        String name = getRandomName();
+        String surname = getRandomSurname();
+        IUser randomUser = daoUser.createUser(name, surname, name + random + surname +"@yahoo.com");
+
+        for (int i=0; i<1; i++) {
+            repoService.createRepository(randomUser.getId(), "repo-"+name + i);
         }
 
     }
@@ -361,6 +379,23 @@ public class RootTerminal implements IRoot {
         // create user
 
         populateDbWithUsers();
+    }
+
+    private void repoServiceTest() throws Exception {
+        // create user
+//        IUserService userService = createServiceFactory().createSQLiteService(UserService.class);
+//        userService.createUser("Michal", "Banan", "123@12.pl");
+//        populateDbWithRepos();
+        IRepoService repoService = createServiceFactory().createSQLiteService(RepoService.class);
+        repoService.removeRepository(01);
+        repoService.removeRepository(-1);
+        repoService.removeRepository(100);
+        repoService.removeRepository(20);
+        repoService.removeRepository(33);
+        repoService.removeRepository(34);
+        repoService.removeRepository(35);
+        repoService.removeRepository(36);
+
     }
 
 
