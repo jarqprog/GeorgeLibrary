@@ -7,6 +7,8 @@ import com.jarq.system.helpers.datetimer.DateTimer;
 import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
+import com.jarq.system.log.ILog;
+import com.jarq.system.log.Logger;
 import com.jarq.system.managers.filesManagers.*;
 
 import com.jarq.system.policy.*;
@@ -39,11 +41,12 @@ public class ServiceFactoryTest extends AbstractTest {
         IEmailPolicy emailPolicy = mock(EmailPolicy.class);
         IPasswordPolicy passwordPolicy = mock(PasswordPolicy.class);
         IAddressPolicy addressPolicy = mock(AddressPolicy.class);
+        ILog log = mock(Logger.class);
 
         serviceFactory = ServiceFactory.getInstance(daoFactory,
                 repositoryManager, contentReader, contentWriter,
                 repositoryPath, dateTimer, emailPolicy,
-                passwordPolicy, addressPolicy);
+                passwordPolicy, addressPolicy, log);
     }
 
     @Test
