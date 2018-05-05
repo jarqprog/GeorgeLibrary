@@ -85,7 +85,9 @@ public class ServiceFactory implements IServiceFactory {
                             contentReader,
                             contentWriter,
                             daoFactory.createDAO(SQLiteDaoText.class),
-                            daoFactory.createDAO(SQLiteDaoContent.class));
+                            daoFactory.createDAO(SQLiteDaoContent.class),
+                            daoFactory.createDAO(SQLiteDaoRepository.class),
+                            daoFactory.createDAO(SQLiteDaoUser.class));
                 break;
             case("UserService"):
                 service = UserService.getInstance(

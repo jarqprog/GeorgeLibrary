@@ -86,7 +86,7 @@ public class IntegrationTerminalTests implements IRoot {
 
 //            serviceFactoryTest();
 
-            userServiceTest();
+//            userServiceTest();
 //            repoServiceTest();
 //            addressServiceTest();
 
