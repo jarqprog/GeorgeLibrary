@@ -23,6 +23,6 @@ public abstract class Service implements IService {
 
     protected void report(String message) {
         String report = message + "\nTrace: " + getStackTrace();
-        log.log(message);
+        log.log(report);
     }
 }

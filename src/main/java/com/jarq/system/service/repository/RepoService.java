@@ -60,8 +60,10 @@ public class RepoService extends Service implements IRepoService {
             return updateRepository(repository);
 
         } catch (DaoFailure daoFailure) {
-            report(serviceFailure);
-            return serviceFailure;
+            String message = String.format("%s Problem occurred while changing repository (id:%s) name (%s).",
+                    serviceFailure, repositoryId, repositoryName);
+            report(message);
+            return message;
         }
     }
 
@@ -83,16 +85,21 @@ public class RepoService extends Service implements IRepoService {
     public String removeRepository(int repositoryId) {
         try {
             IRepository repository = daoRepository.importRepository(repositoryId);
-            if ( daoRepository.removeRepository(repository) ) {
+
+            boolean dbCleared = daoRepository.removeRepository(repository);
+            boolean repoCleared = repositoryManager.removeRepository(repository);
+            if ( dbCleared && repoCleared ) {
                 return repository.toString(); // todo
             }
-            String message = serviceFailure +
-                    "problem occurred while removing repository dir. ";
+
+            // failure:
+            String message = String.format("%s problem occurred while removing repository (id:%s). ",
+                    serviceFailure, repositoryId);
             report(message);
             return message;
 
-        } catch (DaoFailure daoFailure) {
-            reportException(daoFailure);
+        } catch (DaoFailure | IOException ex) {
+            reportException(ex);
             return serviceFailure;
         }
     }
