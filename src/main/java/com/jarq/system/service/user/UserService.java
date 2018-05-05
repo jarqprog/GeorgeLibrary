@@ -16,7 +16,7 @@ public class UserService extends Service implements IUserService {
     private final IDaoUser daoUser;
     private final IEmailPolicy emailPolicy;
     private final IPasswordPolicy passwordPolicy;
-    private final String serviceFailure = "something goes wrong";
+    private final String serviceFailure = "something goes wrong with user data operation";
     private final IRepositoryManager repositoryManager;
     // log
 
@@ -41,10 +41,10 @@ public class UserService extends Service implements IUserService {
             throws SecurityException {
         try {
             IUser user = daoUser.createUser(name, surname, email);
-
+            repositoryManager.createDir(user);
             return user.toString(); // todo
 
-        } catch (DaoFailure ex) {
+        } catch (DaoFailure | IOException ex) {
             ex.printStackTrace();
             // log
             return serviceFailure;
@@ -118,7 +118,7 @@ public class UserService extends Service implements IUserService {
     public String removeUser(int userId) {
         try {
             IUser user = daoUser.importUser(userId);
-
+            repositoryManager.removeUserRepositories(user);
 //            if( repositoryManager.)
             boolean isRemovedUserDir = repositoryManager.removeUserRepositories(user);
             if ( daoUser.removeUser(user) && isRemovedUserDir) {
