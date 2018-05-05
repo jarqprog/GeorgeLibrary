@@ -4,7 +4,7 @@ import java.io.File;
 
 public enum LogPath {
 
-    LOGGER("src/main/resources/logs/log/");
+    LOGGER("src/main/resources/logs/log.md");
 
     private String path;
 
