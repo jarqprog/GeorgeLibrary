@@ -1,17 +1,12 @@
 package com.jarq.system.models.text;
 
 import com.jarq.system.models.Model;
-import com.jarq.system.models.content.IContent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Text extends Model implements IText {
 
     private String title;
     private final String creationDate;
     private String modificationDate = "-";
-    private List<IContent> contents = new ArrayList<>();
     private final int repositoryId;
     private final int userId;
 
@@ -55,29 +50,8 @@ public class Text extends Model implements IText {
     }
 
     @Override
-    public List<IContent> getContents() {
-        return contents;
-    }
-
-    @Override
-    public void setContents(List<IContent> contents) {
-        this.contents = contents;
-    }
-
-    @Override
     public int getUserId() {
         return userId;
     }
 
-    @Override
-    public String toString() {
-        return "Text{" +
-                "title='" + title + '\'' +
-                ", creationDate='" + creationDate + '\'' +
-                ", modificationDate='" + modificationDate + '\'' +
-                ", contents=" + contents +
-                ", repositoryId=" + repositoryId +
-                ", userId=" + userId +
-                "} " + super.toString();
-    }
 }

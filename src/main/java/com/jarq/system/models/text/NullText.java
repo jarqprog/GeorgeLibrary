@@ -1,10 +1,6 @@
 package com.jarq.system.models.text;
 
 import com.jarq.system.models.NullModel;
-import com.jarq.system.models.content.IContent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NullText extends NullModel implements IText {
 
@@ -35,14 +31,6 @@ public class NullText extends NullModel implements IText {
 
     @Override
     public void setModificationDate(String modificationDate) {}
-
-    @Override
-    public List<IContent> getContents() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public void setContents(List<IContent> contents) {}
 
     @Override
     public int getUserId() {
