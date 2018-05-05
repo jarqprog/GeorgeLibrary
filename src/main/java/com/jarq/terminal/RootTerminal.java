@@ -6,6 +6,10 @@ import com.jarq.system.helpers.datetimer.DateTimer;
 import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
+import com.jarq.system.log.ILog;
+import com.jarq.system.log.ILogWriter;
+import com.jarq.system.log.LogWriter;
+import com.jarq.system.log.Logger;
 import com.jarq.system.managers.filesManagers.*;
 import com.jarq.system.models.address.IDaoAddress;
 import com.jarq.system.models.address.SQLiteDaoAddress;
@@ -117,20 +121,23 @@ public class RootTerminal implements IRoot {
                         FileExtension.MD);
         IRepositoryManager repositoryManager = RepositoryManager
                 .getInstance(repositoryPath);
-        IContentReader<String> contentReader = RepoReader
+        IContentReader<String> contentReader = TextReader
                 .getInstance(StandardCharsets.UTF_8);
-        IContentWriter<String> contentWriter = RepoWriter
+        IContentWriter<String> contentWriter = TextWriter
                 .getInstance(StandardCharsets.UTF_8);
 
         IDateTimer dateTimer = getDateTimer();
         IEmailPolicy emailPolicy = new EmailPolicy();
         IPasswordPolicy passwordPolicy = new PasswordPolicy();
         IAddressPolicy addressPolicy = new AddressPolicy();
+        IDateTimer loggerDateTimer = DateTimer.getInstance(DateTimerFormatter.LOGGER);
+        ILogWriter<String> logWriter = LogWriter.getInstance(LogPath.LOGGER);
+        ILog log = Logger.getInstance(loggerDateTimer, logWriter);
 
         return ServiceFactory.getInstance(daoFactory,
                 repositoryManager, contentReader, contentWriter,
                 repositoryPath, dateTimer, emailPolicy,
-                passwordPolicy, addressPolicy);
+                passwordPolicy, addressPolicy, log);
     }
 
     private DatabaseManager createSQLiteManager() {
@@ -172,30 +179,6 @@ public class RootTerminal implements IRoot {
         }
     }
 
-    private void serviceFactoryTest() {
-        IServiceFactory serviceFactory = createServiceFactory();
-        IUserService userService = serviceFactory.createSQLiteService(UserService.class);
-        IAddressService addressService = serviceFactory.createSQLiteService(AddressService.class);
-        IRepoService repoService = serviceFactory.createSQLiteService(RepoService.class);
-    }
-
-    private void repositoryManagerTests() throws Exception {
-
-        IDaoFactory daoFactory = createDaoFactory();
-        IDateTimer dateTimer = DateTimer.getInstance();
-        IRepositoryPath repositoryPath = RepositoryPath
-                .getInstance(RepositoriesPath.FILES_REPOSITORY, FileExtension.MD);
-
-        IDaoUser daoUser = daoFactory.createDAO(SQLiteDaoUser.class);
-
-        IRepositoryManager repositoryManager = RepositoryManager.getInstance(repositoryPath);
-        String path = repositoryPath.userDir(daoUser.importUser(1));
-
-        System.out.println(path);
-        System.out.println(repositoryManager.hasFile(path));
-
-    }
-
     private IDaoUser getDaoUser() {
         return createDaoFactory().createDAO(SQLiteDaoUser.class);
     }
@@ -224,15 +207,88 @@ public class RootTerminal implements IRoot {
                 FileExtension.MD);
     }
 
-    private void userServiceTest() throws Exception {
-        // create user
-
-        IServiceFactory serviceFactory = createServiceFactory();
-        IUserService userService = serviceFactory.createSQLiteService(UserService.class);
-    }
-
     private IDateTimer getDateTimer() {
         return DateTimer.getInstance();
+    }
+
+
+    private int getRandomNumber(int bound) {
+        return new Random().nextInt(bound);
+    }
+
+    private String getRandomName() {
+        String[] names = {"Mark", "Peter", "Tom", "Carl"};
+        return names[getRandomNumber(names.length-1)];
+    }
+
+    private String getRandomSurname() {
+        String[] surnames = {"Novak", "Smith", "Koval", "Black"};
+        return surnames[getRandomNumber(surnames.length-1)];
+    }
+
+    private void populateDbWithTextsAndContents() throws Exception {
+        IDaoRepository daoRepository = getDaoRepository();
+        IDaoUser daoUser = getDaoUser();
+        IDaoContent daoContent = getDaoContent();
+        IDaoText daoText = getDaoText();
+
+
+        int random = getRandomNumber(100);
+        String name = getRandomName();
+        String surname = getRandomSurname();
+        IUser randomUser = daoUser.createUser(name, surname, name + random + surname +"@yahoo.com");
+        IRepository repository01 = daoRepository.createRepository(randomUser, name + random);
+
+
+        for (int i=0; i<100; i++) {
+            random = getRandomNumber(1000);
+            IText text01 = daoText.createText(repository01, name+" note" + random);
+            IContent content001 = daoContent.createContent(text01);
+        }
+
+    }
+
+    private void populateDbWithUsers() throws Exception {
+        IUserService userService = createServiceFactory().createSQLiteService(UserService.class);
+
+        for (int i=0; i<40; i++) {
+            int random = getRandomNumber(40);
+            String name = getRandomName();
+            String surname = getRandomSurname();
+            String randomUser = userService.createUser(name, surname, name + random + surname +"@yahoo.com");
+            System.out.println(randomUser);
+
+        }
+
+    }
+
+    /**
+     *
+     *  TESTS
+     */
+
+    private void serviceFactoryTest() {
+        IServiceFactory serviceFactory = createServiceFactory();
+        IUserService userService = serviceFactory.createSQLiteService(UserService.class);
+        IAddressService addressService = serviceFactory.createSQLiteService(AddressService.class);
+        IRepoService repoService = serviceFactory.createSQLiteService(RepoService.class);
+    }
+
+    private void repositoryManagerTests() throws Exception {
+
+        IDaoFactory daoFactory = createDaoFactory();
+        IDateTimer dateTimer = DateTimer.getInstance();
+        IRepositoryPath repositoryPath = RepositoryPath
+                .getInstance(RepositoriesPath.FILES_REPOSITORY, FileExtension.MD);
+
+        IDaoUser daoUser = daoFactory.createDAO(SQLiteDaoUser.class);
+
+        IRepositoryManager repositoryManager = RepositoryManager.getInstance(repositoryPath);
+        String path = repositoryPath.userDir(daoUser.importUser(1));
+
+        System.out.println(path);
+        System.out.println(repositoryManager.hasFile(path));
+
     }
 
     private void contentTestingAndManager() throws Exception {
@@ -298,13 +354,13 @@ public class RootTerminal implements IRoot {
     }
 
     private void removeTest() throws Exception {
+    }
 
-//        System.out.println(getDaoRepository().removeRepositoriesByUser(getDaoUser().importUserByMail("Tom16Koval@yahoo.com")));
-//        System.out.println(getDaoRepository().removeRepository(373));
-//        System.out.println(getDaoRepository().);
-//        for(int i=170; i<200;i++) {
-//            getDaoUser().removeUser(i);
-//        }
+
+    private void userServiceTest() throws Exception {
+        // create user
+
+        populateDbWithUsers();
     }
 
 
@@ -312,42 +368,7 @@ public class RootTerminal implements IRoot {
 
 
 
-    private int getRandomNumber(int bound) {
-        return new Random().nextInt(bound);
-    }
-
-    private String getRandomName() {
-        String[] names = {"Mark", "Peter", "Tom", "Carl"};
-        return names[getRandomNumber(names.length-1)];
-    }
-
-    private String getRandomSurname() {
-        String[] surnames = {"Novak", "Smith", "Koval", "Black"};
-        return surnames[getRandomNumber(surnames.length-1)];
-    }
 
 
-
-    private void populateDbWithTextsAndContents() throws Exception {
-        IDaoRepository daoRepository = getDaoRepository();
-        IDaoUser daoUser = getDaoUser();
-        IDaoContent daoContent = getDaoContent();
-        IDaoText daoText = getDaoText();
-
-
-        int random = getRandomNumber(100);
-        String name = getRandomName();
-        String surname = getRandomSurname();
-        IUser randomUser = daoUser.createUser(name, surname, name + random + surname +"@yahoo.com");
-        IRepository repository01 = daoRepository.createRepository(randomUser, name + random);
-
-
-        for (int i=0; i<100; i++) {
-            random = getRandomNumber(1000);
-            IText text01 = daoText.createText(repository01, name+" note" + random);
-            IContent content001 = daoContent.createContent(text01);
-        }
-
-    }
 
 }
