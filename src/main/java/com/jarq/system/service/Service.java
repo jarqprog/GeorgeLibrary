@@ -17,7 +17,7 @@ public abstract class Service implements IService {
     }
 
     protected void reportException(Exception ex) {
-        String report = ex.getMessage() + "\nTrace: " + getStackTrace();
+        String report = "## EXCEPTION ## " + ex.getMessage() + "\nTrace: " + getStackTrace();
         log.log(report);
     }
 

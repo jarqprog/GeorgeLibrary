@@ -9,6 +9,7 @@ import com.jarq.system.models.user.IDaoUser;
 import com.jarq.system.models.user.IUser;
 import com.jarq.system.service.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 public class RepoService extends Service implements IRepoService {
@@ -42,11 +43,11 @@ public class RepoService extends Service implements IRepoService {
         try {
             IUser user = daoUser.importUser(userId);
             IRepository repository = daoRepository.createRepository(user, repositoryName);
+            repositoryManager.createDir(repository);
             return repository.toString(); // todo
 
-        } catch (DaoFailure daoFailure) {
-//            daoFailure.printStackTrace();
-            // log
+        } catch (DaoFailure | IOException ex) {
+            reportException(ex);
             return serviceFailure;
         }
     }
@@ -56,11 +57,10 @@ public class RepoService extends Service implements IRepoService {
         try {
             IRepository repository = daoRepository.importRepository(repositoryId);
             repository.setName(repositoryName);
-            return updateRepository(repository); // todo
+            return updateRepository(repository);
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            report(serviceFailure);
             return serviceFailure;
         }
     }
@@ -74,8 +74,7 @@ public class RepoService extends Service implements IRepoService {
                     .toArray(String[]::new);
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return new String[0];
         }
     }
@@ -87,12 +86,13 @@ public class RepoService extends Service implements IRepoService {
             if ( daoRepository.removeRepository(repository) ) {
                 return repository.toString(); // todo
             }
-            // log
-            return serviceFailure;
+            String message = serviceFailure +
+                    "problem occurred while removing repository dir. ";
+            report(message);
+            return message;
 
         } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+            reportException(daoFailure);
             return serviceFailure;
         }
     }
@@ -106,25 +106,33 @@ public class RepoService extends Service implements IRepoService {
                 return output; // todo
             }
 
-            if ( ! daoRepository.removeRepositoriesByUserId(userId) ) {
-                // log
+            // clearing database & repo (validating at the same time)
+            boolean dbFailure = ! daoRepository.removeRepositoriesByUserId(userId);
+            boolean repoFailure = ! repositoryManager
+                    .removeUserRepositories(daoUser.importUser(userId));
+
+            if ( dbFailure | repoFailure ) {
+                String message = String.format("Problem occurred while removing " +
+                        "users (id:%s) repo (no sql exception)", userId);
+                report(message);
                 return output;
             }
             return repositories.stream().map(IRepository::toString).toArray(String[]::new);
 
-        } catch (DaoFailure daoFailure) {
-            daoFailure.printStackTrace();
-            // log
+        } catch (DaoFailure | IOException ex) {
+            reportException(ex);
             return output;
         }
     }
-
 
     private String updateRepository(IRepository repository) throws DaoFailure {
         if ( daoRepository.updateRepository(repository) ) {
             return repository.toString();
         }
-        // log
+        String message = serviceFailure + String
+                .format("Problem occurred while updating user (id:%s) repository (id:%s)",
+                        repository.getUserId(), repository.getId());
+        report(message);
         return serviceFailure;
     }
 }

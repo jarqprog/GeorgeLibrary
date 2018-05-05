@@ -86,7 +86,7 @@ public class RootTerminal implements IRoot {
 
 //            serviceFactoryTest();
 
-            userServiceTest();
+//            userServiceTest();
 
         } catch (Exception e) {
             e.printStackTrace();
