@@ -14,9 +14,9 @@ public interface IContentService extends IService {
 
     byte[] importContentsBytesData(int contentId);
 
-    boolean changeContentsData(int contentId, String data);
+    boolean changeContentsData(int textId, int contentId, String data);
 
-    boolean changeContentsData(int contentId, byte[] data);
+    boolean changeContentsData(int textId, int contentId, byte[] data);
 
     String[] importContentsByText(int textId);
 

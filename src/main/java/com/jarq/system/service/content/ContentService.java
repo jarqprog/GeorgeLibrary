@@ -73,27 +73,48 @@ public class ContentService extends Service implements IContentService {
 
     @Override
     public String importContent(int contentId) {
-        return null;
+        try {
+            IContent content = daoContent.importContent(contentId);
+            return content.toString(); // todo
+
+        } catch (DaoFailure ex) {
+            reportException(ex);
+            return serviceFailure;
+        }
     }
 
     @Override
     public String importContentsData(int contentId) {
-        return null;
+        try {
+            IContent content = daoContent.importContent(contentId);
+            String path = content.getFilepath();
+            return contentReader.readContent(path); // todo
+        } catch (DaoFailure | IOException ex) {
+            reportException(ex);
+            return serviceFailure;
+        }
     }
 
     @Override
     public byte[] importContentsBytesData(int contentId) {
-        return new byte[0];
+        try {
+            IContent content = daoContent.importContent(contentId);
+            String path = content.getFilepath();
+            return contentReader.readContentAsBytes(path); // todo
+        } catch (DaoFailure | IOException ex) {
+            reportException(ex);
+            return serviceFailure.getBytes();
+        }
     }
 
     @Override
-    public boolean changeContentsData(int contentId, String data) {
-        return false;
+    public boolean changeContentsData(int textId, int contentId, String data) {
+        return changeData(textId, contentId, data, null);
     }
 
     @Override
-    public boolean changeContentsData(int contentId, byte[] data) {
-        return false;
+    public boolean changeContentsData(int textId, int contentId, byte[] data) {
+        return changeData(textId, contentId, null, data);
     }
 
     @Override
@@ -136,6 +157,25 @@ public class ContentService extends Service implements IContentService {
         } catch (DaoFailure | IOException ex) {
             reportException(ex);
             return serviceFailure;
+        }
+    }
+
+    private boolean changeData(int textId, int contentId, String textData, byte[] bytesData) {
+        try {
+            IContent content = daoContent.importContent(contentId);
+            String modificationDate = dateTimer.getCurrentDateTime();
+            IText text = daoText.importText(textId);
+            text.setModificationDate(modificationDate);
+            String path = content.getFilepath();
+            if(bytesData == null) {
+                contentWriter.writeContent(path, textData);
+            } else {
+                contentWriter.writeContent(path, bytesData);
+            }
+            return updateParentObjects(text);
+        } catch (DaoFailure | IOException ex) {
+            reportException(ex);
+            return false;
         }
     }
 
