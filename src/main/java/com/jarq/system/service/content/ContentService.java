@@ -27,7 +27,7 @@ public class ContentService extends Service implements IContentService {
     private final IContentReader<String> contentReader;
     private final IContentWriter<String> contentWriter;
     private final IRepositoryPath repositoryPath;
-    private final String serviceFailure = "something goes wrong with content operation.";
+    private final String serviceFailure = "something goes wrong with content operation. ";
 
     public static IContentService getInstance(ILog log, IDaoContent daoContent,
                                               IDaoText daoText,
@@ -91,7 +91,7 @@ public class ContentService extends Service implements IContentService {
             return contentReader.readContent(path); // todo
         } catch (DaoFailure | IOException ex) {
             reportException(ex);
-            return serviceFailure;
+            return serviceFailure + "Cannot import data.";
         }
     }
 
@@ -103,18 +103,18 @@ public class ContentService extends Service implements IContentService {
             return contentReader.readContentAsBytes(path); // todo
         } catch (DaoFailure | IOException ex) {
             reportException(ex);
-            return serviceFailure.getBytes();
+            return (serviceFailure + "Cannot import data.").getBytes();
         }
     }
 
     @Override
-    public boolean changeContentsData(int textId, int contentId, String data) {
-        return changeData(textId, contentId, data, null);
+    public boolean changeContentsData(int contentId, String data) {
+        return changeData(contentId, data, null);
     }
 
     @Override
-    public boolean changeContentsData(int textId, int contentId, byte[] data) {
-        return changeData(textId, contentId, null, data);
+    public boolean changeContentsData(int contentId, byte[] data) {
+        return changeData(contentId, null, data);
     }
 
     @Override
@@ -160,11 +160,11 @@ public class ContentService extends Service implements IContentService {
         }
     }
 
-    private boolean changeData(int textId, int contentId, String textData, byte[] bytesData) {
+    private boolean changeData(int contentId, String textData, byte[] bytesData) {
         try {
             IContent content = daoContent.importContent(contentId);
+            IText text = daoText.importText(content.getTextId());
             String modificationDate = dateTimer.getCurrentDateTime();
-            IText text = daoText.importText(textId);
             text.setModificationDate(modificationDate);
             String path = content.getFilepath();
             if(bytesData == null) {
