@@ -77,10 +77,12 @@ public class RootTerminal implements IRoot {
 //            testUserAddress();
 //            testDaoText();
 //            removeTest();
-            repositoryManagerTests();
+//            repositoryManagerTests();
 //            testDaoContent();
 
 //            serviceFactoryTest();
+
+            userServiceTest();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,19 +177,6 @@ public class RootTerminal implements IRoot {
         IUserService userService = serviceFactory.createSQLiteService(UserService.class);
         IAddressService addressService = serviceFactory.createSQLiteService(AddressService.class);
         IRepoService repoService = serviceFactory.createSQLiteService(RepoService.class);
-
-//        for(int i=0;i<10;i++) {
-//            repoService.createRepository(1, "nowe"+i);
-//        }
-
-//        System.out.println(Arrays.toString(repoService.removeUserRepositories(1)));
-
-
-//        System.out.println(userService.createUser("John", "Little", "john@gmailum.pl"));
-//        System.out.println(addressService.createAddress(3, "12-125",
-//                "Kraków", "Mały Rynek", "21", "2"));
-
-
     }
 
     private void repositoryManagerTests() throws Exception {
@@ -233,6 +222,13 @@ public class RootTerminal implements IRoot {
 
         return RepositoryPath.getInstance(RepositoriesPath.FILES_REPOSITORY,
                 FileExtension.MD);
+    }
+
+    private void userServiceTest() throws Exception {
+        // create user
+
+        IServiceFactory serviceFactory = createServiceFactory();
+        IUserService userService = serviceFactory.createSQLiteService(UserService.class);
     }
 
     private IDateTimer getDateTimer() {

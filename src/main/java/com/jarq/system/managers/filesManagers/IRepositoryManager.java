@@ -20,11 +20,11 @@ public interface IRepositoryManager {
 
     boolean createFile(IContent content) throws IOException;
 
-    boolean createDir(IUser user);
+    boolean createDir(IUser user) throws IOException;
 
-    boolean createDir(IRepository repository);
+    boolean createDir(IRepository repository) throws IOException;
 
-    boolean createDir(IText text);
+    boolean createDir(IText text) throws IOException;
 
     boolean removeFile(IContent content) throws IOException;
 
