@@ -2,11 +2,11 @@ package com.jarq.system.managers.filesManagers;
 
 import java.nio.charset.Charset;
 
-public abstract class RepositoryFile {
+public abstract class TextFileOperator {
 
     private final Charset ENCODING;
 
-    protected RepositoryFile(Charset charset) {
+    protected TextFileOperator(Charset charset) {
         this.ENCODING = charset;
     }
 

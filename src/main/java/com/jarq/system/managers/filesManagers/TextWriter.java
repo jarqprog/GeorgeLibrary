@@ -7,13 +7,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class RepoWriter extends RepositoryFile implements IContentWriter<String> {
+public class TextWriter extends TextFileOperator implements IContentWriter<String> {
 
     public static IContentWriter<String> getInstance(Charset charset) {
-        return new RepoWriter(charset);
+        return new TextWriter(charset);
     }
 
-    private RepoWriter(Charset charset) {
+    private TextWriter(Charset charset) {
         super(charset);
     }
 
