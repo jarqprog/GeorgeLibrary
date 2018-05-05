@@ -82,12 +82,11 @@ public class ServiceFactory implements IServiceFactory {
             case("TextService"):
                 service = TextService.getInstance(
                             log, repositoryManager,
-                            contentReader,
-                            contentWriter,
                             daoFactory.createDAO(SQLiteDaoText.class),
                             daoFactory.createDAO(SQLiteDaoContent.class),
                             daoFactory.createDAO(SQLiteDaoRepository.class),
-                            daoFactory.createDAO(SQLiteDaoUser.class));
+                            daoFactory.createDAO(SQLiteDaoUser.class),
+                            dateTimer);
                 break;
             case("UserService"):
                 service = UserService.getInstance(
@@ -100,7 +99,7 @@ public class ServiceFactory implements IServiceFactory {
                 service = RepoService.getInstance(
                             log, daoFactory.createDAO(SQLiteDaoRepository.class),
                             daoFactory.createDAO(SQLiteDaoUser.class),
-                            repositoryManager);
+                            repositoryManager, dateTimer);
                 break;
             case("AddressService"):
                 service = AddressService.getInstance(

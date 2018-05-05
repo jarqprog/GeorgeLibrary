@@ -54,4 +54,14 @@ public class Text extends Model implements IText {
         return userId;
     }
 
+    @Override
+    public String toString() {
+        return "Text{" +
+                "title='" + title + '\'' +
+                ", creationDate='" + creationDate + '\'' +
+                ", modificationDate='" + modificationDate + '\'' +
+                ", repositoryId=" + repositoryId +
+                ", userId=" + userId +
+                "} " + super.toString();
+    }
 }

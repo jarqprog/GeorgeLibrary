@@ -1,6 +1,7 @@
 package com.jarq.system.service.repository;
 
 import com.jarq.system.exceptions.DaoFailure;
+import com.jarq.system.helpers.datetimer.IDateTimer;
 import com.jarq.system.log.ILog;
 import com.jarq.system.managers.filesManagers.IRepositoryManager;
 import com.jarq.system.models.repository.IDaoRepository;
@@ -17,25 +18,29 @@ public class RepoService extends Service implements IRepoService {
     private final IDaoRepository daoRepository;
     private final IDaoUser daoUser;
     private final IRepositoryManager repositoryManager;
+    private final IDateTimer dateTimer;
     private final String serviceFailure = "something goes wrong with repository operation..";
 
     public static IRepoService getInstance( ILog log,
                                             IDaoRepository daoRepository,
                                             IDaoUser daoUser,
-                                            IRepositoryManager repositoryManager) {
+                                            IRepositoryManager repositoryManager,
+                                            IDateTimer dateTimer) {
 
-        return new RepoService(log, daoRepository, daoUser, repositoryManager);
+        return new RepoService(log, daoRepository, daoUser, repositoryManager, dateTimer);
     }
 
 
     private RepoService(ILog log,
                         IDaoRepository daoRepository,
                         IDaoUser daoUser,
-                        IRepositoryManager repositoryManager) {
+                        IRepositoryManager repositoryManager,
+                        IDateTimer dateTimer) {
         super(log);
         this.daoRepository = daoRepository;
         this.daoUser = daoUser;
         this.repositoryManager = repositoryManager;
+        this.dateTimer = dateTimer;
     }
 
     @Override
@@ -57,6 +62,7 @@ public class RepoService extends Service implements IRepoService {
         try {
             IRepository repository = daoRepository.importRepository(repositoryId);
             repository.setName(repositoryName);
+            repository.setLastModificationDate(dateTimer.getCurrentDateTime());
             return updateRepository(repository);
 
         } catch (DaoFailure daoFailure) {
