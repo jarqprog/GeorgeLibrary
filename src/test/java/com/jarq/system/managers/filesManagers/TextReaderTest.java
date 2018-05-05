@@ -10,20 +10,20 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
 
-public class RepoReaderTest extends AbstractTest {
+public class TextReaderTest extends AbstractTest {
 
     private IContentReader<String> contentReader;
     private String testFile = RepositoriesPath.READER_TEST_FILE.getPath();
 
     @Before
     public void setUp() {
-        contentReader = RepoReader.getInstance(StandardCharsets.UTF_8);
+        contentReader = TextReader.getInstance(StandardCharsets.UTF_8);
     }
 
     @Test
     public void getInstance() {
         assertNotNull(contentReader);
-        assertTrue(contentReader instanceof RepoReader);
+        assertTrue(contentReader instanceof TextReader);
     }
 
     @Test

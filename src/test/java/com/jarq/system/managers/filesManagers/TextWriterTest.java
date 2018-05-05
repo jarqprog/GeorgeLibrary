@@ -14,13 +14,13 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
-public class RepoWriterTest extends AbstractTest {
+public class TextWriterTest extends AbstractTest {
 
     private IContentWriter<String> writer;
 
     @Before
     public void setUp() {
-        writer = RepoWriter.getInstance(StandardCharsets.UTF_8);
+        writer = TextWriter.getInstance(StandardCharsets.UTF_8);
 
     }
 
@@ -28,7 +28,7 @@ public class RepoWriterTest extends AbstractTest {
     public void getInstance() {
 
         assertNotNull(writer);
-        assertTrue(writer instanceof RepoWriter);
+        assertTrue(writer instanceof TextWriter);
     }
 
     @Test
