@@ -79,16 +79,7 @@ public class IntegrationTerminalTests implements IRoot {
         // for tests:
 
         try {
-//            testDaoRepository();
-//            testUserAddress();
-//            testDaoText();
-//            removeTest();
-//            repositoryManagerTests();
-//            testDaoContent();
-
-//            serviceFactoryTest();
-
-            userServiceTest();
+//            userServiceTest();
 //            repoServiceTest();
 //            addressServiceTest();
 //            contentServiceTest();
@@ -317,96 +308,6 @@ public class IntegrationTerminalTests implements IRoot {
      *
      *  TESTS
      */
-
-    private void serviceFactoryTest() {
-        IServiceFactory serviceFactory = createServiceFactory();
-        IUserService userService = serviceFactory.createSQLiteService(UserService.class);
-        IAddressService addressService = serviceFactory.createSQLiteService(AddressService.class);
-        IRepoService repoService = serviceFactory.createSQLiteService(RepoService.class);
-    }
-
-    private void repositoryManagerTests() throws Exception {
-
-        IDaoFactory daoFactory = createDaoFactory();
-        IDateTimer dateTimer = DateTimer.getInstance();
-        IRepositoryPath repositoryPath = RepositoryPath
-                .getInstance(RepositoriesPath.FILES_REPOSITORY, FileExtension.MD);
-
-        IDaoUser daoUser = daoFactory.createDAO(SQLiteDaoUser.class);
-
-        IRepositoryManager repositoryManager = RepositoryManager.getInstance(repositoryPath);
-        String path = repositoryPath.userDir(daoUser.importUser(1));
-
-        System.out.println(path);
-        System.out.println(repositoryManager.hasFile(path));
-
-    }
-
-    private void contentTestingAndManager() throws Exception {
-        IDaoText daoText = getDaoText();
-//        IRepositoryPath repositoryPath = getRepositoryPath();
-        IDateTimer dateTimer = getDateTimer();
-
-        IText text001 = daoText.importText(13);
-
-        text001.setModificationDate(dateTimer.getCurrentDateTime());
-        IDaoContent daoContent = getDaoContent();
-        System.out.println(daoContent.importContent(1));
-
-//        for (int i=0; i<20; i++) {
-//
-//            IContent content001 = daoContent.createContent(text001);
-//            System.out.println(content001);
-//        }
-
-
-//        System.out.println(daoContent.removeContentsByTextId(13));
-//        System.out.println(daoContent.removeContent(11));
-//
-//        List<IContent> contents = daoContent.importContentsByTextId(13);
-//        for(IContent content : contents) {
-//            System.out.println(content);
-//        }
-
-    }
-
-    private void testUserAddress() throws Exception {
-        IDaoUser daoUser = getDaoUser();
-        IDaoAddress daoAddress = getDaoAddress();
-//        IUser user = daoUser.createUser("Jan", "Nowak", "notak@gmail.com");
-//        System.out.println(daoAddress.importAddressByUser(user));
-
-        System.out.println(daoUser.importUser(100));
-        System.out.println(daoUser.importUser(103));
-        System.out.println(daoUser.importUser(102));
-        System.out.println(daoUser.importUser(101));
-
-    }
-
-    private void testDaoRepository() throws Exception {
-        IDaoRepository daoRepository = getDaoRepository();
-        IDaoUser daoUser = getDaoUser();
-        System.out.println(daoRepository.importRepository(1001));
-        System.out.println(daoRepository.importRepository(1003));
-        System.out.println(daoRepository.importRepository(1004));
-        System.out.println(daoRepository.importRepositoriesByUser(daoUser.createNullUser()));
-    }
-
-    private void testDaoText() throws Exception {
-        IDaoText daoText = getDaoText();
-
-        System.out.println(daoText.importTextsByUser(getDaoUser().importUser(3)));
-
-        System.out.println(daoText.importTextsByUser(getDaoUser().importUser(3)));
-    }
-
-    private void testDaoContent() throws Exception {
-        populateDbWithTextsAndContents();
-    }
-
-    private void removeTest() throws Exception {
-    }
-
 
     private void userServiceTest() throws Exception {
         // create user
