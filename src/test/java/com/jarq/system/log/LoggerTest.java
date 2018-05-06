@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,15 +18,15 @@ public class LoggerTest extends AbstractTest {
 
     private ILog logger;
     private IDateTimer dateTimer;
-    private ILogWriter<String> writer;
+    private ILogWriter<String> logWriter;
 
     @Before
     public void setUp()  {
 
         dateTimer = mock(DateTimer.class);
-        writer = mock(LogWriter.class);
+        logWriter = mock(LogWriter.class);
 
-        logger = Logger.getInstance(dateTimer, writer);
+        logger = Logger.getInstance(dateTimer, logWriter);
     }
 
     @Test
@@ -35,20 +36,20 @@ public class LoggerTest extends AbstractTest {
     }
 
     @Test
-    public void log() throws IOException {
+    public void log() throws Exception {
 
         when(dateTimer.getCurrentDateTime()).thenReturn("2018-05-05 12:10:55");
-        when(writer.write("error message")).thenReturn(true);
+        when(logWriter.write(anyString())).thenReturn(true);
 
-        assertTrue(logger.log("error message"));
+        assertTrue(logger.log("Error message"));
     }
 
     @Test
     public void log_when_something_goes_wrong_should_return_false() throws IOException {
 
         when(dateTimer.getCurrentDateTime()).thenReturn("2018-05-05 12:10:55");
-        when(writer.write("error message")).thenReturn(false);
+        when(logWriter.write(anyString())).thenReturn(false);
 
-        assertFalse(logger.log("error message"));
+        assertFalse(logger.log("Error message"));
     }
 }

@@ -349,6 +349,10 @@ public class IntegrationTerminalTests implements IRoot {
 
         IContentService contentService = createServiceFactory().createSQLiteService(ContentService.class);
 
+        System.out.println(contentService.importContent(1));
+        System.out.println(contentService.importContent(2));
+        System.out.println(contentService.importContent(3));
+
     }
 
 

@@ -1,17 +1,16 @@
 package com.jarq.system.managers.filesManagers;
 
-import com.jarq.AbstractTest;
+import com.jarq.system.FileRelatedTest;
 import com.jarq.system.enums.RepositoriesPath;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class TextReaderTest extends AbstractTest {
+public class TextReaderTest extends FileRelatedTest {
 
     private IContentReader<String> contentReader;
     private String testFile = RepositoriesPath.READER_TEST_FILE.getPath();
