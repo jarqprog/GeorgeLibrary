@@ -88,6 +88,7 @@ public class RepositoryManagerTest extends AbstractTest {
     public void hasDir_should_be_true() {
 
         String dirPath = RepositoriesPath.MANAGER_PATH_HAS_DIR_TEST.getPath();
+        createDirs(dirPath);
 
         assertTrue(repositoryManager.hasDir(dirPath));
 
