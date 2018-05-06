@@ -128,8 +128,8 @@ public class UserService extends Service implements IUserService {
         try {
             IUser user = daoUser.importUser(userId);
 
-            boolean dbCleared = daoUser.removeUser(user);
             boolean repoCleared = repositoryManager.removeUserRepositories(user);
+            boolean dbCleared = daoUser.removeUser(user);
 
             if ( dbCleared && repoCleared ) {
                 return user.toString(); // todo
@@ -152,6 +152,4 @@ public class UserService extends Service implements IUserService {
         report(serviceFailure);
         return serviceFailure;
     }
-
-
 }
