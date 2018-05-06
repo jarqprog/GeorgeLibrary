@@ -1,6 +1,6 @@
 package com.jarq.system.managers.filesManagers;
 
-import com.jarq.AbstractTest;
+import com.jarq.system.FileRelatedTest;
 import com.jarq.system.enums.RepositoriesPath;
 import com.jarq.system.helpers.repositoryPath.IRepositoryPath;
 import com.jarq.system.helpers.repositoryPath.RepositoryPath;
@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RepositoryManagerTest extends AbstractTest {
+public class RepositoryManagerTest extends FileRelatedTest {
 
     private IRepositoryManager repositoryManager;
     private IContent content;
@@ -88,6 +88,7 @@ public class RepositoryManagerTest extends AbstractTest {
     public void hasDir_should_be_true() {
 
         String dirPath = RepositoriesPath.MANAGER_PATH_HAS_DIR_TEST.getPath();
+        createDirs(dirPath);
 
         assertTrue(repositoryManager.hasDir(dirPath));
 
@@ -271,47 +272,5 @@ public class RepositoryManagerTest extends AbstractTest {
 
         repositoryManager.removeUserRepositories(user);  // can be called on any method, I use user
 
-    }
-
-    private void prepareFilepathForTest(String path) throws Exception {
-        if(! checkIfFileExists(path) ) {
-            if(! createFile(path) ) {
-                throw new Exception("Can't continue test, path wasn't created!");
-            }
-        }
-    }
-
-    private void prepareDirectoryPathForTest(String path) throws Exception {
-        if(! checkIfDirectoryExists(path) ) {
-            if(! createDirs(path) ) {
-                throw new Exception("Can't continue test, path wasn't created!");
-            }
-        }
-    }
-
-    private void removePath(String filepath) throws IOException {
-        Path path = Paths.get(filepath);
-        deleteIfExists(path);
-    }
-
-    private boolean createFile(String filepath) throws IOException {
-        File path = new File(filepath);
-        path.getParentFile().mkdirs();
-        return path.createNewFile();
-    }
-
-    private boolean createDirs(String dirsPath) {
-        File path = new File(dirsPath);
-        return path.mkdirs();
-    }
-
-    private boolean checkIfFileExists(String filepath) {
-        File f = new File(filepath);
-        return f.exists() && !f.isDirectory();
-    }
-
-    private boolean checkIfDirectoryExists(String dirsPath) {
-        File dir = new File(dirsPath);
-        return dir.exists() && dir.isDirectory();
     }
 }

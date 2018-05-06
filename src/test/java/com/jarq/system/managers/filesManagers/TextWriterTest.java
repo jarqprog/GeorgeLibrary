@@ -1,27 +1,22 @@
 package com.jarq.system.managers.filesManagers;
 
-import com.jarq.AbstractTest;
+import com.jarq.system.FileRelatedTest;
 import com.jarq.system.enums.RepositoriesPath;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
-public class TextWriterTest extends AbstractTest {
+public class TextWriterTest extends FileRelatedTest {
 
     private IContentWriter<String> writer;
 
     @Before
     public void setUp() {
         writer = TextWriter.getInstance(StandardCharsets.UTF_8);
-
     }
 
     @Test
@@ -55,22 +50,6 @@ public class TextWriterTest extends AbstractTest {
 
         assertEquals(getTestText(), output);
     }
-
-    private String readTestFile(String testFilepath) throws IOException {
-        Path path = Paths.get(testFilepath);
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append("\n");
-            }
-            int len = stringBuilder.length();
-            stringBuilder.delete(len-1, len);  // removes unnecessary new line from the end of text
-        }
-        return stringBuilder.toString();
-    }
-
 
     private String getTestText() {
 

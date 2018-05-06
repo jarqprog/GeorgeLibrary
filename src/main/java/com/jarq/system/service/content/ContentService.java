@@ -64,11 +64,17 @@ public class ContentService extends Service implements IContentService {
 
     @Override
     public String createContent(int textId, String data) {
+        if(data.length() == 0) {
+            return "Nothing to save..";
+        }
         return create(textId, data, null);
     }
 
     @Override
     public String createContent(int textId, byte[] data) {
+        if(data.length == 0) {
+            return "Nothing to save..";
+        }
         return create(textId, null, data);
     }
 
@@ -110,11 +116,17 @@ public class ContentService extends Service implements IContentService {
 
     @Override
     public boolean changeContentsData(int contentId, String data) {
+        if(data.length() == 0) {
+            return false;
+        }
         return changeData(contentId, data, null);
     }
 
     @Override
     public boolean changeContentsData(int contentId, byte[] data) {
+        if(data.length == 0) {
+            return false;
+        }
         return changeData(contentId, null, data);
     }
 

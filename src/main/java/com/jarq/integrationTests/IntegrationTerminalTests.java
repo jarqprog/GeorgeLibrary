@@ -35,6 +35,8 @@ import com.jarq.system.service.content.ContentService;
 import com.jarq.system.service.content.IContentService;
 import com.jarq.system.service.repository.IRepoService;
 import com.jarq.system.service.repository.RepoService;
+import com.jarq.system.service.text.ITextService;
+import com.jarq.system.service.text.TextService;
 import com.jarq.system.service.user.IUserService;
 import com.jarq.system.service.user.UserService;
 import com.jarq.integrationTests.controllers.IRepositoryController;
@@ -79,7 +81,7 @@ public class IntegrationTerminalTests implements IRoot {
         // for tests:
 
         try {
-//            userServiceTest();
+            userServiceTest();
 //            repoServiceTest();
 //            addressServiceTest();
 //            contentServiceTest();
@@ -314,44 +316,45 @@ public class IntegrationTerminalTests implements IRoot {
 
 //        populateDbWithUsers();
 
-        IUserService userService = createServiceFactory().createSQLiteService(UserService.class);
+//        IUserService userService = createServiceFactory().createSQLiteService(UserService.class);
+//        userService.createUser("Jack", "White", "jack.white@yahoo.com");
+//        userService.createUser("Paul", "Alasca", "alasca.paul@com.pl");
+//        userService.changeUserPassword(3, "1234Aa#Aa");
 
+//        IAddressService addressService = createServiceFactory().createSQLiteService(AddressService.class);
+//        System.out.println(addressService.createAddress(2, "211-123", "New York", "123", "21", "203"));
+//        System.out.println(addressService.createAddress(3, "208-423", "Boston", "Washington St.", "421", "2a"));
+//        System.out.println(userService.changeUserPassword(2, "1234zfjhggfGGG"));
+//        System.out.println(userService.changeUserPassword(1, "1234#aaBB"));
+//        System.out.println(userService.changeUserEmail(2, "jarq1@gmail.com"));
+//        IRepoService repoService = createServiceFactory().createSQLiteService(RepoService.class);
+//        repoService.createRepository(2, "Just Notes");
+//        repoService.createRepository(3, "Cool things");
+//        repoService.createRepository(3, "Jokes");
+//        repoService.createRepository(3, "My novel");
 
-        int i = 2;
-        while(i < 12) {
-            userService.removeUser(i);
-            i++;
-        }
+//        ITextService textService = createServiceFactory().createSQLiteService(TextService.class);
+//        textService.createText(1, "remember to buy milk");
+//
+//        textService.createText(2, "How to have great sex");
+//        textService.createText(2, "How cook spaghetti");
+//        textService.createText(2, "How be a better man");
+//        textService.createText(3, "About Blonds");
+//        textService.createText(4, "Far, far ago...");
+
+//        IContentService contentService = createServiceFactory().createSQLiteService(ContentService.class);
+//        System.out.println(contentService.createContent(1, ""));
+//        System.out.println(contentService.createContent(1, "Really don't know.."));
+//        System.out.println(contentService.createContent(1, "With great products! ;)"));
+//        System.out.println(contentService.createContent(1, new byte[0]));
+
+//        int i = 5;
+//        while(i < 12) {
+//              userService.removeUser(3);
+//            i++;
+//        }
 
     }
-
-    private void repoServiceTest() throws Exception {
-        // create user
-        IRepoService repoService = createServiceFactory().createSQLiteService(RepoService.class);
-        repoService.removeRepository(2);
-
-
-
-    }
-
-    private void addressServiceTest() throws Exception {
-        // create user
-
-        IAddressService addressService = createServiceFactory().createSQLiteService(AddressService.class);
-
-//        System.out.println(addressService.changeApartmentNo(75, "21111"));
-//        System.out.println(addressService.changeStreet(75, "Podgorze"));
-//        System.out.println(addressService.removeAddress(75));
-    }
-
-
-    private void contentServiceTest() throws Exception {
-
-        IContentService contentService = createServiceFactory().createSQLiteService(ContentService.class);
-
-    }
-
-
 
 
 
