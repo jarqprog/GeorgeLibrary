@@ -38,6 +38,9 @@ public class UserService extends Service implements IUserService {
     @Override
     public String createUser(String name, String surname, String email)
             throws SecurityException {
+        if(! emailPolicy.validate(email)) {
+            throw new SecurityException("Given email is invalid!");
+        }
         try {
             IUser user = daoUser.createUser(name, surname, email);
             repositoryManager.createDir(user);

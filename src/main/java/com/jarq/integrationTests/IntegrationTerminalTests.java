@@ -315,13 +315,13 @@ public class IntegrationTerminalTests implements IRoot {
 //        populateDbWithUsers();
 
         IUserService userService = createServiceFactory().createSQLiteService(UserService.class);
+        System.out.println(userService.createUser("J", "o", "asd"));
 
-
-        int i = 2;
-        while(i < 12) {
-            userService.removeUser(i);
-            i++;
-        }
+//        int i = 2;
+//        while(i < 12) {
+//            userService.removeUser(i);
+//            i++;
+//        }
 
     }
 
