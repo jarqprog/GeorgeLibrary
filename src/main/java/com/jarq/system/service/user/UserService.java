@@ -38,6 +38,9 @@ public class UserService extends Service implements IUserService {
     @Override
     public String createUser(String name, String surname, String email)
             throws SecurityException {
+        if(! emailPolicy.validate(email)) {
+            throw new SecurityException("Given email is invalid!");
+        }
         try {
             IUser user = daoUser.createUser(name, surname, email);
             repositoryManager.createDir(user);
@@ -125,8 +128,8 @@ public class UserService extends Service implements IUserService {
         try {
             IUser user = daoUser.importUser(userId);
 
-            boolean dbCleared = daoUser.removeUser(user);
             boolean repoCleared = repositoryManager.removeUserRepositories(user);
+            boolean dbCleared = daoUser.removeUser(user);
 
             if ( dbCleared && repoCleared ) {
                 return user.toString(); // todo
@@ -149,6 +152,4 @@ public class UserService extends Service implements IUserService {
         report(serviceFailure);
         return serviceFailure;
     }
-
-
 }

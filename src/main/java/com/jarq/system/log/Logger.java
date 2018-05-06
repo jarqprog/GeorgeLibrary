@@ -30,9 +30,9 @@ public class Logger implements ILog {
         sb.append(message);
 
         try {
-            writer.write(sb.toString());
-            return true;
+            return writer.write(sb.toString());
         } catch (IOException e) {
+            System.out.println("log failure, can't write to file:");
             e.printStackTrace();
             return false;
         }

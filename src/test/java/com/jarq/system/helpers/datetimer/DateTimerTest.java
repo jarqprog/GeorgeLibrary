@@ -2,6 +2,7 @@ package com.jarq.system.helpers.datetimer;
 
 import com.jarq.AbstractTest;
 
+import com.jarq.system.enums.DateTimerFormatter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,11 +14,23 @@ import static org.junit.Assert.*;
 public class DateTimerTest extends AbstractTest {
 
     private IDateTimer dateTimer;
-    private String formatter = "yyyy-MM-dd HH:mm:ss";
 
     @Before
     public void setUp() {
-        dateTimer = new DateTimer(formatter);
+        dateTimer = DateTimer.getInstance();
+    }
+
+    @Test
+    public void getInstance() {
+
+        IDateTimer anotherDateTimer = DateTimer.getInstance(DateTimerFormatter.LOGGER);
+
+
+        assertNotNull(dateTimer);
+        assertTrue(dateTimer instanceof DateTimer);
+
+        assertNotNull(anotherDateTimer);
+        assertTrue(anotherDateTimer instanceof DateTimer);
     }
 
     @Test
@@ -39,6 +52,9 @@ public class DateTimerTest extends AbstractTest {
 
 
     private String getDateTimeToCompare() {
+
+        String formatter = "yyyy-MM-dd HH:mm:ss";
+
         LocalDateTime toCompare = LocalDateTime.now();
         DateTimeFormatter format = DateTimeFormatter.ofPattern(formatter);
         return splitDateTime(toCompare.format(format));
