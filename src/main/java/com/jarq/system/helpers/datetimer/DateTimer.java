@@ -17,11 +17,11 @@ public class DateTimer implements IDateTimer {
         return new DateTimer();
     }
 
-    DateTimer(String formatter) {
+    private DateTimer(String formatter) {
         this.formatter = formatter;
     }
 
-    DateTimer() {
+    private DateTimer() {
         this.formatter = "yyyy-MM-dd HH:mm:ss";
     }
 

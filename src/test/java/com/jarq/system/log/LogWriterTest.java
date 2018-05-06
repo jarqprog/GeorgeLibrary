@@ -28,14 +28,12 @@ public class LogWriterTest extends FileRelatedTest {
     @Test
     public void write() throws IOException {
 
-        createFile(path);
+        removePath(path);  // remove old file
         String report = "Exception occurred.";
 
         writer.write(report);
         String output = readTestFile(path);
 
         assertEquals(report, output);
-
-        removePath(path);  // tear down
     }
 }
